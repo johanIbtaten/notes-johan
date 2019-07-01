@@ -364,6 +364,140 @@ Object Property Value Shorthand
     };
 
 
+Fonctions sur les tableaux
+-------------------------------
+FOREACH()
+// arr.forEach(callback);
+// arr.forEach(callback, thisArg);
+1. Permet d'exécuter une fonction donnée sur chaque élément du tableau.
+    
+    [callback] est appelé avec trois arguments :
+      - la valeur de l'élément
+      - l'index de l'élément
+      - le tableau utilisé
+
+    Ex1:
+    var array1 = ['a', 'b', 'c'];
+    array1.forEach(function(element) {
+      console.log(element);
+    });
+
+
+CONSOLE.TABLE()
+
+
+
+REDUCE()
+// arr.reduce(callback) 
+// arr.reduce(callback, valeurInitiale)
+1. reduce() exécute la fonction callback une fois pour chaque élément présent dans le tableau et ignore les éléments vides du tableau. La fonction callback utilise quatre arguments. 
+La première fois que la fonction callback est appelée, valeurInitiale et valeurCourante peuvent correspondre à un ou deux éléments. Si valeurInitiale est fournie dans l'appel de reduce(), 
+alors accumulateur sera égale à valeurInitiale et valeurCourante sera égale à la première valeur de la liste. Si valeurInitiale n'est pas fournie, alors accumulateur sera égale à la première valeur de la liste, et valeurCourante sera alors égale à la seconde.
+Autrement dit, si valeurInitiale n'est pas fournie, reduce exécutera la fonction de rappel à partir de l'indice 1 et la première valeur du tableau (d'indice 0) sera utilisée pour valeurInitiale.
+
+    [callback]
+      La fonction à exécuter sur chaque valeur de la liste (sauf le premier si aucune valeurInitiale n'est fournie), elle prend quatre arguments en entrée :
+        [accumulateur]
+          La valeur précédemment retournée par le dernier appel du callback, ou valeurInitiale, si elle est fournie (voir ci-après) (c'est la valeur « accumulée » au fur et à mesure des appels
+        [valeurCourante]
+          La valeur de l'élément courant actuellement manipulé dans le tableau.
+        [index] (Facultatif)
+          L'index de l'élément courant actuellement manipulé dans le tableau.
+        [array] (Facultatif)
+          Le tableau sur lequel on a appelé la méthode reduce().
+    [valeurInitiale] (Facultatif)
+      Une valeur utilisée comme premier argument lors du premier appel de la fonction callback. Si aucune valeur initiale n'est fournie, le premier élément du tableau est utilisé. Si on appelle reduce() sur un tableau vide sans fournir de valeur initiale, on aura une erreur.
+    
+    Ex1:
+    // Sans fonction fléchée
+    [0, 1, 2, 3, 4].reduce(function(accumulateur, valeurCourante, index, array){
+      return accumulateur + valeurCourante;
+    });
+    // 10
+
+    // Avec fonction fléchée
+    [0, 1, 2, 3, 4].reduce((accumulateur, valeurCourante) => accumulateur + valeurCourante);
+    // 10
+
+    Ex2:
+    // Avec valeurInitiale
+    [0, 1, 2, 3, 4].reduce((accumulateur, valeurCourante) => accumulateur + valeurCourante, 10);
+    // 20
+
+MAP()
+// let nouveauTableau = arr.map(callback [, thisArg])
+1. La fonction callback fournie en argument est exécutée une fois pour chacun des éléments du tableau, dans l'ordre du tableau. 
+Chaque résultat de l'opération sur un élément sera un élément du nouveau tableau. La fonction callback est appelée uniquement pour les indices du tableau 
+pour lesquels il y a des valeurs affectées (y compris si cette valeur est undefined). Si les valeurs ont été supprimées ou qu'elles n'ont jamais été initialisées, la fonction ne sera pas appelée.
+Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser forEach ou for...of. 
+
+    [callback]
+      La fonction qui est utilisée pour créer un élément du nouveau tableau. Elle utilise trois arguments
+        [valeurCourante]
+          La valeur de l'élément du tableau à traiter.
+        [index]
+          L'index de l'élément qui est traité par la fonction.
+        [tableau] (Facultatif)
+          Le tableau sur lequel on a appelé la méthode map.
+    [thisArg] (Facultatif)
+      La valeur à utiliser pour this lors de l'exécution de callback. La valeur par défaut est l'objet global de l'environnement (Window pour un navigateur).
+    
+    Ex1:
+    // On crée un tableau composé des racines carrées des éléments d'un premier tableau
+    var nombres = [1, 4, 9];
+    var racines = nombres.map(Math.sqrt);
+    // racines vaut désormais [1, 2, 3]
+    // nombres vaut toujours [1, 4, 9]
+
+    Ex2:
+    // Créer un tableau de nombres avec une fonction à un argument. 
+    // Cet argument sera automatiquement remplacé par chaque élément du tableau au fur et à mesure que map parcourt le tableau
+    var nombres = [1, 4, 9];
+    var doubles = nombres.map(function(num) {
+      return num * 2;
+    });
+    // doubles vaut désormais [2, 8, 18].
+    // nombres vaut toujours [1, 4, 9]
+
+    Ex3:
+    // On utilise un tableau d'objets pour créer un autre tableau contenant de nouveaux objets dans un autre format 
+    var tableauOrig = [{clé:1, valeur:10}, {clé:2, valeur:20}, {clé:3, valeur: 30}];
+    var tableauFormaté = tableauOrig.map(obj => { 
+      var rObj = {};
+      rObj[obj.clé] = obj.valeur; 
+      return rObj;
+    });
+    // tableauFormaté vaut maintenant [{1:10}, {2:20}, {3:30}], 
+    // tableauOrig vaut toujours 
+    // [{clé:1, valeur:10},
+    //  {clé:2, valeur:20},
+    //  {clé:3, valeur: 30}
+    // ]
+
+    Ex4:
+    // Utiliser map de façon générique sur autre chose qu'un tableau
+    // Sur une chaine de caractère
+    var map = Array.prototype.map;
+    var a = map.call('Hello World', function(x) { return x.charCodeAt(0); });
+    // a vaut désormais [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100]
+    // Ici sur un tableau d'objets collectés grâce à querySelectorAll
+    var elems = document.querySelectorAll('select option:checked');
+    var values = Array.prototype.map.call(elems, function(obj) {
+      return obj.value;
+    });
+
+    Ex5:
+    // Utiliser map de façon générique sur autre chose qu'un tableau
+    // Sur un tableau d'objets collectés grâce à querySelectorAll
+    var elems = document.querySelectorAll('select option:checked');
+    var values = Array.prototype.map.call(elems, function(obj) {
+      return obj.value;
+    });
+
+
+
+
+
 Rest parameters
 -------------------------------
 1. Cette syntaxe permet de représenter un nombre indéfini d'arguments sous forme d'un tableau.
@@ -378,3 +512,43 @@ Rest parameters
     // expected output: 6
     console.log(sum(1, 2, 3, 4));
     // expected output: 10
+
+    Ex2:
+    // S'il n'y a qu'un seul argument qui est décomposé par la syntaxe, la valeur sera toujours un tableau
+    function maFonction(a, b, ...autres);
+      console.log(a);
+      console.log(b);
+      console.log(autres);
+    }
+    maFonction("un", "deux", "trois");
+    // affichera ceci dans la console
+    // "un"
+    // "deux"
+    // ["trois"]
+    maFonction("un", "deux", "trois", "quatre", "cinq");
+    // affichera ceci dans la console :
+    // "un"
+    // "deux"
+    // ["trois", "quatre", "cinq"]
+
+    Ex3:
+    // S'il n'y a pas suffisamment d'arguments, ce sera un tableau vide
+    function maFonction(a, b, ...autres);
+      console.log(a);
+      console.log(b);
+      console.log(autres);
+    }
+    maFonction("un", "deux");
+    // affichera ceci dans la console
+    // "un"
+    // "deux"
+    // []
+
+    Ex4:
+    // lesArguments est un tableau et dispose donc d'une propriété length permettant de compter ses éléments
+    function fun1(...lesArguments) {
+      console.log(lesArguments.length);
+    }
+    fun1();  // 0
+    fun1(5); // 1
+    fun1(5, 6, 7); // 3
