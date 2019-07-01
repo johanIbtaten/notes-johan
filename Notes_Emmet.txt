@@ -1,0 +1,9 @@
+﻿=================================
+Expressions
+=================================
+li>a[href=#menu$]{Menu $}*3
+<li>
+	<a href="#menu1">Menu 1</a>
+    <a href="#menu2">Menu 2</a>
+	<a href="#menu3">Menu 3</a>
+</li>

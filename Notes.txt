@@ -1,0 +1,156 @@
+Browsersync watch files VSCode
+-------------------------------
+*.html|assets/css/*.css
+
+Cmder watch files
+-------------------------------
+sass --watch C:\Users\jibta\Desktop\projetsJohan\web\inuitcss\app\assets\sass\main.scss:C:\Users\jibta\Desktop\projetsJohan\web\inuitcss\dist\assets\css\main.css
+
+Boostrap Grid variables
+-------------------------------
+$grid-columns: 12 !default;
+$grid-gutter-width: 30px !default;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px
+) !default;
+
+// Example usage
+.some-class {
+    @include media-breakpoint-up(sm) {
+        // Larger than sm: 480px
+    }
+    @include media-breakpoint-down(md) {
+        // Smaller than md: 768px
+    }
+}
+
+Patterns Gulp
+-------------------------------
+Les globs sont des patterns de correspondance qui fonctionnent un peu comme les regex mais spécifiquement pour les chemins d’accès.
+La plupart des workflows de gulp feront appel à 4 globs seulement :
+
+*.scss : le pattern * est une sorte de “joker” qui correspond à
+n’importe quel pattern dans le dossier courant. 
+Dans cet exemple, tous les fichiers ayant une extension .scss dans 
+le dossier racine project.
+
+**/*.scss : c’est une version plus extrême du pattern précédent, 
+qui cible tous les fichiers ayant une extension .scss dans le 
+dossier racine et dans n’importe quel dossier enfant.
+
+!pas-moi.scss : le ! indique que Gulp doit exclure ce pattern, ce qui est 
+utile si vous voulez exclure un fichier au sein d’un pattern. Dans notre exemple, le fichier pas-moi.scss sera exclu.
+
+*.+(scss|sass) : le plus + et les parenthèses () permettent à Gulp de cibler des patterns multiples, 
+chaque pattern étant séparé des autres par un caractère “barre verticale” | Dans notre exemple, Gulp ciblera tous les fichiers ayant une extension .scss ou .sass dans le dossier racine.
+Nous pouvons maintenant remplacer app/scss/styles.scss par un pattern scss/**/*.scss qui matchera 
+tous les fichiers ayant une extension .scss dans app/scss ou dans un dossier enfant.
+
+Project Folder Structure for Text2Folders
+-------------------------------
+spectrecss
+spectrecss\app
+spectrecss\app\assets
+spectrecss\app\assets\images
+spectrecss\app\assets\js
+spectrecss\app\assets\sass
+spectrecss\app\assets\sass\helpers
+spectrecss\app\assets\sass\vendors
+spectrecss\app\assets\sass\components
+spectrecss\app\assets\sass\layout
+spectrecss\app\assets\sass\utilities
+spectrecss\dist
+spectrecss\dist\assets
+spectrecss\dist\assets\images
+spectrecss\dist\assets\js
+spectrecss\dist\assets\css
+
+
+Architecture SASS
+-------------------------------
+//abstracts (or settings or helpers)
+@import 'abstracts/variables';
+@import 'abstracts/functions';
+@import 'abstracts/mixins';
+@import 'abstracts/placeholders';
+
+//vendors
+@import 'vendors/bootstrap';
+@import 'vendors/jquery-ui';
+
+//// optional ////
+//vendors-extensions (vendors override and extensions )
+@import 'base/boostrap';
+@import 'base/typography';
+
+//layout
+@import 'layout/navigation';
+@import 'layout/grid';
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/sidebar';
+@import 'layout/forms';
+
+//components (or modules)
+@import 'components/buttons';
+@import 'components/carousel';
+@import 'components/cover';
+@import 'components/dropdown';
+
+//// optional ////
+//pages
+@import 'pages/home';
+@import 'pages/contact';
+
+//// optional ////
+@import 'themes/theme';
+@import 'themes/admin';
+
+// utilities
+@import "node_modules/inuitcss/utilities/utilities.widths";
+@import "node_modules/inuitcss/utilities/utilities.widths";
+@import "node_modules/inuitcss/utilities/utilities.headings";
+@import "node_modules/inuitcss/utilities/utilities.spacings";
+
+
+Répondre automatiquement Y ou O en français à la question "Terminate batch job (Y/N)?" ou "Terminer le programme de commandes (O/N) ?"
+-------------------------------
+clink set terminate_autoanswer 1 puis redémarrer Cmder
+
+
+path.join vs path.resolve with __dirname avec nodeJS
+-------------------------------
+Oui, il y a une différence entre les fonctions, mais la façon dont vous les utilisez dans ce cas aboutira au même résultat.
+path.join retourne un chemin normalisé en fusionnant deux chemins. Il peut retourner un chemin absolu, mais il ne le fait pas nécessairement toujours.
+
+Par exemple:
+path.join('app/libs/oauth', '/../ssl')
+donne le résultat app/libs/ssl
+
+path.resolve, lui, se résoudra en un chemin absolu.
+Par exemple, lorsque vous exécutez:
+path.resolve('bar', '/foo');
+Le chemin renvoyé sera /foo puisqu'il s'agit du premier chemin absolu pouvant être construit.
+
+Cependant, si vous exécutez:
+path.resolve('/bar/bae', '/foo', 'test');
+Le chemin renvoyé sera /foo/test car il s'agit du premier chemin absolu pouvant être formé de droite à gauche.
+
+Si vous ne fournissez pas un chemin spécifiant le répertoire racine, les chemins fournis à la fonction resolve sont ajoutés au répertoire de travail en cours. Donc, si votre répertoire de travail était /home/mark/project/:
+
+path.resolve('test', 'directory', '../back');
+resolve /home/mark/project/test/back
+
+__dirname est le chemin absolu du répertoire contenant le fichier source. Lorsque vous utilisez path.resolve ou path.join ils retourneront le même résultat si vous donnez le même chemin en suivant __dirname. Dans de tels cas, c'est simplement une question de préférence.

@@ -1,0 +1,380 @@
+var, let, const
+-------------------------------
+Déclaration (var a;) initialisation : var a=2;
+Déclaration (let a;) initialisation : let a=2;
+Déclaration, initialisation : const a=2;
+Scope (ou Portée en français)
+
+var   : Scope dans les fonctions 
+        Pas de scope dans les blocs (blocs types if, for, while, etc.)
+        Si var est déclaré sans valeur initiale (ex: var a;) elle aura la valeur undefined
+
+let   : Scope dans les fonctions 
+        Scope dans les blocs (blocs types if, for, while, etc.)
+        Si let est déclaré sans valeur initiale (ex: let a;) elle aura la valeur undefined
+
+const : Scope dans les fonctions 
+        Scope dans les blocs (blocs types if, for, while, etc.)
+        const a besoin d'être déclaré avec une valeur initiale (ex: const a=2;)
+	      On ne peut pas réassigner la valeur d'une constante (ex: a=4;)
+        On ne peut pas re-déclarer dans la même portée une autre constante avec le même nom (ex: const a=4;)
+        --------------------------------------------
+        On peut ajouter ou supprimer les éléments d'un tableau
+        On ne peut pas changer la structure d'un objet littéral
+        On peut changer les valeurs d'un objet littéral
+
+
+Types de données
+-------------------------------
+Numbers — var age = 23
+Variables — var x
+Text (strings) — var a = "init"
+Operations — var b = 1 + 2 + 3
+True or false statements (boolean) — var c = true
+Constant numbers — const PI = 3.14
+Objects — var name = {firstName:"John", lastName:"Doe"}
+Undefined — var a; console.log(a); retourne undefined
+Null  — var a = null
+
+
+Différence entre undefined et null
+-------------------------------
+/// undefined : ///
+1. Une variable possède la valeur undefined si elle n'est pas déclarée ou si elle est déclarée mais n'a pas encore eu de valeur d'assignée.
+
+    Ex1: 
+    var maVariable;
+    alert(maVariable); // Le texte undefined s'affichera à l'écran, car la variable est non définie.
+   
+    Ex2: 
+    function direBonjour(message) {
+      console.log(message)
+    }
+    direBonjour(); // Le texte undefined s'affichera à l'écran, car la variable message déclarée en paramètre est non définie.
+
+2. Il y a une faille dans JavaScript à connaître : le mot undefined n'est pas un mot-clé du langage. Il est donc possible de nommer une variable undefined, puis de lui attribuer une valeur.
+
+    Ex1: 
+    var undefined = toto; //Cette déclaration n'est pas fausse, contrairement à ce que l'on pourrait croire.
+    if(maVariable === undefined) {
+      alert(Vous avez été trompés!);
+    }
+
+3. Pour tester si une variable n'a pas été déclaré ou assignée, il faut utiliser typeof. 
+typeof renvoie une chaîne qui indique le type de l'opérande (Quantité, donnée qui entre dans une opération arithmétique, une instruction informatique).
+
+    Ex1:
+    if (typeof maVariable === "undefined") {
+      alert("La variable maVariable n'est pas définie");
+    }
+
+    Ex2:
+    var x;
+    if (typeof x === 'undefined') {
+       // ces instructions seront exécutées
+    }
+    if (typeof x !== 'undefined') {
+       // ces instructions ne seront pas exécutées
+    }
+
+4. Pour tester si une propriété d'objet est indéfinie on peut aussi utiliser typeof
+
+    Ex1:
+    const list = []
+    const count = 2
+    typeof list // "object"
+    typeof count // "number"
+    typeof "test" // "string"
+    typeof color // "undefined"
+    const car = {
+      model: 'Fiesta'
+    }
+    if (typeof car.color === "undefined") {
+      // color is undefined
+    }
+
+5. Une fonction qui n'a pas de valeur de return affiche undefined
+
+    Ex1:
+    function add() {
+      const a = 3;
+    }
+    add(); // affiche undefined
+
+/// null : ///
+1. null sert à définir l'absence de valeur, on s'en sert par exemple pour assigner une valeur par défaut à des variables ou des paramètres de fonction, c'est une méthode beaucoup plus propre que d'assigner une valeur arbitraire comme 0 pour un entier, ou une chaine de caractère vide pour une chaine de caractère.
+
+    Ex1:
+    // toto n'existe pas, n'a pas été défini (déclaré) et n'a jamais été initialisé (assigné)
+    toto;
+    "ReferenceError: toto is not defined"
+    // toto existe mais n'a ni type ni valeur
+    var toto = null;
+    console.log(toto); // null
+
+    Ex2:
+    function direBonjour(message = null) { // Valeur par défaut de message égale à null
+      console.log(message); // null
+    }
+
+    Ex3:
+    typeof null;           // "object" (pas null pour des raisons historiques)
+    typeof undefined;      // "undefined"
+    null === undefined;    // false
+    null  == undefined;    // true
+    null === null;         // true
+    null  == null;         // true
+    !null;                 // true
+    isNaN(1 + null);       // false
+    isNaN(1 + undefined);  // true
+
+
+Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
+-------------------------------
+1. C'est selon les préférences. L'avantage des doubles quotes est qu'il permet d'échapper les apostrophes et se conforme à JSON
+
+    Ex1:
+    alert('Say "Hello"');
+    alert("Say 'Hello'");
+    alert("It's \"game\" time.");
+    alert('It\'s "game" time.');
+
+2. En ES6 on peut aussi utiliser les template literals
+
+    Ex1:
+    alert(`Use "double" and 'single' quotes in the same string`);
+    alert(`Escape the \` back-tick character and the \${ dollar-brace sequence in a string`);
+
+
+Opérateur void
+-------------------------------
+1. L'opérateur void évalue (exécute) l'expression donnée void(0) équivaut à void 0 et retourne ensuite undefined.
+    Ex1:
+    void 2 == '2';    // renvoie false, attention à la précédence et donc mieux vaut utiliser des parenthèses
+    void (2 === '2'); // renvoie undefined
+
+2. On peut utiliser void pour ajouter un comportement preventDefault () pour un lien
+    Ex1:
+    <a href="javascript: void(0)"> À propos de </a>
+
+3. On peut utiliser void pour qu'une function retourne undefined même si elle possède une valeur de retour.
+    Ex1:
+    function add() {
+      const a = 3; return a
+    };
+    console.log(add()); // affiche 3
+    console.log(void add()); // affiche undefined
+
+
+La « remontée » des déclarations de fonction
+-------------------------------
+1. Lorsqu'on utilise une déclaration de fonction pour créer une fonction, la définition de la fonction est « remontée » (hoisting). Il devient donc possible d'utiliser la fonction avant de l'avoir déclarée
+    Ex1:
+    remontée(); // affiche "toto" dans la console
+    function remontée() {
+      console.log("toto");
+    }
+
+
+Les expressions de fonctions
+-------------------------------
+1. Une expression de fonction est très similaire et a presque la même syntaxe qu'une déclaration de fonction. La différence principale entre une expression de fonction et une instruction est le nom de la fonction. En effet, pour les expressions, celui peut être omis (on parle alors d'une fonction anonyme). 
+    Ex1:
+    var getRectArea = function(width, height) {
+    return width * height;
+    }
+    console.log(getRectArea(3,4));
+    // expected output: 12    
+
+2. En JavaScript, les expressions de fonction ne sont pas remontées (à la différence des déclarations de fonction). Il est donc impossible d'utiliser les expressions de fonction avant leur définition.
+    Ex1:
+    nonRemontée(); // TypeError: nonRemontée is not a function
+    var nonRemontée = function() {
+      console.log("truc");
+    }
+
+3. On peut utiliser une expression de fonction pour créer une « IIFE » (Immediately Invoked Function Expression), c'est-à-dire une expression de fonction qu'on appelle dès sa définition.
+    Ex1:
+    var a = "coucou";
+    var b = "monde";
+    // IIFE
+    (function(x, y) {
+      console.log(x + " " + y);
+    })(a, b);
+    // coucou monde
+
+
+Les fonctions flechées (arrow function en anglais)
+-------------------------------
+    // Avant ES6
+    const add = function(x, y) {
+        return x + y
+    }
+    console.log(add(5, 4)) // 9
+1. Une expression de fonction fléchée permet d’avoir une syntaxe plus courte que les expressions de fonction. Les fonctions fléchées sont souvent anonymes et ne sont pas destinées à être utilisées pour déclarer des méthodes.    
+    Ex1:    
+    // ES6
+    const addES6 = (x, y) => { return x + y }
+    console.log(addES6(5, 6)) // 11
+
+2. Les accolades ne sont même pas obligatoire ici et le mot clé return aussi, parce que l'on renvoie une seule instruction.
+    Ex1:
+    // ES6
+    const addES6 = (x, y) => x + y
+    console.log(addES6(5, 6)) // 11
+
+3. Quand on a un seul paramètre, nous n'avons donc pas besoin des parenthèses, on renseigne juste le nom du paramètre.
+    Ex1:
+    // ES6
+    const hello = name => `Hello ${name}`
+    console.log(hello('Niang')) // Hello Niang
+
+    Ex2:
+    var simple = a => a > 15 ? 15 : a; 
+    simple(16); // 15
+    simple(10); // 10
+
+
+4. Pour définir une fonction sans paramètre, on met juste des parenthèses vides.
+    Ex1:
+    // ES6
+    const helloWorld = () => 'Hello World!'
+    console.log(helloWorld()) // Hello World!
+
+5. Pour retourner un objet, il y a une petite différence, parce que l'objet doit être dans des accolades, il faut donc mettre le return entre parenthèses cette fois-ci pour faire la différence.
+    Ex1:
+    const setContent = (title, content) => ({title: title, content: content})
+    console.log(setContent('Hello', 'ES6')) // {title: "Hello", content: "ES6"}
+
+6. Il ne peut pas y avoir de saut de ligne entre les paramètres et la flèche d’une fonction fléchée.
+    Ex1:
+    var func = ()
+            => 1; // SyntaxError: expected expression,
+                  //              got '=>'
+
+7. La flèche utilisée pour une fonction fléchée n’est pas un opérateur. Les fonctions fléchées ont des règles spécifiques quant à leur place dans la syntaxe et interagissent différemment de la précédence des opérateurs par rapport à une fonction classique.
+    Ex1:
+    let fonctionRappel;
+    fonctionRappel = fonctionRappel || function () {};
+    // OK
+    fonctionRappel = fonctionRappel || () => {};
+    // SyntaxError: invalid arrow-function arguments
+    fonctionRappel = fonctionRappel || (() => {});
+    // OK
+
+8. Les fonctions fléchées sont mieux indiquées pour les fonctions qui ne sont pas des méthodes (fonctions dans un objet).
+    Ex1:
+    'use strict';
+    var objet = {
+      i: 10,
+      b: () => console.log(this.i, this),
+      c: function() {
+        console.log(this.i, this);
+      }
+    }
+    objet.b(); 
+    // affiche undefined, Window (ou l'objet global de l'environnement)
+    objet.c();
+    // affiche 10, Object {...}
+
+9. Les fonctions fléchées ne créent pas de nouveau contexte, elles utilisent la valeur this de leur contexte. Aussi, si le mot-clé this est utilisé dans le corps de la fonction, le moteur recherchera la référence à cette valeur dans une portée parente.
+    Ex1:
+    // Avant ES6
+    function Personne () {
+      var that = this; 
+      that.age = 0;
+      setInterval(function grandir () {
+        // La fonction callback se réfère à la variable `that`
+        // qui est le contexte souhaité
+        that.age++;
+      }, 1000);
+    }
+    // ES6
+    function Personne () {
+      this.age = 0;
+      setInterval(() => {
+        this.age++; 
+          // |this| fait bien référence à l'objet personne
+      }, 1000);
+    }
+    var p = new Personne();
+
+
+10. Exemples d'utilisation
+    Ex1:
+    (() => "tototruc")() 
+    // exemple d'une fonction immédiatement 
+    // invoquée (IIFE en anglais) qui renvoie 
+    // "tototruc" 
+
+    var complexe = (a, b) => {
+      if (a > b) {
+          return a;
+      } else {
+          return b;
+      }
+    }
+
+    var arr = [5, 6, 13, 0, 1, 18, 23];
+    var sum = arr.reduce((a, b) => a + b);
+    // 66
+    var even = arr.filter(v => v % 2 == 0);
+    // [6, 0, 18]
+    var double = arr.map(v => v * 2);       
+    // [10, 12, 26, 0, 2, 36, 46]
+
+
+Object Property Value Shorthand
+-------------------------------
+1. If you want to define or set an object who's keys have the same name as the variables passed-in as properties, you can use the shorthand and simply pass the key name.
+    Ex1:
+    // Avant ES6
+    var cat = 'Miaow';
+    var dog = 'Woof';
+    var bird = 'Peet peet';
+    var someObject = {
+      cat: cat,
+      dog: dog,
+      bird: bird
+    }
+    // ES6
+    let cat = 'Miaow';
+    let dog = 'Woof';
+    let bird = 'Peet peet';
+    let someObject = {
+      cat,
+      dog,
+      bird
+    }
+    console.log(someObject);
+    //{
+    //  cat: "Miaow",
+    //  dog: "Woof",
+    //  bird: "Peet peet"
+    //}
+
+    Ex2:
+    state = {
+      text: sampleText
+    };
+
+    editText = (event) => {
+      const text = event.target.value;
+      this.setState({ text }); // au lieu de this.setState({ text: text});
+    };
+
+
+Rest parameters
+-------------------------------
+1. Cette syntaxe permet de représenter un nombre indéfini d'arguments sous forme d'un tableau.
+    Ex1:
+    // ES6
+    function sum(...theArgs) {
+      return theArgs.reduce((previous, current) => {
+        return previous + current;
+      });
+    }
+    console.log(sum(1, 2, 3));
+    // expected output: 6
+    console.log(sum(1, 2, 3, 4));
+    // expected output: 10

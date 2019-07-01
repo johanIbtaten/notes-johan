@@ -1,0 +1,5 @@
+JS errors
+-------------------------------
+SyntaxError: Invalid shorthand property initializer :
+- This error usually comes when you try to assign value to its properties is using (=) sign rather than colon (:) 
+  when using object literal to create an object.

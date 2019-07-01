@@ -1,0 +1,41 @@
+﻿=================================
+Github
+=================================
+1. Clone repository dans un dossier local
+git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+
+2. Pushing to a remote repository
+git push  <REMOTENAME> <BRANCHNAME>
+   ex1:
+   git push origin master
+
+3. Adding a remote in the directory your repository is stored at
+git remote add origin https://github.com/user/repo.git
+
+4. Create a new local repository on the command line
+echo "# notes-johan" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/johanIbtaten/notes-johan.git
+git push -u origin master
+
+5. Push an existing repository from the command line
+git remote add origin https://github.com/johanIbtaten/notes-johan.git
+git push -u origin master
+
+6. Clone a Git repository into a specific folder. If you are in the directory you want.
+git clone git@github.com:whatever .
+// The "." at the end specifies the current folder as the checkout folder.
+
+=================================
+Git
+=================================
+1. Force overwrite of local file with what's it origin repo
+// Overwrite only one file
+git fetch
+git checkout origin/master <filepath>
+
+// Overwrite all changed files
+git fetch
+git reset --hard origin/master

@@ -1,0 +1,17 @@
+﻿=================================
+Expressions
+=================================
+// Génère 4 mots (1 par défaut)
+<%= faker.lorem.words(4) %>
+ratione possimus tenetur aut
+
+// Phrase de 4 mots (entre 2 et 10 par défaut)
+<%= faker.lorem.sentence(4) %>
+Neque quo pariatur delectus.
+
+// Génère 3 phrases (entre 2 et 6 par défaut)
+<%= faker.lorem.sentences(3) %>
+
+// Paragraphe de 5 phrases avec entre 0 et 3 phrases en plus
+<%= faker.lorem.paragraph(5) %>
+Rem aperiam voluptatibus. Quia adipisci sunt ratione nulla amet veniam temporibus incidunt animi. Provident in aut distinctio rerum et. Vitae occaecati omnis et. Consequatur consequatur reprehenderit.

@@ -1,0 +1,328 @@
+﻿=================================
+Syntaxe BEM 
+=================================
+.prefixe-namespace-Block
+.prefixe-namespace-Block--theModifier
+.prefixe-namespace-Block__theElement
+.prefixe-namespace-Block__theElement--theModifier
+.state
+
+ex:
+BEM
+.dev-Card // Majuscule au début pour un composant (Block)
+.dev-Card--size-huge (Modifier)
+.dev-Card--theme-sun
+.dev-Card--theme-forest
+.dev-Card__header (Element)
+.dev-Card__body
+.dev-Card__img
+.dev-Card__img--style-framed (Modifier)
+.dev-Card__text
+.is-active
+.dev-t-light // Sur le body
+.dev-u-textCenter
+
+
+=================================
+Namespaces BEM
+=================================
+o- 			// object
+c- 			// component (optionnel)
+u- 			// utility
+t- 			// theme
+is-, has- 	// state
+_ 			// hack css
+js-			// javascript (pas de style)
+qa-			// quality for tests (pas de style)
+
+
+=================================
+Mix BEM
+=================================
+<div class="dev-Header">
+  <div class="dev-SearchForm dev-Header__searchForm"></div>
+</div>
+<div class="dev-Footer">
+  <div class="dev-SearchForm dev-Footer__searchForm"></div>
+</div>
+
+// 'dev-Header__searchForm' exécute les tâches de positionnement du composant 
+// 'dev-SearchForm' dans son parent.
+
+ex:
+.dev-Header {
+	&__searchForm {
+		margin-left: 20px;
+	}
+}
+
+.dev-Footer {
+	&__searchForm {
+		margin-left: 30px;
+	}
+}
+
+=================================
+State Hooks BEM
+=================================
+is-active
+has-loaded
+is-loading
+is-visible
+is-disabled
+is-expanded
+is-collapsed
+
+ex:
+.navMain__link {
+  color: red;
+
+  &.is-active {
+    color: blue;
+  }
+}
+
+
+=================================
+Les containers en BEM
+=================================
+
+ex:
+<body class="page">
+    <header class="header page__header">...</header>
+    <footer class="footer page__footer">...</footer>
+</body>
+
+<body class="page">
+    <div class="page__inner">
+      <header class="header">...</header>
+      <footer class="footer">...</footer>
+    </div>
+</body>
+
+
+=================================
+Ordre des attributs HTML
+=================================
+class
+id, name
+data-*
+src, for, type, href, value
+title, alt
+role, aria-*
+
+
+=================================
+Ordre des propriétés CSS selon SMACSS
+================================
+# Box
+
+display
+position
+top
+right
+bottom
+left
+
+width
+min-width
+max-width
+
+height
+min-height
+max-height
+
+margin
+margin-top
+margin-right
+margin-bottom
+margin-left
+
+padding
+padding-top
+padding-right
+padding-bottom
+padding-left
+
+float
+clear
+
+columns
+column-gap
+column-fill
+column-rule
+column-span
+column-count
+column-width
+
+transform
+transition
+
+# Border
+
+border
+border-top
+border-right
+border-bottom
+border-left
+border-width
+border-top-width
+border-right-width
+border-bottom-width
+border-left-width
+
+border-style
+border-top-style
+border-right-style
+border-bottom-style
+border-left-style
+
+border-radius
+border-top-left-radius
+border-top-right-radius
+border-bottom-left-radius
+border-bottom-right-radius
+
+border-color
+border-top-color
+border-right-color
+border-bottom-color
+border-left-color
+
+outline
+outline-color
+outline-offset
+outline-style
+outline-width
+
+# Background
+
+background
+background-color
+background-image
+background-repeat
+background-position
+background-size
+cursor
+
+# Text 
+
+color
+
+font
+font-family
+font-size
+font-smoothing
+font-style
+font-variant
+font-weight
+
+letter-spacing
+line-height
+list-style
+
+text-align
+text-decoration
+text-indent
+text-overflow
+text-rendering
+text-shadow
+text-transform
+text-wrap
+
+white-space
+word-spacing
+
+# Other
+
+border-collapse
+border-spacing
+box-shadow
+caption-side
+content
+cursor
+empty-cells
+opacity
+overflow
+quotes
+speak
+table-layout
+vertical-align
+visibility
+z-index
+
+=================================
+Bootstrap BEM
+=================================
+
+<form>
+  <div class="form-group">
+    <label for="email">E-mail</label>
+    <input type="text" name="email" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" name="password" class="form-control" />
+  </div>
+  <div class="checkbox">
+    <label for="remember">
+      <input type="checkbox" name="remember"> Remember me
+    </label>
+  </div>
+  <input type="submit" class="btn btn-primary" value="Log In" />
+  <a href="../" class="btn btn-warning">Back</a>
+</form>
+
+<form class="dev-Form">
+  <div class="dev-Input">
+    <label class="dev-Input__label" for="email" >E-mail</label>
+    <input class="dev-Input__field" name="email" type="text" />
+  </div>
+  <div class="dev-Input dev-Form__input">
+    <label class="dev-Input__label" for="password" >Password</label>
+    <input class="dev-Input__field" name="password" type="password" />
+  </div>
+  <div class="dev-Checkbox">
+    <label class="dev-Checkbox__label">
+      <input class="dev-Checkbox__field" name="remember" type="checkbox"> Remember me
+    </label>
+  </div>
+  <input class="dev-Btn dev-Btn--color-primary" type="submit" value="Log In" />
+  <a href="../" class="dev-Btn dev-Btn--color-warning">Back</a>
+</form>
+
+SASS
+
+.dev-Form {
+	&__input {
+		padding-top: rem(15)
+	}	
+}
+
+.dev-Input {
+	&__field { 
+		@extend .form-control;
+	}	
+	&__label { 
+	}
+}
+
+.dev-Checkbox {
+	&__field { 
+		@extend .form-control;
+	}
+	&__label { 
+	}
+}
+
+.dev-Btn {
+	@extend .btn
+
+	&--color-primary {
+		@extend .btn-primary;
+	}
+	&--color-warning {
+		@extend .btn-warning;
+	}
+}
+

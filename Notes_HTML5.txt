@@ -1,0 +1,156 @@
+﻿=================================
+DOCTYPE HTML5
+=================================
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+=================================
+Placeholder images
+=================================
+https://via.placeholder.com/150
+https://via.placeholder.com/468x60
+https://via.placeholder.com/468x60?text=Visit+Blogging.com+Now
+https://via.placeholder.com/150/000000/FFFFFF (Fond noir/Texte blanc)
+https://via.placeholder.com/300/000000/FFFFFF.png (.gif ou .jpg ou .jpeg)
+
+https://dummyimage.com/300
+https://dummyimage.com/640x4:3
+https://dummyimage.com/16:9x1080
+https://dummyimage.com/250/000000/FFFFFF (Fond noir/Texte blanc) 09f becomes 0099ff, ef becomes efefef, c becomes cccccc
+https://dummyimage.com/400/000/fff&text=Visit+Blogging.com+Now
+https://dummyimage.com/qvga
+https://dummyimage.com/medrect
+https://dummyimage.com/300/09f/fff.png (.gif ou .jpg ou .jpeg)
+
+https://loremflickr.com/320/240
+https://loremflickr.com/320/240/dog
+https://loremflickr.com/g/320/240/paris (image en niveau de gris de Paris)
+https://loremflickr.com/320/240/brazil,rio (image en du brésil ou de rio)
+https://loremflickr.com/320/240?random=1 (random évite la mise en cache du navigateur)
+https://loremflickr.com/320/240?random=2
+https://loremflickr.com/320/240?random=3
+https://loremflickr.com/320/240?lock=1 (lock évite le cache côté serveur)
+https://loremflickr.com/320/240?lock=212
+https://loremflickr.com/320/240?lock=30976
+
+
+=================================
+<figure></figure>
+<figcaption></figcaption>
+=================================
+1. L'élément HTML <figure> représente une figure (un schéma), qui peut être accompagné d'une légende grâce à l'élément <figcaption>. Il est normalement référencé de manière unique. C'est souvent une image, une illustration, un diagramme, un fragment de code ou un schéma auquel il est fait référence dans le texte principal mais qui peut être utilisé sur une autre page ou dans une annexe sans que cela affecte le contenu principal. Il transmet un contenu pertinent, lié au contenu principal, comme le serait une image classique sur un support papier.
+
+    Ex1:
+	<!-- Une simple image -->
+	<figure>
+	  <img
+	  src="https://developer.mozilla.org/static/img/favicon144.png"
+	  alt="Le logo de MDN.">
+	</figure>
+
+	<!-- Une image avec une légende -->
+	<figure>
+	  <img
+	  src="https://developer.mozilla.org/static/img/favicon144.png"
+	  alt="Le logo de MDN.">	
+	  <figcaption>Logo MDN</figcaption>
+	</figure>
+
+	<!-- Plusieurs images sur le même thème avec une légende -->
+	<figure>
+	  <img src="dog1.jpg" alt="Maltese Terrier">
+	  <img src="dog2.jpg" alt="Black Labrador">
+	  <img src="dog3.jpg" alt="Golden Retriever">
+	  <figcaption>Three different breeds of dog.</figcaption>
+	</figure>
+
+	<!-- Un bloc de code -->
+	<figure>
+	  <pre>
+	    <code>
+	      p {
+	          color: #333;
+	          font-family: Helvetica, sans-serif;
+	          font-size: 1rem;
+	      }
+	    </code>
+	  </pre>
+	</figure>
+
+	<!-- Une vidéo -->
+	<figure>
+	    <video src="video.ogv" width="640" height="480"></video>
+	    <figcaption>Description de la vidéo</figcaption>
+	</figure>
+
+
+=================================
+<picture></picture>
+=================================
+1. L'élément HTML <picture> est un conteneur utilisé afin de définir zéro ou plusieurs éléments <source> destinés à un élément <img>. Le navigateur choisira la source la plus pertinente selon la disposition de la page (les contraintes qui s'appliquent à la boîte dans laquelle l'image devra être affichée), selon l'appareil utilisé (la densité de pixels de l'affichage par exemple avec les appareils hiDPI) et selon les formats pris en charge (ex. WebP pour les navigateurs Chromium ou PNG pour les autres). Si aucune correspondance n'est trouvée parmi les éléments <source>, c'est le fichier défini par l'attribut src de l'élément <img> qui sera utilisé.
+
+    Ex1:
+    <!--Change the browser window width to see the image change.-->
+	<picture>
+      <source srcset="/media/examples/surfer-240-200.jpg" media="(min-width: 800px)">
+      <img src="/media/examples/painted-hand-298-332.jpg" />
+	</picture>
+
+
+=================================
+<nav></nav>
+=================================
+1. L'élément HTML <nav> représente une section d'une page ayant des liens vers d'autres pages ou des fragments de cette page. Autrement dit, c'est une section destinée à la navigation dans un document (avec des menus, des tables des matières, des index, etc.).
+
+    Ex1:
+    <!-- Avec liste -->
+    <nav>
+	  <ul>
+	    <li><a href="#Accueil">Accueil</a></li>
+	    <li><a href="#Apropos">À propos</a></li>
+	    <li><a href="#Contact">Contact</a></li>
+	  </ul>
+	</nav>
+
+	<!-- Sans liste -->
+    <nav>
+	  <a href="#Accueil">Accueil</a>
+	  <a href="#Apropos">À propos</a>
+	  <a href="#Contact">Contact</a>
+	</nav>
+
+	<!-- Avec liste et submenu-->
+	<ul>
+	  <li><a href="page1.html">Page 1</a>
+	    <ul>
+		  <li><a href="subPageA.html">Page A</a></li>
+		  <li><a href="subPageB.html">Page B</a></li>
+	    </ul>
+	  <li><a href="page2.html">Page 2</a></li>
+	  <li><a href="page3.html">Page 3</a></li>
+	  <li><a href="page4.html">Page 4</a></li>
+	</ul>
+
+	<!-- Sans liste et submenu-->
+	<nav>
+	<h1>Main Menu</h1>
+	  <a href="#">Home</a>
+	  <a href="#">Products</a>
+	    <section>
+		  <h2>Product Menu</h2>
+		  <a href="#">Product One</a>
+		  <a href="#">Product Two</a>
+	    </section>
+	  <a href="#">Services</a>
+	</nav>
