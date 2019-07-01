@@ -3,6 +3,8 @@ Github
 =================================
 1. Clone repository dans un dossier local
 git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+    ex1:
+    git clone https://github.com/johanIbtaten/notes-johan.git
 
 2. Pushing to a remote repository
 git push  <REMOTENAME> <BRANCHNAME>
