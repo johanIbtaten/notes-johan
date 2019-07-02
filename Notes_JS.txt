@@ -324,6 +324,119 @@ Les fonctions flechées (arrow function en anglais)
     // [10, 12, 26, 0, 2, 36, 46]
 
 
+Objet Map
+-------------------------------
+1. L'objet Map représente un dictionnaire, autrement dit une carte de clés/valeurs. 
+N'importe quelle valeur valable en JavaScript (que ce soit les objets ou les valeurs de types primitifs) 
+peut être utilisée comme clé ou comme valeur. Un objet Map permet de retrouver ses éléments dans leur ordre d'insertion. 
+Par exemple, une boucle for...of renverra un tableau de [clé, valeur] pour chaque itération.
+
+//new Map([itérable])
+    [itérable]
+        Un tableau (Array) ou tout autre objet itérable dont les éléments sont des paires clé/valeur (par exemple un tableau de la forme [[1 , "toto"],[2, "truc"]]). Chaque paire clé/valeur sera ajoutée au nouvel objet Map. null est traité comme undefined.
+    
+    Ex1:
+    // Utiliser un objet Map
+    var maMap = new Map();
+    var objetCle = {},
+        fonctionCle = function () {},
+        chaineCle = "une chaîne";
+    // définir les valeurs
+    maMap.set(chaineCle, "valeur associée à 'une chaîne'");
+    maMap.set(objetCle, "valeur associée à objetCle");
+    maMap.set(fonctionCle, "valeur associée à fonctionCle");
+    maMap.size; // 3
+    // récupérer les valeurs
+    maMap.get(chaineCle);     // "valeur associée à 'une chaîne'"
+    maMap.get(objetCle);      // "valeur associée à objetCle"
+    maMap.get(fonctionCle);   // "valeur associée à fonctionCle"
+    maMap.get("une chaîne");  // "valeur associée à 'une chaîne'"
+                              // car chaineCle === 'une chaîne'
+
+    Ex2:
+    // Parcourir des objets Maps avec for..of
+    var maMap = new Map();
+    maMap.set(0, "zéro");
+    maMap.set(1, "un");
+    for (var [cle, valeur] of maMap) {
+      console.log(cle + " = " + valeur);
+    }
+    // On aura 2 lignes : la première avec "0 = zéro"
+    // la seconde avec "1 = un"
+    for (var cle of maMap.keys()) {
+      console.log(cle);
+    }
+    // On aura 2 lignes : la première avec "0"
+    // et la seconde avec "1"
+    for (var valeur of maMap.values()) {
+      console.log(valeur);
+    }
+    // On aura 2 lignes : la première avec "zéro"
+    // et la seconde avec "un"
+    for (var [cle, valeur] of maMap.entries()) {
+      console.log(cle + " = " + valeur);
+    }
+    // On aura 2 lignes : la première avec "0 = zéro"
+    // la seconde avec "1 = un"
+    maMap.forEach(function(valeur, cle) {
+      console.log(cle + " = " + valeur);
+    });
+    // On aura 2 lignes : la première avec "0 = zéro"
+    // la seconde avec "1 = un"
+
+    Ex3:
+    // Relation avec les objets Array
+    var tableauCleValeur = [["cle1", "valeur1"], ["cle2", "valeur2"]];
+    // On utilise le constructeur Map
+    // pour transformer un tableau de cles/valeurs
+    // en un objet map
+    var maMap = new Map(tableauCleValeur);
+    maMap.get("cle1"); // renvoie "valeur1"
+    // On utilise la fonction Array.from pour transformer
+    // une map en un tableau de cles/valeurs
+    console.log(Array.from(maMap)); // affichera la même chose que tableauCleValeur
+    // On peut aussi l'utiliser pour n'extraire que les cles
+    // ou les valeurs et créer le tableau associé
+    console.log(Array.from(maMap.keys())); // affichera ["cle1", "cle2"]
+
+    Ex4:
+    // Fusionner des objets Map
+    var premier = new Map([
+      [1, 'un'],
+      [2, 'deux'],
+      [3, 'trois'],
+    ]);
+    var second = new Map([
+      [1, 'uno'],
+      [2, 'dos']
+    ]);
+    // On fusionne les deux maps. C'est la "dernière" version
+    // de la clé qui l'emporte.
+    // L'opérateur de décomposition nous permet principalement ici
+    // de convertir une map en un tableau
+    var fusion = new Map([...premier, ...second]);
+    console.log(fusion.get(1)); // uno
+    console.log(fusion.get(2)); // dos
+    console.log(fusion.get(3)); // trois
+
+    // Fusionner des objets Map avec des objets Array
+    var premier = new Map([
+      [1, 'un'],
+      [2, 'deux'],
+      [3, 'trois'],
+    ]);
+    var second = new Map([
+      [1, 'uno'],
+      [2, 'dos']
+    ]);
+    // On peut fusionner des Maps avec un tableau 
+    // Là encore c'est le dernier exemplaire de la clé qui l'emporte
+    var fusion = new Map([...premier, ...second, [1, 'eins']]);
+    console.log(fusion.get(1)); // eins
+    console.log(fusion.get(2)); // dos
+    console.log(fusion.get(3)); // trois
+
+
 Object Property Value Shorthand
 -------------------------------
 1. If you want to define or set an object who's keys have the same name as the variables passed-in as properties, you can use the shorthand and simply pass the key name.
@@ -364,6 +477,144 @@ Object Property Value Shorthand
     };
 
 
+Boucles
+-------------------------------
+FOR...OF (ES6)
+for (variable of iterable)
+  instruction
+
+    [variable]
+      À chaque itération, la valeur d'une propriété différente est affectée à variable (cette variable peut être déclarée avec const, let ou var).
+    [iterable]
+      L'objet dont on parcourt les propriétés énumérables.
+    [instruction]
+      Une instruction à exécuter pour chaque propriété, cette instruction peut être composée de plusieurs instructions en utilisant un bloc d'instructions.
+
+1. L'instruction for...of permet de créer une boucle Array qui parcourt un objet itérable 
+(ce qui inclut les objets Array, Map, Set, String, TypedArray, l'objet arguments, etc.) et 
+qui permet d'exécuter une ou plusieurs instructions pour la valeur de chaque propriété.
+
+    Ex1:
+    // Sur un tableau
+    let tableauIterable = [1, 2, 3];
+    for (let valeur of tableauIterable) {
+      console.log(valeur);
+    }
+    // 1
+    // 2
+    // 3
+
+    Ex2:
+    // Parcourir une chaîne de caractères
+    let iterable = 'pixel';
+    for (let valeur of iterable) {
+      console.log(valeur);
+    }
+    // p
+    // i
+    // x
+    // e
+    // l
+
+    Ex3:
+    // Parcourir une Map
+    let iterable = new Map([['a', 1], ['b', 2], ['c', 3]]);
+    for (let element of iterable) {
+      console.log(element);
+    }
+    // ['a', 1]
+    // ['b', 2]
+    // ['c', 3]
+    for (let [clef, valeur] of iterable) {
+      console.log(valeur);
+    }
+    // 1
+    // 2
+    // 3
+
+
+FOR...IN
+for (variable in objet) {...
+}
+
+    [variable]
+      Un nom de propriété différent est assigné à la variable à chaque itération de la boucle.
+    [objet]
+      L'objet dont les propriétés énumérables et qui ne sont pas des symboles sont parcourues par la boucle.
+
+1. L'instruction for...in permet d'itérer sur les propriétés énumérables d'un objet qui ne sont pas des symboles. 
+Pour chaque propriété obtenue, on exécute une instruction (ou plusieurs grâce à un bloc d'instructions).
+for...in ne doit pas être utilisée pour parcourir un Array lorsque l'ordre des éléments est important.
+
+    Ex1:
+    // Sur un objet
+    var obj = {a:1, b:2, c:3};    
+    for (var prop in obj) {
+      console.log(`obj.${prop} = ${obj[prop]}`);
+    }
+    // Affiche dans la console :
+    // "obj.a = 1"
+    // "obj.b = 2"
+    // "obj.c = 3"
+
+    Ex2:
+    // Parcourir une chaîne de caractères
+    let iterable = 'pixel';
+    for (let valeur of iterable) {
+      console.log(valeur);
+    }
+    // p
+    // i
+    // x
+    // e
+    // l
+
+    Ex3:
+    // Parcourir une Map
+    let iterable = new Map([['a', 1], ['b', 2], ['c', 3]]);
+    for (let element of iterable) {
+      console.log(element);
+    }
+    // ['a', 1]
+    // ['b', 2]
+    // ['c', 3]
+    for (let [clef, valeur] of iterable) {
+      console.log(valeur);
+    }
+    // 1
+    // 2
+    // 3
+
+
+LES DIFFÉRENCES ENTRE FOR...OF ET FOR...IN
+1. Chaque objet héritera de la propriété objCustom et chaque objet qui est un tableau (Array) héritera de la propriété arrCustom car 
+on les ajoute aux prototypes Object.prototype et Array.prototype. L'objet iterable hérite donc des propriétés objCustom et 
+arrCustom grâce à l'héritage et à la chaîne de prototypes.
+Cette boucle ne parcourt que les propriétés énumérables de l'objet iterable dans un ordre arbitraire. 
+Les éléments du tableau 3, 5, 7 ou "coucou" ne sont pas affichés car ce ne sont pas des propriétés 
+(et encore moins des propriétés énumérables). En revanche, on retrouve bien les indices du tableau et 
+les propriétés arrCustom et objCustom. Pour décrire plus précisément ce comportement, vous pouvez consulter for...in.
+
+    Ex1:
+    Object.prototype.objCustom = function() {}; 
+    Array.prototype.arrCustom = function() {};
+    let iterable = [3, 5, 7];
+    iterable.toto = 'coucou';
+    for (let i in iterable) {
+      console.log(i); // affiche 0, 1, 2, "toto",
+                      // "arrCustom", "objCustom"
+    }
+    for (let i in iterable) {
+      if (iterable.hasOwnProperty(i)) {
+        console.log(i); // affiche 0, 1, 2, "toto"
+      }
+    }
+    // Cette boucle parcourt les valeurs définies comme itérables par l'objet itérable et 
+    // dans ce cas ce sont les éléments du tableau 3, 5, 7 et pas les propriétés de l'objet (ici toto et sa valeur "coucou")
+    for (let i of iterable) {
+      console.log(i); // affiche 3, 5, 7
+    }
+
 Fonctions sur les tableaux
 -------------------------------
 FOREACH()
@@ -382,9 +633,70 @@ FOREACH()
       console.log(element);
     });
 
+    Ex2:
+    let arr = [3, 5, 7];
+    arr.toto = "coucou";
+    arr.forEach(function (element, index) {
+      console.log(element); // affiche "3", "5", "7"
+      console.log(index);  // affiche "0", "1", "2"
+    });
+
 
 CONSOLE.TABLE()
+// console.table(data [, columns]);
+    [data]
+      La donnée à afficher. Doit être un tableau ou un objet.
+    [columns]
+      Un tableau contenant les noms des colonnes à inclure dans la sortie.
 
+    Ex1:
+    // data peut contenir un tableau ou un objet.
+    // un tableau de chaînes de caractères
+    console.table(["apples", "oranges", "bananas"]);
+
+    Ex2:
+    // un objet dont les propriétés sont des chaînes de caractères
+    function Person(firstName, lastName) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+    }
+    var me = new Person("John", "Smith");
+    console.table(me);
+
+    Ex3:
+    // un tableau de tableaux
+    var people = [["John", "Smith"], ["Jane", "Doe"], ["Emily", "Jones"]]
+    console.table(people);
+
+    Ex4:
+    // un tableau d'objets
+    function Person(firstName, lastName) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+    }
+    var john = new Person("John", "Smith");
+    var jane = new Person("Jane", "Doe");
+    var emily = new Person("Emily", "Jones");
+    console.table([john, jane, emily]);
+
+    Ex5:
+    // un objet contenant des propriétés qui sont des objets
+    var family = {};
+    family.mother = new Person("Jane", "Smith");
+    family.father = new Person("John", "Smith");
+    family.daughter = new Person("Emily", "Smith");
+    console.table(family);
+
+    Ex6:
+    // un tableau d'objets, affichant seulement firstName
+    function Person(firstName, lastName) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+    }
+    var john = new Person("John", "Smith");
+    var jane = new Person("Jane", "Doe");
+    var emily = new Person("Emily", "Jones");
+    console.table([john, jane, emily], ["firstName"]);
 
 
 REDUCE()
@@ -461,17 +773,17 @@ Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser f
 
     Ex3:
     // On utilise un tableau d'objets pour créer un autre tableau contenant de nouveaux objets dans un autre format 
-    var tableauOrig = [{clé:1, valeur:10}, {clé:2, valeur:20}, {clé:3, valeur: 30}];
+    var tableauOrig = [{cle:1, valeur:10}, {cle:2, valeur:20}, {cle:3, valeur: 30}];
     var tableauFormaté = tableauOrig.map(obj => { 
       var rObj = {};
-      rObj[obj.clé] = obj.valeur; 
+      rObj[obj.cle] = obj.valeur; 
       return rObj;
     });
     // tableauFormaté vaut maintenant [{1:10}, {2:20}, {3:30}], 
     // tableauOrig vaut toujours 
-    // [{clé:1, valeur:10},
-    //  {clé:2, valeur:20},
-    //  {clé:3, valeur: 30}
+    // [{cle:1, valeur:10},
+    //  {cle:2, valeur:20},
+    //  {cle:3, valeur: 30}
     // ]
 
     Ex4:
