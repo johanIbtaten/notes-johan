@@ -1,4 +1,33 @@
 var, let, const
+
+On ne peut pas re-déclarer dans la même portée une autre constante avec le même nom (ex: const a=4;)
+        
+Types de données
+
+Différence entre undefined et null
+
+Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
+
+Opérateur void
+
+La « remontée » des déclarations de fonction
+
+Les expressions de fonctions
+
+Les fonctions flechées (arrow function en anglais)
+
+Objet Map
+
+Object Property Value Shorthand
+
+Boucles
+
+Fonctions sur les tableaux
+
+Rest parameters
+
+
+var, let, const
 -------------------------------
 Déclaration (var a;) initialisation : var a=2;
 Déclaration (let a;) initialisation : let a=2;
