@@ -19,9 +19,9 @@ const : Scope dans les fonctions
 	      On ne peut pas réassigner la valeur d'une constante (ex: a=4;)
         On ne peut pas re-déclarer dans la même portée une autre constante avec le même nom (ex: const a=4;)
         --------------------------------------------
-        On peut ajouter ou supprimer les éléments d'un tableau
-        On ne peut pas changer la structure d'un objet littéral
-        On peut changer les valeurs d'un objet littéral
+        On peut ajouter ou supprimer les éléments d'un tableau dans une const
+        On ne peut pas changer la structure d'un objet littéral dans une const
+        On peut changer les valeurs d'un objet littéral dans un const
 
 
 Types de données
