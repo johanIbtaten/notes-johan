@@ -1,30 +1,20 @@
-var, let, const
-
-On ne peut pas re-déclarer dans la même portée une autre constante avec le même nom (ex: const a=4;)
-        
-Types de données
-
-Différence entre undefined et null
-
-Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
-
-Opérateur void
-
-La « remontée » des déclarations de fonction
-
-Les expressions de fonctions
-
-Les fonctions flechées (arrow function en anglais)
-
-Objet Map
-
-Object Property Value Shorthand
-
-Boucles
-
-Fonctions sur les tableaux
-
-Rest parameters
+    var, let, const
+    Types de données
+    Différence entre undefined et null
+    Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
+    Opérateur void
+    La « remontée » des déclarations de fonction
+    Les expressions de fonctions
+    Les fonctions flechées (arrow function en anglais)
+    Objet Map
+    Object Property Value Shorthand
+    Boucles
+    Fonctions sur les tableaux
+    Rest parameters
+    Spread operator (opérateur de décomposition)
+    Le protocole « itérable » (Objets itérables)
+    Le protocole « itérateur »
+    Les générateurs function*
 
 
 var, let, const
@@ -47,7 +37,6 @@ const : Scope dans les fonctions
         const a besoin d'être déclaré avec une valeur initiale (ex: const a=2;)
 	      On ne peut pas réassigner la valeur d'une constante (ex: a=4;)
         On ne peut pas re-déclarer dans la même portée une autre constante avec le même nom (ex: const a=4;)
-        --------------------------------------------
         On peut ajouter ou supprimer les éléments d'un tableau dans une const
         On ne peut pas changer la structure d'un objet littéral dans une const
         On peut changer les valeurs d'un objet littéral dans un const
@@ -836,7 +825,17 @@ Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser f
     });
 
 
+ENTRIES()
+// arr.entries()
+1. La méthode entries() renvoie un nouvel objet de type Array Iterator qui contient le couple clef/valeur pour chaque éléments du tableau.
 
+    Ex1:
+    var array1 = ['a', 'b', 'c'];
+    var iterator1 = array1.entries();
+    console.log(iterator1.next().value);
+    // expected output: Array [0, "a"]
+    console.log(iterator1.next().value);
+    // expected output: Array [1, "b"]
 
 
 Rest parameters
@@ -893,3 +892,384 @@ Rest parameters
     fun1();  // 0
     fun1(5); // 1
     fun1(5, 6, 7); // 3
+
+  
+Spread operator (opérateur de décomposition)
+-------------------------------
+1. Il permet de développer un objet itérable (comme un Array) en plusieurs arguments (pour les appels de fonctions) 
+ou en plusieurs éléments (pour les littéraux de tableaux) ou en paires clés-valeurs (pour les littéraux d'objets)
+
+    Ex1:
+    // Dans les appels de fonction
+    f(...objetIterable);
+    // Pour les littéraux de tableaux
+    [...objetIterable, 4, 5, 6]
+    // Pour les littéraux objets
+    let objClone = { ...obj };
+
+    Ex2:
+    // Utiliser la décomposition dans les appels de fonction
+    const myArray = [1991, 8, 1]
+    new Date(...myArray) // object Date - équivaut à: new Date(1991, 8, 1)
+    // spread peut être mélangé aux autres arguments d'une fonction
+    const myArray = [8, 1];
+    new Date(1991, ...myArray, 12); 
+    // object Date - équivaut à: new Date(1991, 8, 1, 12)
+    
+    Ex3:
+    // Les objets String étant itérables
+    const myString = "foo bar"    
+    [...myString] // ["f", "o", "o", " ", "b", "a", "r"]
+
+    Ex4:
+    // Éviter l'utilisation de .apply()
+    // ES5
+    console.log.apply(console, ["foo", "bar"]);
+    // ES6
+    console.log(...["foo", "bar"]); // même résultat
+
+    Ex5:
+    // Concaténer plusieurs itérables
+    const stronglyTyped = ["scala", "haskell"]
+    // ES5
+    ["go", "rust"].concat(stronglyTyped) 
+    // ["go", "rust", "scala", "haskell"]
+    // ES6 / ES2015
+    ["go", "rust", ...stronglyTyped] 
+    // ["go", "rust", "scala", "haskell"]
+    var articulations = ['épaules', 'genoux'];
+    var corps = ['têtes', ...articulations, 'bras', 'pieds'];
+    // ["têtes", "épaules", "genoux", "bras", "pieds"]
+    var arr1 = [4, 5, 6];
+    var arr2 = [1, 2, 3];
+    arr1 = [...arr2, ...arr1];
+    // arr1 vaut désormais [1, 2, 3, 4, 5, 6]
+
+    Ex6:
+    // Copier un tableau (seulement au premier niveau de profondeur)
+    var arr = [1, 2, 3];
+    var arr2 = [...arr];
+    arr2.push(4);
+    console.log(arr2); // [1, 2, 3, 4]
+    console.log(arr);  // [1, 2, 3] (inchangé)
+
+    Ex7:
+    // Clonage superficiel d'objet   
+    const cat = { age: 4 };
+    const kitten = { ...cat }; // Nouvel objet créé
+    kitten.age = 1;
+    console.log(kitten.age); // 1
+    console.log(cat.age); // 4
+    // Superficiel car les valeurs des propriétés de l'objet cloné pointent vers les mêmes références que l'objet copié et ne sont pas de nouvelles instances) 
+    const cat = { age: 4, toys: ["mouse", "catnip"] };
+    const kitten = { ...cat };
+    kitten.toys[1] = "yarn";
+    console.log(kitten.toys); // ["mouse", "yarn"]
+    console.log(cat.toys); // ["mouse", "yarn"] <-- problem!
+
+
+Le protocole « itérable » (Objets itérables)
+-------------------------------
+1. Le protocole « itérable » permet aux objets JavaScript de définir ou de personnaliser leur comportement lors d'une itération, 
+par exemple la façon dont les valeurs seront parcourues avec une boucle for..of. 
+Certains types natifs tels que Array ou Map possèdent un comportement itératif par défaut, d'autres types, 
+comme Object n'ont pas ce type de comportement.
+
+    Ex1:
+    // Certains types natifs possèdent un comportement par défaut pour l'itération, d'autres types (tels qu'Object) n'ont pas de tel comportement. Les types natifs qui disposent d'une méthode @@iterator sont :
+    Array.prototype[@@iterator]()
+    TypedArray.prototype[@@iterator]()
+    String.prototype[@@iterator]()
+    Map.prototype[@@iterator]()
+    Set.prototype[@@iterator]()
+
+    Ex2:
+    // Les API natives utilisant des itérables
+    Map([itérable])
+    WeakMap([itérable])
+    Set([itérable])
+    WeakSet([itérable])
+    Promise.all(itérable)
+    Promise.race(itérable)
+    Array.from()
+
+    var monObjet = {};
+    new Map([[1,"a"],[2,"b"],[3,"c"]]).get(2); // "b"
+    new WeakMap([[{},"a"],[monObjet,"b"],[{},"c"]]).get(monObjet); // "b"
+    new Set([1, 2, 3]).has(3); // true
+    new Set("123").has("2"); // true
+    new WeakSet(function*() {
+        yield {};
+        yield monObjet;
+        yield {};
+    }()).has(monObjet);  // true
+
+    Ex3:
+    // Les éléments de syntaxe utilisant des itérables
+    for..of
+    la syntaxe de décomposition (opérateur spread)
+    yield*
+    l'affectation par décomposition
+
+    for(let value of ["a", "b", "c"]){
+      console.log(value);
+    }
+    // "a"
+    // "b"
+    // "c"
+    [..."abc"]; // ["a", "b", "c"]
+    function* gen(){
+      yield* ["a", "b", "c"];
+    }
+    gen().next(); // { value:"a", done:false }
+    [a, b, c] = new Set(["a", "b", "c"]);
+    a; // "a"
+
+2. Afin d'être itérable, un objet doit implémenter la méthode @@iterator, cela signifie que l'objet (ou un des objets de sa chaîne de prototypes) 
+doit avoir une propriété avec une clé @@iterator qui est accessible via Symbol.iterator. 
+Lorsqu'on doit itérer sur un objet (ex. : au début d'une boucle for..of), sa méthode @@iterator est appelée sans argument et l'itérateur 
+qui est renvoyé est utilisé afin d'obtenir les valeurs sur lesquelles itérer.
+
+    Ex1:
+    // Itérables définis par l'utilisateur
+    const iterable1 = new Object();
+    iterable1[Symbol.iterator] = function* () {
+      yield 1;
+      yield 2;
+      yield 3;
+    };
+    console.log([...iterable1]);
+    // expected output: Array [1, 2, 3]
+
+    // Dans des déclarations de classe ou dans des littéraux objets
+    class Toto {
+      *[Symbol.iterator] () {
+        yield 1;
+        yield 2;
+        yield 3;
+      }
+    }
+    const monObj = {
+      *[Symbol.iterator] () {
+        yield "a";
+        yield "b";
+      }
+    }
+    [... new Toto] // [1, 2, 3]
+    [... monObj]   // ["a", "b"]
+
+3. Si une méthode @@iterator d'un objet itérable ne renvoie pas d'objet itérateur,
+on dira que cet objet est un itérable mal-formé. Utiliser de tels itérables peut provoquer 
+des exceptions lors de l'exécution ou un comportement erratique
+    Ex1:
+    // Itérables mal-formés
+    var itérableMalForme = {}
+    iterableMalForme[Symbol.iterator] = () => 1
+    [...iterableMalForme] // TypeError: [] is not a function
+
+
+Le protocole « itérateur »
+-------------------------------
+1.Le protocole « itérateur » définit une façon standard pour produire une suite de valeurs (finie ou infinie) 
+ainsi qu'une valeur de retour lorsque toutes les valeurs ont été générées.
+Un objet est considéré comme un itérateur lorsqu'il implémente une méthode next() avec la sémantique suivante:
+Une fonction sans argument qui doit toujours renvoyer un objet contenant les propriétés done et value. 
+Si c'est une valeur primitive qui est renvoyée (ex. false ou undefined), une exception TypeError sera levée ("iterator.next() returned a non-object value").
+  [done] (un booléen)
+      Qui vaut true lorsque l'itérateur a fini la suite. Dans ce cas, la propriété value sera facultative et permettra de spécifier la valeur de retour de l'itérateur. Les valeurs de retour sont détaillées ici.
+      Qui vaut false lorsque l'itérateur a pu produire la prochaine valeur de la suite. Si on ne définit pas la propriété done, on aura ce comportement par défaut.
+  [value]
+      N'importe quelle valeur JavaScript, renvoyée par l'itérateur. Cette propriété peut être absente lorsque done vaut true.
+
+    Ex1:
+    // L'itérateur par défaut d'un objet String renverra les caractères de la chaîne les uns à la suite des autres
+    var uneChaine = "coucou";
+    typeof uneChaine[Symbol.iterator]; // "function"
+    var iterateur = uneChaine[Symbol.iterator](); // On récupère l'objet itérateur de l'objet String
+    iterateur + "";     // "[object String Iterator]"
+    iterateur.next();  // { value: "c", done: false }
+    iterateur.next();  // { value: "o", done: false }
+    iterateur.next();  // { value: "u", done: false }
+    iterateur.next();  // { value: "c", done: false }
+    iterateur.next();  // { value: "o", done: false }
+    iterateur.next();  // { value: "u", done: false }
+    iterateur.next();  // { value: undefined, done: true }
+
+    Ex2:
+    // Redéfinir le comportement par défaut de l'itérateur en définissant soi-même le symbole @@iterator
+    var uneChaine = new String("yo"); // on construit un objet String explicitement afin d'éviter la conversion automatique
+    uneChaine[Symbol.iterator] = function() {
+      return { // l'objet itérateur qui renvoie un seul élément, la chaîne "bop"
+        next: function() {
+          if (this._first) {
+            this._first = false;
+            return { value: "bop", done: false };
+          } else {
+            return { done: true };
+          }
+        },
+        _first: true
+      };
+    };
+    [...uneChaîne];  // ["bop"]
+    uneChaîne + "";  // "yo"
+
+    Ex3:
+    // Un itérateur simple
+    function creerIterateur(tableau){
+        var nextIndex = 0;
+        
+        return {
+          next: function(){
+              return nextIndex < tableau.length ?
+                  {value: tableau[nextIndex++], done: false} :
+                  {done: true};
+          }
+        }
+    }
+    var it = creerIterateur(['yo', 'ya']);
+    console.log(it.next().value); // 'yo'
+    console.log(it.next().value); // 'ya'
+    console.log(it.next().done);  // true
+
+    Ex4:
+    // Un itérateur infini
+    function créateurID(){
+        var index = 0;
+        
+        return {
+          next: function(){
+              return {value: index++, done: false};
+          }
+        };
+    }
+    var it = créateurID();
+    console.log(it.next().value); // '0'
+    console.log(it.next().value); // '1'
+    console.log(it.next().value); // '2'
+    // ...
+
+
+Les générateurs function*
+-------------------------------
+1. La déclaration function* (le mot-clé function suivi par un astérisque) permet de définir un générateur
+(aussi appelé une fonction génératrice) (un générateur est un objet Generator).
+Les générateurs sont des fonctions qu'il est possible de quitter puis de reprendre. 
+Le contexte d'un générateur (les liaisons avec ses variables) est sauvegardé entre les reprises successives.
+
+2. Les générateurs, combinés avec les promesses, sont des outils de programmation asynchrones puissants qui permettent de réduire 
+les inconvénients causés par les callbacks (fonctions de rappel) et l'inversion de contrôle.
+Lorsqu'on appelle une fonction génératrice, son corps n'est pas exécuté immédiatement, c'est un itérateur 
+qui est renvoyé pour la fonction. Lorsque la méthode next() de l'itérateur est appelée, le corps de la fonction génératrice 
+est utilisé jusqu'à ce que la première expression yield soit trouvée. Cette expression définira la valeur à renvoyer pour l'itérateur.
+Si on utilise yield*, on pourra déléguer la génération des valeurs à une autre fonction génératrice. La méthode next() renvoie 
+un objet dont la propriété value contient la valeur générée et une propriété done qui indique si le générateur a produit sa dernière 
+valeur ou non. Lorsqu'on appelle la méthode next() avec un argument, cela reprendra l'exécution de la fonction génératrice et remplacera 
+la valeur de l'expression yield (là où l'exécution avait été interrompue) avec la valeur de l'argument passé à next().
+
+3. On peut utiliser une instruction return dans un générateur. Lorsque cette instruction sera exécutée, 
+le générateur sera terminé (done vaudra true). La valeur renvoyée par l'instruction return sera la valeur de terminaison du générateur. 
+Une fois qu'un générateur est terminé, il ne peut plus produire d'autres valeurs.
+
+4. À l'instar d'une instruction return, une exception levée à l'intérieur du générateur entraînera la terminaison du 
+générateur sauf si cette exception est interceptée. Lorsqu'un générateur est terminé, les appels suivants à next() n'exécuteront 
+aucun code provenant du générateur, ils renverront simplement un objet de la forme {value: undefined, done: true}.
+
+    Ex1:
+    // Exemple simple
+    function* creerID(){
+      var index = 0;
+      while(index < 3){
+        yield index++;
+      }
+    }
+    var gen = creerID();
+    console.log(gen.next().value); // 0
+    console.log(gen.next().value); // 1
+    console.log(gen.next().value); // 2
+    console.log(gen.next().value); // undefined
+
+    Ex2:
+    // Avec des arguments
+    function* logGenerator() {
+      console.log(yield);
+      console.log(yield);
+      console.log(yield);
+    }
+    var gen = logGenerator();
+    // le premier appel à next exécute la fonction depuis son 
+    // début jusqu'au premier yield rencontré
+    gen.next(); 
+    gen.next('bretzel');    // bretzel
+    gen.next('california'); // california
+    gen.next('mayonnaise'); // mayonnaise
+
+    Ex3:
+    // Exemple utilisant yield* (Pour déléguer la génération des valeurs à un autre générateur)
+    function* autreGenerateur(i) {
+      yield i + 1;
+      yield i + 2;
+      yield i + 3;
+    }
+    function* generateur(i){
+      yield i;
+      yield* autreGenerateur(i);
+      yield i + 10;
+    }
+    var gen = generateur(10);
+    console.log(gen.next().value); // 10
+    console.log(gen.next().value); // 11
+    console.log(gen.next().value); // 12
+    console.log(gen.next().value); // 13
+    console.log(gen.next().value); // 20
+
+    Ex4:
+    // Utilisation de return
+    function* yieldAndReturn() {
+      yield "Y";
+      return "R";
+      yield "inaccessible";
+    }
+    var gen = yieldAndReturn();
+    console.log(gen.next()); // { value: "Y", done: false }
+    console.log(gen.next()); // { value: "R", done: true }
+    console.log(gen.next()); // { value: undefined, done: true }
+
+    Ex5:
+    // Utiliser un générateur comme propriété
+    const monObj = {
+      *generator () {
+        yield "a";
+        yield "b";
+      }
+    }
+    const gen = monObj.generator();
+    console.log(gen.next()); // { value: "a", done: false }
+    console.log(gen.next()); // { value: "b", done: false }
+    console.log(gen.next()); // { value: undefined, done: true }
+
+    Ex6:
+    // Utiliser un générateur comme propriété calculée
+    class Toto {
+      *[Symbol.iterator] () {
+        yield 1;
+        yield 2;
+      }
+    }
+    const monObj = {
+      *[Symbol.iterator] () {
+        yield "a";
+        yield "b";
+      }
+    }
+    console.log(Array.from(new Toto)); // [1, 2]
+    console.log(Array.from(monObj));   // [ "a", "b"]
+
+    Ex7:
+    // Générateur défini avec une expression
+    const toto = function* () {
+      yield 10;
+      yield 20;
+    };
+    const truc = toto();
+    console.log(truc.next()); // {value: 10, done: false}
