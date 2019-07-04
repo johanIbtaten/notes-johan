@@ -4,6 +4,7 @@
     Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
     Opérateur void
     La « remontée » des déclarations de fonction
+    Définition d'un littéral
     Les expressions de fonctions
     Les fonctions flechées (arrow function en anglais)
     Objet Map
@@ -192,6 +193,11 @@ La « remontée » des déclarations de fonction
     function remontée() {
       console.log("toto");
     }
+
+
+Définition d'un littéral
+-------------------------------
+En programmation informatique, une valeur littérale est une valeur donnée explicitement dans le code source d'un programme
 
 
 Les expressions de fonctions
@@ -824,7 +830,6 @@ Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser f
       return obj.value;
     });
 
-
 ENTRIES()
 // arr.entries()
 1. La méthode entries() renvoie un nouvel objet de type Array Iterator qui contient le couple clef/valeur pour chaque éléments du tableau.
@@ -837,7 +842,49 @@ ENTRIES()
     console.log(iterator1.next().value);
     // expected output: Array [1, "b"]
 
+FROM()
+// Array.from(arrayLike [, fonctionMap[, thisArg]])
+1. La méthode Array.from() permet de créer une nouvelle instance d'Array (une copie superficielle) 
+à partir d'un objet itérable ou semblable à un tableau.
 
+    [arrayLike]
+        Un objet semblable à un tableau ou bien un objet itérable dont on souhaite créer un tableau, instance d'Array.
+    [fonctionMap] (Facultatif)
+        Argument optionnel, une fonction à appliquer à chacun des éléments du tableau.
+    [thisArg] (Facultatif)
+        Argument optionnel. La valeur à utiliser pour this lors de l'exécution de la fonction fonctionMap.
+
+    Valeur de retour :
+        Une nouvelle instance de Array.
+
+    Ex1:
+    // créer une instance d'Array à partir de l'objet arguments qui est semblable à un tableau
+    function f() {
+      return Array.from(arguments);
+    }
+    f(1, 2, 3); 
+    // [1, 2, 3]
+
+    Ex2:
+    // Ça fonctionne avec tous les objets itérables...
+    // Set
+    const s = new Set(["toto", "truc", "truc", "bidule"]);
+    Array.from(s);   
+    // ["toto", "truc", "bidule"]
+    // Map
+    const m = new Map([[1, 2], [2, 4], [4, 8]]);
+    Array.from(m);                          
+    // [[1, 2], [2, 4], [4, 8]]  
+    const mapper = new Map([["1", "a"], ["2", "b"]]);
+    Array.from(mapper.values());
+    // ["a", "b"] 
+    Array.from(mapper.keys());
+    // ["1", "2"]
+    // String
+    Array.from("toto");                      
+    // ["t", "o", "t", "o"]
+
+    
 Rest parameters
 -------------------------------
 1. Cette syntaxe permet de représenter un nombre indéfini d'arguments sous forme d'un tableau.
@@ -1148,6 +1195,48 @@ Si c'est une valeur primitive qui est renvoyée (ex. false ou undefined), une ex
     console.log(it.next().value); // '1'
     console.log(it.next().value); // '2'
     // ...
+
+    Ex5:
+    // Avec un générateur
+    function* creerUnGenerateurSimple(tableau){
+        var nextIndex = 0;
+        
+        while(nextIndex < tableau.length){
+            yield tableau[nextIndex++];
+        }
+    }
+    var gen = creerUnGenerateurSimple(['yo', 'ya']);
+    console.log(gen.next().value); // 'yo'
+    console.log(gen.next().value); // 'ya'
+    console.log(gen.next().done);  // true
+
+    Ex6:
+    // Avec une classe (ES6)
+    class ClasseSimple {
+      constructor(data) {
+        this.index = 0;
+        this.data = data;
+      }
+      [Symbol.iterator]() {
+        return {
+          next: () => {
+            if (this.index < this.data.length) {
+              return {value: this.data[this.index++], done: false};
+            } else {
+              this.index = 0; 
+              // En réinitialisant l'index, on peut 
+              // "reprendre" l'itérateure sans avoir
+              // à gérer de mise à jour manuelle
+              return {done: true};
+            }
+          }
+        };
+      }
+    }
+    const simple = new ClasseSimple([1,2,3,4,5]);
+    for (const val of simple) {
+      console.log(val);  // '1' '2' '3' '4' '5' 
+    }
 
 
 Les générateurs function*
