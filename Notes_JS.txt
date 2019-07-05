@@ -1362,3 +1362,446 @@ aucun code provenant du générateur, ils renverront simplement un objet de la f
     };
     const truc = toto();
     console.log(truc.next()); // {value: 10, done: false}
+
+
+Héritage et chaîne de prototype
+-------------------------------
+1. JavaScript continue de reposer sur l'héritage prototypique. En ce qui concerne l'héritage, JavaScript n'utilise qu'une seule structure : les objets. 
+Chaque objet possède une propriété privée qui contient un lien vers un autre objet appelé le prototype. Ce prototype possède également son prototype et 
+ainsi de suite, jusqu'à ce qu'un objet ait null comme prototype. Par définition, null ne possède pas de prototype et est ainsi le dernier maillon de la chaîne de prototype.
+
+2. La majorité des objets JavaScript sont des instances de Object qui est l'avant dernier maillon de la chaîne de prototype.
+
+3. Les objets JavaScript sont des ensembles dynamiques de propriétés (les propriétés directement rattachées à un objet sont 
+appelées propriétés en propre (own properties)). Les objets JavaScript possèdent également un lien vers un objet qui est leur prototype. 
+Lorsqu'on tente d'accéder aux propriétés d'un objet, la propriété sera recherchée d'abord sur l'objet même, puis sur son prototype, puis 
+sur le prototype du prototype et ainsi de suite jusqu'à ce qu'elle soit trouvée ou que la fin de la chaîne de prototype ait été atteinte.
+
+4. Dans la spécification ECMAScript, on utilise la notation unObjet.[[Prototype]] pour faire référence au prototype de unObjet. 
+Depuis ECMAScript 2015, on peut accéder à [[Prototype]] grâce aux accesseurs Object.getPrototypeOf() et Object.setPrototypeOf(). 
+Cela est équivalent à la propriété JavaScript __proto__ qui était non-standard avant ES2015 mais qui était de fait implémentée par la majorité des navigateurs.
+
+    Ex1:
+    // On commence par créer un objet o pour lequel la fonction f sera 
+    // son constructeur et lui créera deux propriétés en propre
+    // a et b :
+    let f = function () {
+      this.a = 1;
+      this.b = 2;
+    }
+    let o = new f(); // {a: 1, b: 2}
+
+    // on ajoute des propriétés au prototype de la fonction
+    // f
+    f.prototype.b = 3;
+    f.prototype.c = 4;
+
+    // Note : on ne définit pas le prototype de f avec f.prototype = {b:3,c:4};
+    // car cela briserait la chaîne de prototype
+
+    // o.[[Prototype]] possède les propriétés b and c.
+    // o.[[Prototype]].[[Prototype]] est Object.prototype.
+    // Enfin, o.[[Prototype]].[[Prototype]].[[Prototype]] vaut null.
+    // On a alors atteint la fin de la chaîne de prototype car,
+    // par définition, null n'a pas de [[Prototype]].
+    // Ainsi, la chaîne complète est ici :
+    // {a: 1, b: 2} ---> {b: 3, c: 4} ---> Object.prototype ---> null
+
+    console.log(o.a); // 1
+    // Existe-t-il une propriété 'a' en propre sur o ? Oui, elle vaut 1.
+
+    console.log(o.b); // 2
+    // Existe-t-il une propriété 'b' en propre sur o ? Oui, elle vaut 2.
+    // Le prototype possède également une propriété 'b' mais elle n'est pas
+    // utilisée.
+    // C'est ce qu'on appelle l'ombrage (shadowing en anglais)
+
+    console.log(o.c); // 4
+    // Existe-t-il une propriété 'c' en propre sur o ? Non, on vérifie le
+    // prototype.
+    // Existe-t-il une propriété 'c' en propre sur o.[[Prototype]] ?
+    // Oui, elle vaut 4.
+
+    console.log(o.d); // undefined
+    // Existe-t-il une propriété 'd' en propre sur o ? Non, on vérifie le
+    // prototype.
+    // Existe-t-il une propriété 'd' en propre sur o.[[Prototype]] ? Non, on vérifie le 
+    // prototype.
+    // o.[[Prototype]].[[Prototype]] est Object.prototype et ne contient pas 
+    // de propriété 'd' par défaut. On vérifie son prototype.
+    // o.[[Prototype]].[[Prototype]].[[Prototype]] est null, on arrête la recherche
+    // aucune propriété n'est trouvée, le moteur renvoie undefined.
+
+5. Si un objet et son prototype possèdent la même propriété, celle du prototype n'est pas utilisée.
+C'est ce qu'on appelle l'ombrage (shadowing en anglais)
+
+6.Lorsquon définit une propriété sur un objet, cela définit une propriété en propre. 
+La seule exception se produit lorsqu'on définit un accesseur et/ou un mutateur sur une propriété héritée.
+
+7. JavaScript ne possède pas de méthodes au sens des langages de classe. En effet, en JavaScript, toute fonction associée à un objet est également une propriété. 
+Une fonction héritée se comportera comme n'importe quelle autre propriété (y compris pour l'ombrage mentionné ci-avant où on pourra parler de surcharge).
+
+8. Lorsqu'une fonction héritée est exécutée, la valeur de this pointe vers l'objet hérité et non vers l'objet prototype qui possède la fonction comme propriété en propre.
+
+    Ex1:
+    var o = {
+      a: 2,
+      m: function() {
+        return this.a + 1;
+      }
+    };
+
+    console.log(o.m()); // 3
+    // Quand on appelle o.m ici, 'this' fera référence à o
+
+    var p = Object.create(o);
+    // p est un objet qui hérite de o
+
+    p.a = 4; // on crée une propriété 'a' en propre sur p
+    console.log(p.m()); // 5
+    // lorsque p.m est appelée, 'this' fait référence à p.
+    // Ainsi quand p hérite de m via o, 
+    // 'this.a' signifie p.a, soit la propriété 'a' de p
+
+9. En JavaScript, les fonctions peuvent avoir des propriétés. Toutes les fonctions ont une propriété spéciale intitulée prototype.
+
+    Ex1:
+    function faireUnTruc(){}
+    console.log( faireUnTruc.prototype ); // Object {...}
+    // Peu importe comment vous déclarez la fonction.
+    // une fonction en JavaScript aura toujours une propriété
+    // prototype par défaut.
+    var faireUnTruc= function(){}; 
+    console.log(faireUnTruc.prototype); // Object {...}
+    
+    Ex2:
+    // Ajouter des propriétés au prototype de faireUnTruc()
+    function faireUnTruc(){}
+    faireUnTruc.prototype.toto = "truc";
+    console.log( faireUnTruc.prototype );
+    // {
+    //   toto: "truc",
+    //   constructor: ƒ faireUnTruc(),
+    //   __proto__: {
+    //       constructor: ƒ Object(),
+    //       hasOwnProperty: ƒ hasOwnProperty(),
+    //       isPrototypeOf: ƒ isPrototypeOf(),
+    //       propertyIsEnumerable: ƒ propertyIsEnumerable(),
+    //       toLocaleString: ƒ toLocaleString(),
+    //       toString: ƒ toString(),
+    //       valueOf: ƒ valueOf()
+    //   }
+    // }
+
+    Ex3:
+    // Toute fonction déclaré possède nativement une propriété « prototype » initialement vide
+    var Dog = function() {}; // declaring constructor
+    Dog.prototype;     // prints "{}" : prototype exists and is empty
+
+10. On peut utiliser l'opérateur new afin de créer une instance de faireUnTruc() basée sur ce prototype. 
+Pour utiliser l'opérateur new, il suffira d'appeler la fonction et de précéder cet appel avec le mot-clé new. 
+Lorsqu'on appelle une fonction avec un opérateur new, celle-ci renvoie un objet qui est une instance de la fonction. 
+On peut ensuite ajouter des propriétés sur cet objet.
+    
+    Ex1:
+    function faireUnTruc(){}
+    faireUnTruc.prototype.toto = "truc"; // on ajoute une propriété au prototype
+    var uneInstance = new faireUnTruc();
+    uneInstance.prop = "une valeur"; // on ajoute une propriété sur l'objet
+    console.log(uneInstance);
+    // {
+    //   prop: "une valeur",
+    //   __proto__: {
+    //       toto: "truc",
+    //       constructor: ƒ faireUnTruc(),
+    //       __proto__: {
+    //           constructor: ƒ Object(),
+    //           hasOwnProperty: ƒ hasOwnProperty(),
+    //           isPrototypeOf: ƒ isPrototypeOf(),
+    //           propertyIsEnumerable: ƒ propertyIsEnumerable(),
+    //           toLocaleString: ƒ toLocaleString(),
+    //           toString: ƒ toString(),
+    //           valueOf: ƒ valueOf()
+    //       }
+    //   }
+    // }
+    
+    Ex2:
+    function faireUnTruc(){}
+    faireUnTruc.prototype.toto = "truc";
+    var uneInstance = new faireUnTruc();
+    uneInstance.prop = "une valeur";
+    console.log("uneInstance.prop: " + uneInstance.prop);
+    console.log("uneInstance.toto: " + uneInstance.toto);
+    console.log("faireUnTruc.prop: " + faireUnTruc.prop);
+    console.log("faireUnTruc.toto: " + faireUnTruc.toto);
+    console.log("faireUnTruc.prototype.prop: " + faireUnTruc.prototype.prop);
+    console.log("faireUnTruc.prototype.toto:  " + faireUnTruc.prototype.toto);
+    // uneInstance.prop: une valeur
+    // uneInstance.toto: truc
+    // faireUnTruc.prop: undefined
+    // faireUnTruc.toto: undefined
+    // faireUnTruc.prototype.prop: undefined
+    // faireUnTruc.prototype.toto: truc
+
+    Ex3:
+    var Dog = function() {}; // declaring constructor
+    // Une propriété rajouté sur le prototype du constructeur devient disponible sur les instances
+    Dog.prototype.bark = function() { // defining a method on the Dog prototype
+      console.log("wouf wouf");
+    };
+    var bobby = new Dog();
+    bobby.bark(); // using the prototype declaration - prints "wouf wouf" to the console
+    var felix = new Dog();
+    (bobby.bark == felix.bark); // instances share same reference - returns true;
+    bobby.bark = Dog.prototype.bark // which is the prototype property - returns true;
+
+11. Performance. Le temps de recherche des propriétés sera plus élevé si ces propriétés sont situées plus loin dans la chaîne de prototype. 
+Tenter d'accéder à ces propriétés éloignées pourra avoir un impact négatif sur les performances. 
+De plus, tenter d'accéder à des propriétés inexistantes entraîntera toujours le parcours de l'ensemble de la chaîne de prototype.
+Lorsqu'on parcourt les propriétés d'un objet, toutes les propriétés énumérables situées sur la chaîne de prototype seront parcourues. 
+Pour vérifier si un objet possède une propriété en propre plus que via sa chaîne de prototype, on devra utiliser la méthode hasOwnProperty() 
+qui est héritée grâce à Object.prototype.
+
+    Ex1:
+    function Graphe() {
+      this.sommets = [];
+      this.aretes = [];
+    }
+    Graphe.prototype = {
+      ajoutSommet: function(v) {
+        this.sommets.push(v);
+      }
+    };
+    var g = new Graphe();
+    // g est un objet qui possède les propriétés 'sommets' and 'aretes' en propre.
+    // g.[[Prototype]] est la valeur de Graphe.prototype lorsque "new Graphe()" est exécuté.
+    console.log(g.hasOwnProperty('aretes'));
+    // true
+    console.log(g.hasOwnProperty('nononon'));
+    // false
+    console.log(g.hasOwnProperty('ajoutSommet'));
+    // false
+    console.log(g.__proto__.hasOwnProperty('ajoutSommet'));
+    // true
+
+12. Tester si une propriété vaut undefined ne suffit pas à vérifier la présence de la propriété sur un objet : 
+une propriété peut très bien exister sur un objet mais valoir undefined.
+
+14. Mauvaise pratique : étendre les prototypes natifs. On peut parfois voir du code qui étend Object.prototype ou l'un des prototypes natifs.
+Cette technique est intitulée monkey patching et brise l'encapsulation. Bien qu'elle soit utilisée par certains frameworks, il n'existe pas de 
+raison suffisante pour étendre les objets natifs avec des fonctionnalités non-standard.
+La seule raison qui peut prévaloir pour l'extension de prototypes natifs est l'ajout de fonctionnalités JavaScript apparues 
+avec les nouvelles versions des spécifications et moteurs afin d'en disposer dans de plus anciens environnements.
+
+15. On peut surcharger sur une instance une propriété définie sur son prototype. 
+Cependant cela ne surcharge que sa propre référence, et ne touche donc pas à la déclaration du prototype.
+
+    Ex1:
+    var Dog = function() {}; // declaring constructor
+    // Une propriété rajouté sur le prototype du constructeur devient disponible sur les instances
+    Dog.prototype.bark = function() { // defining a method on the Dog prototype
+      console.log("wouf wouf");
+    };
+    var bobby = new Dog();
+    var felix = new Dog();
+    bobby.bark = function() { console.log("beeeee !") }; // setting the bark property on dogA
+    bobby.bark(); // using the instance function, prints "beeee !" to the console
+    felix.bark(); // still using the prototype function, prints "wouf wouf" to the console.
+
+16. Une modification du prototype est immédiate sur les instances déjà existantes et les futures. 
+En effet le prototype est une référence des instances, et le « fallback » se fait au moment de l’accès à la propriété.
+
+    Ex1:
+    var Dog = function() {}; // declaring constructor
+    // Une propriété rajouté sur le prototype du constructeur devient disponible sur les instances
+    Dog.prototype.bark = function() { // defining a method on the Dog prototype
+      console.log("wouf wouf");
+    };
+    var bobby = new Dog();
+    bobby.bark(); // prints "wouf wouf" to the console
+    Dog.prototype.bark = function() { console.log("meow meow"); } // overrides the prototype bark method
+    bobby.bark(); // now prints "meow meow" to the console.
+
+17. Une méthode modifiée sur le prototype est immédiatement active, un rajout l'est aussi.
+
+    Ex1:
+    var Dog = function() {}; // declaring constructor
+    // Une propriété rajouté sur le prototype du constructeur devient disponible sur les instances
+    Dog.prototype.bark = function() { // defining a method on the Dog prototype
+      console.log("wouf wouf");
+    };
+    var bobby = new Dog();
+    bobby.sleep(); // Raise a TypeError : has no method sleep
+    Dog.prototype.sleep = function() { console.log("Zzz Zzz"); }
+    bobby.sleep(); // now prints "Zzz Zzz" to the console.
+
+18. La classe d'une instance (enfin, techniquement, le constructeur) est accessible via la propriété constructor. 
+Cela permet également d'accéder à son prototype (même s'il est très rare d'y voir une utilité).
+
+    Ex1:
+    var Dog = function() {}; // declaring constructor
+    // Une propriété rajouté sur le prototype du constructeur devient disponible sur les instances
+    Dog.prototype.bark = function() { // defining a method on the Dog prototype
+      console.log("wouf wouf");
+    };
+    var bobby = new Dog();
+    bobby.constructor === Dog; // bobby constructor is Dog, returns true
+    bobby.constructor.prototype.bark // direct access to the prototype
+
+    // Le mot clef instanceof de javascript fonctionne bien avec les constructeurs
+    bobby instanceof Dog; // bobby is an instance of Dog, returns true
+
+
+Les différentes façons de créer des objets et les impacts sur la chaîne de prototype
+-------------------------------
+    Ex1:
+    // Objets créés avec les raccourcis syntaxiques (littéraux)
+    var o = {a: 1};
+    // Le nouvel objet possède Object.prototype comme [[Prototype]]
+    // o ne possède pas de propriété 'hasOwnProperty' en propre
+    // hasOwnProperty est une propriété en propre de Object.prototype. 
+    // o hérite de hasOwnProperty via Object.prototype
+    // Object.prototype possède null comme prototype.
+    // o ---> Object.prototype ---> null
+    var myObject = {
+      a : 1,
+      b : 2,
+      sum : function() {
+        return this.a + this.b;
+      }
+    };
+    // myObject ---> Object.prototype ---> null
+
+    var b = ['coucou', 'ça va', '?'];
+    // Les tableaux (Array) héritent de Array.prototype 
+    // (qui possède les méthodes indexOf, forEach, etc.)
+    // La chaîne de prototype est donc :
+    // b ---> Array.prototype ---> Object.prototype ---> null
+
+    function f() {
+      return 2;
+    }
+    // Les fonctions héritent de Function.prototype 
+    // (qui possède les méthodes call, bind, etc.)
+    // La chaîne de prototype est donc
+    // f ---> Function.prototype ---> Object.prototype ---> null
+    
+    Ex2:
+    // Objets créés avec un constructeur
+    // En JavaScript, un constructeur est juste une fonction que l'on invoque avec l'opérateur new.
+    function Graphe() {
+      this.sommets = [];
+      this.arêtes = [];
+    }
+    Graphe.prototype = {
+      ajoutSommet: function(v) {
+        this.sommets.push(v);
+      }
+    };
+    var g = new Graphe();
+    // g est un objet qui possède les propriétés 'sommets' and 'arêtes' en propre.
+    // g.[[Prototype]] est la valeur de Graphe.prototype lorsque "new Graphe()" est exécuté.
+
+    // Toute fonction peut servir de constructeur : il suffit simplement de l'appeler avec l'opérateur new.
+    var Dog = function() {   // defining Dog constructor
+      this.hasTail = true; // defining a property
+      this.bark = function() { // defining a method property
+        console.log("wouf wouf");
+      }
+    }
+    var bobby = new Dog(); // instanciating the constructor
+    bobby.hasTail; // returns true
+    bobby.bark();  // print "wouf wouf" to the console
+
+    // Pour définir une propriété des futures instances, il faut utiliser le mot clef this. En effet var ne suffit pas. 
+    // C'est d'ailleurs une particularité intéressante dont on peut se servir pour déclarer des variables privées de l'instance
+    var Dog = function() {
+      var shout = "wouf wouf"; // defining a local var.
+      this.bark = function() {
+        console.log(shout); // local scope access the 'shout' variable
+      }
+    }
+    var bobby = new Dog();
+    bobby.bark();  // print "wouf wouf" to the console
+    bobby.shout;   // undefined , not attached to the instance
+
+    // Il est également possible de passer des paramètres à un constructeur 
+    var Dog = function(breed) {
+      this.breed = breed;
+    }
+    var bobby = new Dog("terrier");
+    bobby.breed;  // returns "terrier"
+
+    // Problème : comme la déclaration des méthodes se fait lors de l'instanciation, les instances ne partageant pas leurs méthodes.
+    var Dog = function() {
+      this.bark = function() {
+        console.log(shout);
+      }
+    }
+    var bobby = new Dog();
+    var felix = new Dog();
+    (boddy.bark == felix.bark); // returns false. They both declared their own method. 
+    
+    Ex3:
+    // Objets créés avec Object.create()
+    // Appeler cette méthode crée un nouvel objet et le prototype de cet objet est le premier argument de cette fonction
+    var a = {a: 1}; 
+    // a ---> Object.prototype ---> null
+
+    var b = Object.create(a);
+    // b ---> a ---> Object.prototype ---> null
+    console.log(b.a); // 1 (héritée)
+
+    var c = Object.create(b);
+    // c ---> b ---> a ---> Object.prototype ---> null
+
+    var d = Object.create(null);
+    // d ---> null
+    console.log(d.hasOwnProperty); 
+    // undefined, car d n'hérite pas de Object.prototype  
+    
+    Ex4:
+    // Objets créés avec le mot-clé class
+    // ECMAScript 2015 introduit plusieurs mots-clés destinés à créer du sucre syntaxique pour manipuler des classes. 
+    // Ces mots-clés sont class, constructor, static, extends et super
+    'use strict';
+    class Polygone {
+      constructor(hauteur, largeur) {
+        this.hauteur = hauteur;
+        this.largeur = largeur;
+      }
+    }
+    class Carre extends Polygone {
+      constructor(longueurCote) {
+        super(longueurCote, longueurCote);
+      }
+      get aire() {
+        return this.hauteur * this.largeur;
+      }
+      set longueurCote(nouvelleLongueur) {
+        this.hauteur = nouvelleLongueur;
+        this.largeur = nouvelleLongueur;
+      }
+    }
+    var carre = new Carre(2);
+    
+    Ex5:
+    
+    Ex6:
+    
+    Ex7:
+    
+    Ex8:
+    
+    Ex9:
+    
+    Ex5:
+    
+    Ex6:
+    
+    Ex7:
+    
+    Ex8:
+    
+    Ex9:
