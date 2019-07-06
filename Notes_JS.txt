@@ -16,6 +16,10 @@
     Le protocole « itérable » (Objets itérables)
     Le protocole « itérateur »
     Les générateurs function*
+    Héritage et chaîne de prototype
+    Les différentes façons de créer des objets et les impacts sur la chaîne de prototype
+    Comparer des objets
+    Utiliser this
 
 
 var, let, const
@@ -1786,22 +1790,44 @@ Les différentes façons de créer des objets et les impacts sur la chaîne de p
     }
     var carre = new Carre(2);
     
-    Ex5:
-    
-    Ex6:
-    
-    Ex7:
-    
-    Ex8:
-    
-    Ex9:
-    
-    Ex5:
-    
-    Ex6:
-    
-    Ex7:
-    
-    Ex8:
-    
-    Ex9:
+
+Comparer des objets
+-------------------------------
+1. En JavaScript, les objets fonctionnent par référence. Deux objets distincts ne sont jamais égaux, même s'ils ont les mêmes valeurs 
+pour les mêmes propriétés. On aura une équivalence uniquement si on compare un objet avec lui-même.
+
+    Ex1:
+    // Deux variables avec deux objets distincts qui ont les mêmes propriétés
+    var fruit = {nom: "pomme"};
+    var fruit2 = {nom: "pomme"};
+    fruit == fruit2  // return false
+    fruit === fruit2 // return false
+    // Deux variables avec un même objet
+    var fruit = {nom: "pomme"};
+    var fruit2 = fruit;  // On affecte la même référence
+    // dans ce cas fruit et fruit2 pointent vers le même objet
+    fruit == fruit2  // return true
+    fruit === fruit2 // return true
+    fruit.nom = "raisin";
+    console.log(fruit2); // affiche {nom: "raisin"} et non {nom: "pomme"}
+
+
+Utiliser this
+-------------------------------
+1. JavaScript possède un mot-clé spécial this, qui peut être utiliser à l'intérieur d'une méthode pour faire référence à l'objet courant.
+
+Ex1:
+// Si on a une fonction valider qui permet de valider la propriété 
+// valeur d'un objet en fonction d'un seuil minimum et d'un seuil maximum
+function valider(obj, seuilMin, seuilMax) {
+  if ((obj.value < seuilMin) || (obj.valeur > seuilMax))
+    console.log("Valeur invalide !");
+}
+
+// Cette fonction pourrait ensuite être appelée via le gestionnaire d'événement onchange 
+// pour les éléments d'un formulaire et la valeur pour l'élément du formulaire serait passée en argument
+<input type="text" name="age" size="3" onChange="valider(this, 18, 99)">
+
+2. En général, this fait référence à l'objet appelant de la méthode.
+
+
