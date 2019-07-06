@@ -1,5 +1,6 @@
     var, let, const
     Types de données
+    Les opérateurs d'égalité
     Différence entre undefined et null
     Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
     Opérateur void
@@ -58,6 +59,60 @@ Constant numbers — const PI = 3.14
 Objects — var name = {firstName:"John", lastName:"Doe"}
 Undefined — var a; console.log(a); retourne undefined
 Null  — var a = null
+
+
+Les opérateurs d'égalité
+-------------------------------
+/// Égalité simple (==) ///
+1. L'opérateur d'égalité simple convertit les deux opérandes s'ils ne sont pas du même type, 
+ensuite la comparaison stricte est appliquée. Si les deux opérandes sont des objets, le moteur JavaScript 
+comparera les références internes pour voir si elles réfèrent au même objet en mémoire.
+
+    Ex1:
+    1  ==  1;        // true
+    "1"  ==  1;        // true
+    1  == '1';       // true
+    0  == false;     // true
+    0  == null;      // false
+    0  == undefined  // false
+    null == undefined  // true
+    var obj1 = { "clé": "valeur"};
+    var obj2 = { "clé": "valeur"};
+    obj1 == obj2       // false
+
+2. Lorsqu'une comparaison est opérée entre une chaîne de caractères et un nombre, 
+Javascript tente de convertir la chaine en une valeur numérique. Une valeur mathématique est 
+obtenue à partir de la chaîne littérale numérique, puis celle-ci est arrondie à une valeur de type Nombre.
+
+3. Si l'un des opérandes est de type booléen, true sera converti en 1 et false en +0.
+
+4. Si on compare un objet avec un nombre ou une chaîne, le moteur JavaScript tentera de renvoyer la valeur par défaut de l'objet. 
+Les opérateurs opèrent une conversion grâce aux méthodes valueOf (pour obtenir un nombre) et toString (pour obtenir une chaîne de caractères). 
+Si cela ne fonctionne pas, une exception sera levée. Un objet sera converti en un type primitif autre uniquement si l'autre 
+opérande est un type primitif (autre qu'objet). Si les deux opérandes sont des objets, 
+ils seront comparés comme deux objets (voir ci-avant) et l'égalité ne sera vérifiée que si les opérandes font référence au même objet en mémoire
+
+    Ex1:
+    // true car les deux opérandes sont du type primitif chaîne de caractères
+    'toto' === 'toto'
+    var a = new String('toto');
+    var b = new String('toto');
+    // false car a et b sont du type objet mais font référence à deux objets distincts
+    a == b 
+    // false car a et b sont du type objet mais font référence à deux objets distincts
+    a === b 
+    // true car a et 'toto' sont de type différents et lorsque a est
+    // converti, la fonction de conversion renvoie bien la chaîne 'toto'
+    a == 'toto'
+
+/// Égalité stricte (===) ///
+1. L'opérateur d'égalité stricte renvoie true si les opérandes sont strictement égaux (voir ci-avant), aucune conversion de type n'est effectuée.
+
+    Ex1:
+    3 === 3   // true
+    3 === '3' // false
+    var objet1 = {'clé': 'valeur'}, objet2 = {'clé', 'valeur'};
+    objet1 === objet2; // false
 
 
 Différence entre undefined et null
@@ -144,9 +199,9 @@ typeof renvoie une chaîne qui indique le type de l'opérande (Quantité, donné
     typeof null;           // "object" (pas null pour des raisons historiques)
     typeof undefined;      // "undefined"
     null === undefined;    // false
-    null  == undefined;    // true
+    null == undefined;    // true
     null === null;         // true
-    null  == null;         // true
+    null == null;         // true
     !null;                 // true
     isNaN(1 + null);       // false
     isNaN(1 + undefined);  // true
@@ -193,8 +248,8 @@ La « remontée » des déclarations de fonction
 -------------------------------
 1. Lorsqu'on utilise une déclaration de fonction pour créer une fonction, la définition de la fonction est « remontée » (hoisting). Il devient donc possible d'utiliser la fonction avant de l'avoir déclarée
     Ex1:
-    remontée(); // affiche "toto" dans la console
-    function remontée() {
+    remontee(); // affiche "toto" dans la console
+    function remontee() {
       console.log("toto");
     }
 
