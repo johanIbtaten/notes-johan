@@ -2,9 +2,11 @@ Browsersync watch files VSCode
 -------------------------------
 *.html|assets/css/*.css
 
+
 Cmder watch files
 -------------------------------
-sass --watch C:\Users\jibta\Desktop\projetsJohan\web\inuitcss\app\assets\sass\main.scss:C:\Users\jibta\Desktop\projetsJohan\web\inuitcss\dist\assets\css\main.css
+sass --watch C:\[Path_To_File]\file.scss
+
 
 Boostrap Grid variables
 -------------------------------
@@ -36,27 +38,29 @@ $container-max-widths: (
     }
 }
 
+
 Patterns Gulp
 -------------------------------
-Les globs sont des patterns de correspondance qui fonctionnent un peu comme les regex mais spécifiquement pour les chemins d’accès.
-La plupart des workflows de gulp feront appel à 4 globs seulement :
+Les globs sont des patterns de correspondance qui fonctionnent un peu comme les regex mais spÃ©cifiquement pour les chemins dâ€™accÃ¨s.
+La plupart des workflows de gulp feront appel Ã  4 globs seulement :
 
-*.scss : le pattern * est une sorte de “joker” qui correspond à
-n’importe quel pattern dans le dossier courant. 
+*.scss : le pattern * est une sorte de â€œjokerâ€ qui correspond Ã 
+nâ€™importe quel pattern dans le dossier courant. 
 Dans cet exemple, tous les fichiers ayant une extension .scss dans 
 le dossier racine project.
 
-**/*.scss : c’est une version plus extrême du pattern précédent, 
+**/*.scss : câ€™est une version plus extrÃªme du pattern prÃ©cÃ©dent, 
 qui cible tous les fichiers ayant une extension .scss dans le 
-dossier racine et dans n’importe quel dossier enfant.
+dossier racine et dans nâ€™importe quel dossier enfant.
 
 !pas-moi.scss : le ! indique que Gulp doit exclure ce pattern, ce qui est 
-utile si vous voulez exclure un fichier au sein d’un pattern. Dans notre exemple, le fichier pas-moi.scss sera exclu.
+utile si vous voulez exclure un fichier au sein dâ€™un pattern. Dans notre exemple, le fichier pas-moi.scss sera exclu.
 
-*.+(scss|sass) : le plus + et les parenthèses () permettent à Gulp de cibler des patterns multiples, 
-chaque pattern étant séparé des autres par un caractère “barre verticale” | Dans notre exemple, Gulp ciblera tous les fichiers ayant une extension .scss ou .sass dans le dossier racine.
+*.+(scss|sass) : le plus + et les parenthÃ¨ses () permettent Ã  Gulp de cibler des patterns multiples, 
+chaque pattern Ã©tant sÃ©parÃ© des autres par un caractÃ¨re â€œbarre verticaleâ€ | Dans notre exemple, Gulp ciblera tous les fichiers ayant une extension .scss ou .sass dans le dossier racine.
 Nous pouvons maintenant remplacer app/scss/styles.scss par un pattern scss/**/*.scss qui matchera 
 tous les fichiers ayant une extension .scss dans app/scss ou dans un dossier enfant.
+
 
 Project Folder Structure for Text2Folders
 -------------------------------
@@ -125,32 +129,32 @@ Architecture SASS
 @import "node_modules/inuitcss/utilities/utilities.spacings";
 
 
-Répondre automatiquement Y ou O en français à la question "Terminate batch job (Y/N)?" ou "Terminer le programme de commandes (O/N) ?"
+RÃ©pondre automatiquement Y ou O en franÃ§ais Ã  la question "Terminate batch job (Y/N)?" ou "Terminer le programme de commandes (O/N)Â ?"
 -------------------------------
-clink set terminate_autoanswer 1 puis redémarrer Cmder
+clink set terminate_autoanswer 1 puis redÃ©marrer Cmder
 
 
 path.join vs path.resolve with __dirname avec nodeJS
 -------------------------------
-Oui, il y a une différence entre les fonctions, mais la façon dont vous les utilisez dans ce cas aboutira au même résultat.
-path.join retourne un chemin normalisé en fusionnant deux chemins. Il peut retourner un chemin absolu, mais il ne le fait pas nécessairement toujours.
+Oui, il y a une diffÃ©rence entre les fonctions, mais la faÃ§on dont vous les utilisez dans ce cas aboutira au mÃªme rÃ©sultat.
+path.join retourne un chemin normalisÃ© en fusionnant deux chemins. Il peut retourner un chemin absolu, mais il ne le fait pas nÃ©cessairement toujours.
 
 Par exemple:
 path.join('app/libs/oauth', '/../ssl')
-donne le résultat app/libs/ssl
+donne le rÃ©sultat app/libs/ssl
 
-path.resolve, lui, se résoudra en un chemin absolu.
-Par exemple, lorsque vous exécutez:
+path.resolve, lui, se rÃ©soudra en un chemin absolu.
+Par exemple, lorsque vous exÃ©cutez:
 path.resolve('bar', '/foo');
-Le chemin renvoyé sera /foo puisqu'il s'agit du premier chemin absolu pouvant être construit.
+Le chemin renvoyÃ© sera /foo puisqu'il s'agit du premier chemin absolu pouvant Ãªtre construit.
 
-Cependant, si vous exécutez:
+Cependant, si vous exÃ©cutez:
 path.resolve('/bar/bae', '/foo', 'test');
-Le chemin renvoyé sera /foo/test car il s'agit du premier chemin absolu pouvant être formé de droite à gauche.
+Le chemin renvoyÃ© sera /foo/test car il s'agit du premier chemin absolu pouvant Ãªtre formÃ© de droite Ã  gauche.
 
-Si vous ne fournissez pas un chemin spécifiant le répertoire racine, les chemins fournis à la fonction resolve sont ajoutés au répertoire de travail en cours. Donc, si votre répertoire de travail était /home/mark/project/:
+Si vous ne fournissez pas un chemin spÃ©cifiant le rÃ©pertoire racine, les chemins fournis Ã  la fonction resolve sont ajoutÃ©s au rÃ©pertoire de travail en cours. Donc, si votre rÃ©pertoire de travail Ã©tait /home/mark/project/:
 
 path.resolve('test', 'directory', '../back');
 resolve /home/mark/project/test/back
 
-__dirname est le chemin absolu du répertoire contenant le fichier source. Lorsque vous utilisez path.resolve ou path.join ils retourneront le même résultat si vous donnez le même chemin en suivant __dirname. Dans de tels cas, c'est simplement une question de préférence.
+__dirname est le chemin absolu du rÃ©pertoire contenant le fichier source. Lorsque vous utilisez path.resolve ou path.join ils retourneront le mÃªme rÃ©sultat si vous donnez le mÃªme chemin en suivant __dirname. Dans de tels cas, c'est simplement une question de prÃ©fÃ©rence.

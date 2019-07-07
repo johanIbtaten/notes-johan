@@ -32,13 +32,13 @@ These methods are called when there is an error during rendering, in a lifecycle
 Component Lifecycle functions
 -------------------------------
 componentDidMount() 
-est appelée immédiatement après que le composant est monté (inséré dans l’arbre). C’est ici que vous devriez placer les initialisations qui requièrent l’existence de nœuds du DOM. Si vous avez besoin de charger des données depuis un point d’accès distant, c’est aussi le bon endroit pour déclencher votre requête réseau.
+est appelÃ©e immÃ©diatement aprÃ¨s que le composant est montÃ© (insÃ©rÃ© dans lâ€™arbre). Câ€™est ici que vous devriez placer les initialisations qui requiÃ¨rent lâ€™existence de nÅ“uds du DOM. Si vous avez besoin de charger des donnÃ©es depuis un point dâ€™accÃ¨s distant, câ€™est aussi le bon endroit pour dÃ©clencher votre requÃªte rÃ©seau.
 
 componentDidUpdate() 
-est appelée immédiatement après que la mise à jour a eu lieu. Cette méthode n’est pas appelée pour le rendu initial.
+est appelÃ©e immÃ©diatement aprÃ¨s que la mise Ã  jour a eu lieu. Cette mÃ©thode nâ€™est pas appelÃ©e pour le rendu initial.
 
 
-Stateless Functional Component (Composant fonctionnel sans état)
+Stateless Functional Component (Composant fonctionnel sans Ã©tat)
 -------------------------------
 1. Composant qui ne fait qu'afficher du contenu
     Ex1:
@@ -54,7 +54,7 @@ Stateless Functional Component (Composant fonctionnel sans état)
     const HelloWorld = (props) => {
       return <p>Hello {props.user}</p>
     }
-    // le passage de props à notre composant se fait de la façon suivante en JSX: <HelloWorld user='Gaël' />
+    // le passage de props Ã  notre composant se fait de la faÃ§on suivante en JSX: <HelloWorld user='GaÃ«l' />
 
     Ex3:
     const Hello = ({ name }) => (<div>Hello, {name}!</div>);
@@ -72,19 +72,19 @@ Stateless Functional Component (Composant fonctionnel sans état)
 
 Class Components
 -------------------------------
-1. Un composant class étend la classe Component de React.
+1. Un composant class Ã©tend la classe Component de React.
     Ex1:
     class Welcome extends React.Component {
       render() {
         return <h1>Bonjour, {this.props.name}</h1>;
       }
     }
-    // le passage de props à notre composant se fait de la façon suivante en JSX: <Welcome name='Gaël' />
+    // le passage de props Ã  notre composant se fait de la faÃ§on suivante en JSX: <Welcome name='GaÃ«l' />
 
 
 Stateful Class Components
 -------------------------------
-1. Un composant class étend la classe Component de React.
+1. Un composant class Ã©tend la classe Component de React.
     Ex1:
     // [...]
     // JS PERSO
