@@ -1,0 +1,32 @@
+Créer une méthode truncate sur une String
+-------------------------------
+
+String.prototype.truncate = function(charNumber) {
+  let str = this.valueOf()  
+  if (str.length <= charNumber) {
+	  return str
+  } else {
+    let subStr = str.substr(0, charNumber)
+    let charts = [...subStr].reverse();
+    //console.log(charts)
+    let counter = 0
+    for (const letter of charts) {
+      if (/[\s\.,\/#!$%\^&\*;:{}=\-_`~()]+$/i.test(letter)) {
+        counter++
+      } else {
+		    break;
+      }
+    };   
+    //console.log(counter)
+    charts.splice(0, counter)
+    //console.log(charts)
+	  return charts.reverse().join("") + '...';
+  }
+}
+console.log('Hello, world!'.truncate(5))
+console.log('Hello, world!'.truncate(9))
+console.log('Hello'.truncate(5))
+console.log('Hello!'.truncate(5))
+console.log('Hi!'.truncate(5))
+console.log('Hello world!'.truncate(6))
+console.log('Hello, world!'.truncate(6))
