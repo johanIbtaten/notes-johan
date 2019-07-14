@@ -34,6 +34,60 @@ Variables
 4. On peut aussi utiliser la plupart lettres Unicode ou ISO 8859-1 (comme å et ü, pour plus de détails, au sein des identifiants).
 
 
+Le hoisting ou remontée des variables
+-------------------------------
+1. Avant d'être exécuté, l'interpréteur va remonter toutes les déclarations de variables et de fonctions 
+tout en haut de leur contexte d'exécution.
+
+2. Il existe deux types de contexte :
+La fonction dans laquelle la déclaration a été faite
+Le contexte d'exécution globale si la déclaration a été faite en dehors de toute fonction
+
+    Ex1:
+    console.log(a);
+    var a = 2;
+    // Affiche undefined
+    // L'interpréteur va remonter la déclaration de la variable avant le reste
+    // Le code ci-dessus revient à écrire
+    var a;
+    console.log(a);
+    a = 2;
+
+    Ex2:
+    a = 2;
+    console.log(a);
+    var a;
+    // Affiche 2
+    // Le code ci-dessus revient à écrire
+    var a;
+    a = 1;
+    console.log(a);
+
+    Ex3:
+    var f = 'foo';
+    foo();
+    function foo() {
+      console.log(f);
+      var f = 'bar';
+    }
+    // f affiche undefined
+    // Le code ci-dessus revient à écrire
+    function foo() {
+      var f;
+      console.log(f);
+      f = 'bar';
+    }
+    var f;
+    f = 'foo';
+    foo();
+    // L'une est dans le contexte global, tandis que l'autre se trouve dans celui de la fonction. 
+    // Elles sont remontées, mais pas au même niveau. Voilà pourquoi on obtient undefined à l'exécution de foo.
+
+3. Faire attention à bien déclarer vos variables au tout début de votre code.
+
+
+
+
 Évaluation de variables
 -------------------------------
 1. Une variable déclarée (déclaration) grâce à l'instruction var ou let sans valeur initiale définie (affectation ou initialisation) vaudra undefined.
@@ -48,7 +102,29 @@ Variables
     let y;
     console.log("La valeur de y est " + y); // La valeur de y est undefined
 
-2. Tenter d'accéder à une variable qui n'a pas été déclarée ou tenter d'accéder à un identifiant déclaré 
+2. Toute variable non déclarée devient une variable globale. 
+Elle est accessible depuis n'importe quelle ligne de code, qu'elle soit dans une fonction ou non.
+
+    Ex1:
+    uneVariableGlobale = 'Hello world';
+    
+    Ex2:
+    function foo() {
+      try {
+        console.log(f);
+      }
+      catch (ex) {
+        console.log("f n'existe pas");
+      }
+      f = 'bar'; // Variable globale
+    }
+    foo();
+    foo();
+    // affiche "f n'existe pas"
+    // affiche bar
+
+
+3. Tenter d'accéder à une variable qui n'a pas été déclarée ou tenter d'accéder à un identifiant déclaré 
 avec let avant sa déclaration provoquera l'envoi d'une exception ReferenceError
 
     Ex1:
@@ -57,7 +133,7 @@ avec let avant sa déclaration provoquera l'envoi d'une exception ReferenceError
     console.log("La valeur de x est " + x); // signale une exception ReferenceError
     let x;
 
-3. Il est possible d'utiliser undefined pour déterminer si une variable possède une valeur. 
+4. Il est possible d'utiliser undefined pour déterminer si une variable possède une valeur. 
 
     Ex1:
     // La condition de l'instruction if sera validée car la variable n'a pas été initialisée (affectée) (elle a simplement été déclarée)
@@ -68,7 +144,7 @@ avec let avant sa déclaration provoquera l'envoi d'une exception ReferenceError
       faireCela();
     }
 
-4. La valeur undefined se comporte comme le booléen false lorsqu'elle est utilisée dans un contexte booléen.
+5. La valeur undefined se comporte comme le booléen false lorsqu'elle est utilisée dans un contexte booléen.
 
     Ex1:
     // Le code qui suit exécutera la fonction maFonction puisque le premier élément de monTableau n'est pas défini
@@ -77,13 +153,13 @@ avec let avant sa déclaration provoquera l'envoi d'une exception ReferenceError
       maFunction(); 
     }
 
-5. La valeur undefined est convertie en NaN (pour Not a Number : « n'est pas un nombre ») lorsqu'elle est utilisée dans un contexte numérique.
+6. La valeur undefined est convertie en NaN (pour Not a Number : « n'est pas un nombre ») lorsqu'elle est utilisée dans un contexte numérique.
 
     Ex1:
     var a;
     a + 2; // NaN
 
-6. Une variable valant null sera toujours considérée comme 0 dans un contexte numérique et comme false dans un contexte booléen.
+7. Une variable valant null sera toujours considérée comme 0 dans un contexte numérique et comme false dans un contexte booléen.
 
     Ex1:
     var n = null;
@@ -314,15 +390,18 @@ Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
 Opérateur void
 -------------------------------
 1. L'opérateur void évalue (exécute) l'expression donnée void(0) équivaut à void 0 et retourne ensuite undefined.
+    
     Ex1:
     void 2 == '2';    // renvoie false, attention à la précédence et donc mieux vaut utiliser des parenthèses
     void (2 === '2'); // renvoie undefined
 
 2. On peut utiliser void pour ajouter un comportement preventDefault () pour un lien
+    
     Ex1:
     <a href="javascript: void(0)"> À propos de </a>
 
 3. On peut utiliser void pour qu'une function retourne undefined même si elle possède une valeur de retour.
+    
     Ex1:
     function add() {
       const a = 3; return a
@@ -331,15 +410,147 @@ Opérateur void
     console.log(void add()); // affiche undefined
 
 
+L'opérateur this
+-------------------------------
+1. this est un opérateur qui permet de retourner une valeur en fonction de son contexte. Deux éléments peuvent influer dessus :
+- Le contexte dans lequel this est appelé : global, fonction, fonction fléchée, méthode d'un objet…
+- Le mode utilisé : strict ou non-strict.
+Attention par contre, this est utilisé this sans qu'il soit défini à son appel.
+Grâce à apply() et call(), il est en effet possible de définir une valeur de this au sein de la fonction, 
+ce qui change forcément l'utilisation que l'on peut en faire.
+
+2. this dans un contexte global
+Le contexte global, c'est lorsque l'on exécute du code en dehors de toute fonction, de tout bloc. 
+Si on utilise this dans ce contexte, il retourne l'objet global.
+
+    Ex1:
+    console.log(this);
+    // Dans un navigateur, cela retourne l'objet DOM window
+    this.alert('Message');
+    // Ouvre une boite de dialogue avec comme contenu : "Message".
+    window.alert('Message');
+    // C'est donc le même résultat que window.alert()
+
+    Ex2:
+    // En mode strict, this retourne exactement la même chose qu'en mode non-strict
+    "use strict";
+    console.log(this);
+    // Retourne l'objet DOM window dans le navigateur
+
+3. this dans une fonction classique
+Lorsque l'on utilise this dans une fonction classique, il retourne un objet, 
+l'objet global (comme si on l'utilise hors de toute fonction).
+
+    Ex1:
+    function maFonction() {
+      return this;
+    }
+    maFonction();
+    // Dans un navigateur, cela retourne l'objet global window
+    
+    Ex2:
+    // En mode strict, c'est un peu différent, this retourne undefined
+    "use strict";
+
+4. this dans une fonction fléchée (arrow function)
+Le cas des fonctions fléchées est un peu particulier car elles ne créent pas de nouveau contexte. 
+Du coup, la valeur de this reprend celle du contexte dans laquelle la fonction est définie.
+
+    Ex1:
+    const maFonction = () => { return this };
+    maFonction();
+    // Retourne window dans mon navigateur, this ayant la valeur de l'objet global.
+
+    Ex2:
+    // Si on utilise this dans une fonction fléchée définie dans une méthode d'un objet, 
+    // this retourne bien l'objet
+    const commentaire = {
+      getAuthor: function() {
+        const value = (() => this);
+        return value;
+      },
+    };
+    const test = commentaire.getAuthor();
+    console.log(test());
+    // Retourne bien l'objet complet
+
+    Ex3:
+    // En mode strict, le comportement est exactement le même
+    const maFonction = () => { "use strict"; return this };
+    maFonction();
+    // Retourne window dans mon navigateur, this ayant la valeur de l'objet global.
+
+5. this dans une méthode d'un objet
+En POO, il est souvent nécessaire d'accéder aux propriétés et méthodes de l'objet courant pour 
+les utiliser ailleurs. this est parfait pour y faire référence. Dans ce contexte, 
+this retourne l'objet dans lequel la méthode est définie. 
+
+    Ex1:
+    const commentaire = {
+      id: 7,
+      author: 'Jean',
+      content: 'Juste un simple commentaire',
+      getAuthor: function(){
+        return this.author
+      },
+    };
+    commentaire.getAuthor();
+    // Retourne 'Jean', this faisant référence à notre objet commentaire, this.author correspond à l'auteur de commentaire.
+
+    Ex2:
+    // En mode strict, le comportement est exactement le même
+    "use strict";
+    const article = {
+      title: 'Un article',
+      content: 'Contenu de mon article',
+    };
+    article.getTitle = function(){
+      return this.title;
+    };
+    article.getTitle();
+    // Retourne bien "Un article"
+
+6. this dans une méthode de type constructeur
+this fait référence à l’objet nouvellement créé.
+
+    Ex1:
+    function Jeu(){
+      this.points = 120;
+    }
+    var j = new Jeu();
+    console.log(Jeu.points);
+    // Retourne 120
+    // En mode strict, la valeur de this est similaire au mode non-strict
+
 La « remontée » des déclarations de fonction
 -------------------------------
-1. Lorsqu'on utilise une déclaration de fonction pour créer une fonction, la définition de la fonction est « remontée » (hoisting). Il devient donc possible d'utiliser la fonction avant de l'avoir déclarée
+1. Lorsqu'on utilise une déclaration de fonction pour créer une fonction, la définition de la fonction 
+est « remontée » (hoisting). Il devient donc possible d'utiliser la fonction avant de l'avoir déclarée.
+    
     Ex1:
     remontee(); // affiche "toto" dans la console
     function remontee() {
       console.log("toto");
     }
 
+2. En tant qu'expression de fonction, l'interpréteur JavaScript ne va ni plus ni moins que remonter 
+la déclaration de la variable et laisser l'affectation à son emplacement initial. Cela revient donc à écrire le code suivant.
+    
+    Ex1:
+    foo();
+    var foo = function() {
+      console.log('foo');
+    }
+    // Affiche "Uncaught TypeError : foo is not a function"
+    // Le code ci-dessus revient à écrire
+    var foo;
+    foo();
+    foo = function() {
+    console.log('foo');
+    }
+
+3. Il faut donc bien faire la distinction entre expression et déclaration de fonction, 
+car l'interpréteur va les traiter de manière différente l'une de l'autre.
 
 Définition d'un littéral
 -------------------------------
@@ -381,7 +592,7 @@ Les fonctions flechées (arrow function en anglais)
         return x + y
     }
     console.log(add(5, 4)) // 9
-1. Une expression de fonction fléchée permet d’avoir une syntaxe plus courte que les expressions de fonction. Les fonctions fléchées sont souvent anonymes et ne sont pas destinées à être utilisées pour déclarer des méthodes.    
+1. Une expression de fonction fléchée permet d'avoir une syntaxe plus courte que les expressions de fonction. Les fonctions fléchées sont souvent anonymes et ne sont pas destinées à être utilisées pour déclarer des méthodes.    
     Ex1:    
     // ES6
     const addES6 = (x, y) => { return x + y }
@@ -416,13 +627,13 @@ Les fonctions flechées (arrow function en anglais)
     const setContent = (title, content) => ({title: title, content: content})
     console.log(setContent('Hello', 'ES6')) // {title: "Hello", content: "ES6"}
 
-6. Il ne peut pas y avoir de saut de ligne entre les paramètres et la flèche d’une fonction fléchée.
+6. Il ne peut pas y avoir de saut de ligne entre les paramètres et la flèche d'une fonction fléchée.
     Ex1:
     var func = ()
             => 1; // SyntaxError: expected expression,
                   //              got '=>'
 
-7. La flèche utilisée pour une fonction fléchée n’est pas un opérateur. Les fonctions fléchées ont des règles spécifiques quant à leur place dans la syntaxe et interagissent différemment de la précédence des opérateurs par rapport à une fonction classique.
+7. La flèche utilisée pour une fonction fléchée n'est pas un opérateur. Les fonctions fléchées ont des règles spécifiques quant à leur place dans la syntaxe et interagissent différemment de la précédence des opérateurs par rapport à une fonction classique.
     Ex1:
     let fonctionRappel;
     fonctionRappel = fonctionRappel || function () {};
@@ -1029,6 +1240,64 @@ FROM()
     // String
     Array.from("toto");                      
     // ["t", "o", "t", "o"]
+
+SLICE()
+// arr.slice()
+// arr.slice(début)
+// arr.slice(début, fin)
+1. La méthode slice() renvoie un objet tableau, contenant une copie superficielle (shallow copy) d'une portion du tableau d'origine, 
+la portion est définie par un indice de début et un indice de fin (EXCLUS). Le tableau original ne sera pas modifié.
+
+    [début] (Facultatif)
+        Indice (à partir de zéro) depuis lequel commencer l'extraction.
+        S'il s'agit d'un indice négatif, début indique un décalage depuis la fin de la séquence. Par exemple, slice(-2) 
+        extrait les avant-dernier et dernier éléments dans la séquence.
+        Si début est absent, slice() commencera depuis 0. 
+        Si début est supérieur à la taille du tableau, c'est un tableau vide qui sera renvoyé.
+    [fin] (Facultatif)
+        Indice (à partir de zéro) auquel arrêter l'extraction. slice() extrait jusqu'à cet indice, 
+        mais pas l'élément situé en fin lui-même. slice(1,4) extrait du deuxième au quatrième élément (les éléments d'indices 1, 2 et 3).
+        S'il s'agit d'un indice négatif, fin indique un décalage depuis la fin de la séquence. slice(2,-1) extrait du troisième à l'avant-dernier élément dans la séquence.
+        Si fin n'est pas fourni, slice() extraira jusqu'à la fin de la séquence (arr.length). 
+        Si fin est supérieur à la longueur de la séquence, slice() fera une extraction jusqu'à la fin de la séquence.
+
+    Valeur de retour :
+        Un nouveau tableau contenant les éléments extraits.
+
+2. slice() ne modifie pas le tableau original, mais renvoie une nouvelle copie du tableau (shallow copy — copie superficielle) dont les éléments sont des copies des éléments extraits du tableau original. 
+Les éléments du tableau original sont copiés dans le nouveau tableau de la manière suivante :
+Pour les références à des objets (et non les objets eux-mêmes), slice() copie ces références dans le nouveau tableau. 
+Tant l'original que le nouveau tableau font référence au même objet. Si un objet référencé est modifié, ces changements sont visibles tant pour le nouveau que pour l'ancien tableau.
+Pour les chaines de caractères, les nombres et les booléens, slice() copie ces chaines de caractères, ces nombres et ces valeurs booléennes dans le nouveau tableau. 
+Les modifications sur ces chaînes, nombres ou booléens dans l'un des tableaux n'affectent pas l'autre tableau 
+(NB : lorsque l'on parle de chaine de caractères, de nombre ou de booléen ici, on parle exclusivement de leur type primitif, 
+pas des objets String, Number ou Boolean — voir par exemple différences entre objet String et type primitif pour les chaines de caractères).
+Si un nouvel élément est ajouté à l'un ou l'autre tableau, le second n'est pas affecté.
+
+    Ex1:
+    var fruits = ["Banane", "Orange", "Citron", "Pomme", "Mangue"];
+    var agrumes = fruits.slice(1, 3);
+    // fruits vaut --> ["Banane", "Orange", "Citron", "Pomme", "Mangue"]
+    // agrumes vaut --> ["Orange", "Citron"]
+
+    Ex2:
+    var animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+    console.log(animals.slice(2));
+    // expected output: Array ["camel", "duck", "elephant"]
+    console.log(animals.slice(2, 4));
+    // expected output: Array ["camel", "duck"]
+    console.log(animals.slice(1, 5));
+    // expected output: Array ["bison", "camel", "duck", "elephant"]
+
+    Ex3:
+    var fruits = ["Banana", "Orange", "Lemon", "Apple", "Mango"];
+    var myBest = fruits.slice(-2); // Equivaut à fruits.slice(fruits.length-2) équivaut à fruits.slice(3)
+    // Apple,Mango
+    var myBest = fruits.slice(-4, -2); // Equivaut à fruits.slice(fruits.length-4, fruits.length-2) équivaut à fruits.slice(1, 3)
+    // Orange,Lemon
+    var myBest = fruits.slice(-4, 2);  // Equivaut à fruits.slice(fruits.length-4, 2) équivaut à fruits.slice(1, 2)
+    // Orange
+
 
     
 Rest parameters
@@ -1756,7 +2025,7 @@ Cependant cela ne surcharge que sa propre référence, et ne touche donc pas à 
     felix.bark(); // still using the prototype function, prints "wouf wouf" to the console.
 
 16. Une modification du prototype est immédiate sur les instances déjà existantes et les futures. 
-En effet le prototype est une référence des instances, et le « fallback » se fait au moment de l’accès à la propriété.
+En effet le prototype est une référence des instances, et le « fallback » se fait au moment de l'accès à la propriété.
 
     Ex1:
     var Dog = function() {}; // declaring constructor
