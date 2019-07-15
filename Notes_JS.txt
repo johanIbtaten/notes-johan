@@ -4,6 +4,7 @@
     Différence entre undefined et null
     Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
     Opérateur void
+    L'opérateur this
     La « remontée » des déclarations de fonction
     Définition d'un littéral
     Les expressions de fonctions
@@ -521,6 +522,7 @@ this fait référence à l’objet nouvellement créé.
     console.log(Jeu.points);
     // Retourne 120
     // En mode strict, la valeur de this est similaire au mode non-strict
+
 
 La « remontée » des déclarations de fonction
 -------------------------------
