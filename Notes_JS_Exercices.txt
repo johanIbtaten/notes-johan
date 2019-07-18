@@ -1,6 +1,5 @@
 Créer une méthode truncate sur une String
 -------------------------------
-
 String.prototype.truncate = function(charNumber) {
   let str = this.valueOf()  
   if (str.length <= charNumber) {
@@ -30,3 +29,102 @@ console.log('Hello!'.truncate(5))
 console.log('Hi!'.truncate(5))
 console.log('Hello world!'.truncate(6))
 console.log('Hello, world!'.truncate(6))
+
+
+printReverse
+-------------------------------
+const tab = ["a", "b" ,"c", "d", "e", "f"]
+function printReverse (arr) {
+  for (const i = arr.length-1 ; i >= 0 ; i-- ) {
+    console.log(arr[i])
+  }
+}
+printReverse(tab)
+
+
+isUniform
+-------------------------------
+const tab1 = ["a", "a" ,"a", "a", "a"]
+function isUniform (arr) {
+  const firstEl = arr[0]
+  for (const i = 1 ; i < arr.length ; i++ ) {
+    if (arr[i] !== firstEl) {
+      return false
+    }
+  }
+  return true
+}
+console.log(isUniform(tab1))
+
+
+Afficher une collection de films
+----------------------------------
+const films = [
+    {
+      titre: "Mon nez dans ton cul 3",
+      vu: true,
+      note: 19
+    },
+    {
+      titre: "Avaletar 2",
+      vu: false,
+      note: 8
+    },
+    {
+      titre: "La belle au bois de Boulogne",
+      vu: true,
+      note: 15
+    }, 
+    {
+      titre: "Tata nique",
+      vu: false,
+      note: 18
+    }
+]
+
+function afficheFilms (films) {
+  films.forEach(function(film) {
+    console.log("Titre : ", film.titre)
+    console.log(film.vu ? "Vu" : "Pas vu")
+    console.log("Note : ", film.note)
+    console.log("-------------------------")
+  })
+}
+
+afficheFilms(films)
+
+
+sum
+-------------------------------
+const tab2 = [1, 2, 3, 4, 5]
+function sum (arr) {
+  const result = null
+  for (const i = 0 ; i < arr.length ; i++ ) {
+    result += arr[i]
+  }
+  return result
+}
+// Avec forEach
+/*function sum (arr) {
+  const result = null
+  arr.forEach (function(item) {
+    result += item
+  })
+  return result
+}*/
+console.log(sum(tab2))
+
+
+sum
+-------------------------------
+function maxValue (arr) {
+  let result = null
+  for (const i = 0 ; i < arr.length ; i++ ) {
+    if (arr[i] > result && typeof arr[i] == 'number') {
+      result = arr[i]
+    }
+  }
+  return result
+}
+
+console.log(maxValue(tab2))

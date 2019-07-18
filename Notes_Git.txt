@@ -33,7 +33,11 @@ git clone git@github.com:whatever .
 =================================
 Git
 =================================
-1. Force overwrite of local file with what's it origin repo
+1. Initialiser un dépôt Git local
+// A la racine du dossier qui contient le projet
+git init
+
+2. Force overwrite of local file with what's it origin repo
 // Overwrite only one file
 git fetch
 git checkout origin/master <filepath>
