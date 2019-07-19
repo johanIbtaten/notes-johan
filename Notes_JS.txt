@@ -1185,6 +1185,20 @@ Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser f
       return obj.value;
     });
 
+    Ex6:
+    // On peut passer à map() simplement le nom de la fonction sans paramètres
+    myArray = [1,2,3]
+    add3 = function(val) {
+      return val+2;
+    }
+    myArray.map(add3) // [3,4,5]
+    // Equivaut à 
+    myArray.map(function(valCouranteDuTableau) {
+      return valCouranteDuTableau+2;
+    })
+
+
+
 ENTRIES()
 // arr.entries()
 1. La méthode entries() renvoie un nouvel objet de type Array Iterator qui contient le couple clef/valeur pour chaque éléments du tableau.
@@ -1468,6 +1482,28 @@ ou en plusieurs éléments (pour les littéraux de tableaux) ou en paires clés-
     kitten.toys[1] = "yarn";
     console.log(kitten.toys); // ["mouse", "yarn"]
     console.log(cat.toys); // ["mouse", "yarn"] <-- problem!
+
+2. Il permet de mettre une ou plusieurs valeurs de propriété d'un objet. 
+Les propriétés sont ajoutées dans l'ordre. Par conséquent, si vous souhaitez remplacer des propriétés existantes, 
+vous devez les placer à la fin et non au début
+
+  Ex1:
+  const obj1 = {
+    a: "original a",
+    b: "original b"
+  }
+  // Doesn't work
+  const obj2 = {
+    a: "updated a",
+    ...obj1
+  }
+  console.log(obj2); // Affiche Object {a: "original a", b: "original b"}
+  // Works
+  const obj3 = {
+    ...obj1, 
+    a: "updated a"
+  }
+  console.log(obj3); // Affiche Object {a: "updated a", b: "original b"}
 
 
 Le protocole « itérable » (Objets itérables)
