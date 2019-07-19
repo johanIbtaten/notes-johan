@@ -13,6 +13,7 @@
     Object Property Value Shorthand
     Boucles
     Fonctions sur les tableaux
+    Méthodes sur les objets
     Rest parameters
     Spread operator (opérateur de décomposition)
     Le protocole « itérable » (Objets itérables)
@@ -1175,12 +1176,7 @@ Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser f
     var map = Array.prototype.map;
     var a = map.call('Hello World', function(x) { return x.charCodeAt(0); });
     // a vaut désormais [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100]
-    // Ici sur un tableau d'objets collectés grâce à querySelectorAll
-    var elems = document.querySelectorAll('select option:checked');
-    var values = Array.prototype.map.call(elems, function(obj) {
-      return obj.value;
-    });
-
+    
     Ex5:
     // Utiliser map de façon générique sur autre chose qu'un tableau
     // Sur un tableau d'objets collectés grâce à querySelectorAll
@@ -1301,7 +1297,49 @@ Si un nouvel élément est ajouté à l'un ou l'autre tableau, le second n'est p
     // Orange
 
 
-    
+Méthodes sur les objets
+-------------------------------
+KEYS()
+// Object.keys(obj)
+1. La méthode Object.keys() renvoie un tableau contenant les noms des propriétés propres à un objet 
+(qui ne sont pas héritées via la chaîne de prototypes) et qui sont énumérables. L'ordre de ce tableau est le même que celui obtenu par une boucle for...in 
+(à la différence qu'une boucle for-in liste également les propriétés héritées).
+Si on souhaite lister toutes les propriétés, y compris celles qui ne sont pas énumérables, on pourra utiliser Object.getOwnPropertyNames().
+
+    [obj]
+        L'objet dont on souhaite lister les propriétés propres et énumérables.
+   
+    Valeur de retour :
+        Un tableau de chaînes de caractères qui sont les noms des propriétés énumérables de l'objet passé en argument.
+
+    Ex1:
+    const object1 = {
+      a: 'somestring',
+      b: 42,
+      c: false
+    };
+    console.log(Object.keys(object1));
+    // expected output: Array ["a", "b", "c"]
+
+    Ex2:
+    var arr = ["a", "b", "c"];
+    console.log(Object.keys(arr));
+    // affichera ['0', '1', '2']
+
+    Ex3:
+    // un objet semblable à un tableau
+    var obj = { 0 : "a", 1 : "b", 2 : "c"};
+    console.log(Object.keys(obj));
+    // affichera ['0', '1', '2']
+
+    Ex4:
+    // un objet semblable à un tableau avec
+    // un ordre de clé aléatoire
+    var an_obj = { 100: "a", 2: "b", 7: "c"};
+    console.log(Object.keys(an_obj));
+    // affichera ['2', '7', '100'] Les clés se classent dans l'ordre croissant de la valeur des indices
+
+
 Rest parameters
 -------------------------------
 1. Cette syntaxe permet de représenter un nombre indéfini d'arguments sous forme d'un tableau.
