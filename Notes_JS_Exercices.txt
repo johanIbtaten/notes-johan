@@ -115,7 +115,7 @@ function sum (arr) {
 console.log(sum(tab2))
 
 
-sum
+maxValue
 -------------------------------
 function maxValue (arr) {
   let result = null
@@ -126,5 +126,20 @@ function maxValue (arr) {
   }
   return result
 }
-
 console.log(maxValue(tab2))
+
+
+randomize array
+-------------------------------
+function randomize (arr) {
+	let temp = null
+	let random = null
+	for(let i = 0; i < arr.length; i++) {
+		random = Math.floor(Math.random() * arr.length)
+		temp = arr[i]
+		arr[i] = arr[random]
+		arr[random] = temp
+	}
+	return arr
+}
+console.log(randomize([1,2,3,4,5]))

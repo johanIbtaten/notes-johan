@@ -1,6 +1,7 @@
     Variables
     Le hoisting ou remontée des variables
     Évaluation de variables
+    Les bouléens
     var, let, const
     Affectation par décomposition (Destructuring en anglais)
     Types de données
@@ -98,7 +99,7 @@ Le contexte d'exécution globale si la déclaration a été faite en dehors de t
 
 Évaluation de variables
 -------------------------------
-1. Une variable déclarée (déclaration) grâce à l'instruction var ou let sans valeur initiale définie (affectation ou initialisation) vaudra undefined.
+1. Une variable déclarée (déclaration) grâce à l'instruction var ou let sans valeur initiale définie (affectation ou initialisation ou  assignation) vaudra undefined.
 
     Ex1:
     var a;
@@ -146,7 +147,7 @@ avec let avant sa déclaration provoquera l'envoi d'une exception ReferenceError
     Ex1:
     // La condition de l'instruction if sera validée car la variable n'a pas été initialisée (affectée) (elle a simplement été déclarée)
     var input;
-    if (input === undefined){
+    if (typeof input === undefined){
       faireCeci();
     } else {
       faireCela();
@@ -172,6 +173,24 @@ avec let avant sa déclaration provoquera l'envoi d'une exception ReferenceError
     Ex1:
     var n = null;
     console.log(n * 32); // Le log affichera 0
+
+
+Les booléens
+-------------------------------
+1. Dans un contexte booléen, si la valeur d'une variable 
+est omise ou est 0, -0, null, false, NaN, undefined ou une chaine de caractères vide (""), 
+son évaluation est à false (faux).
+Toutes les autres valeurs d'une variable, y compris n'importe quel objet, 
+un tableau vide ([]), ou une chaine de caractères "false", 
+est évaluer avec une valeur initiale à true (vrai).
+
+    Ex1:
+    // En javascript, l'opérateur || retourne la première valeur évaluée à true.
+    // Tester si une variable est définie en javascript
+    var language;
+    var info = language || "en"; // langage vaut false car la variable renvoie undefined
+    console.log(info) // "en"
+
 
 var, let, const
 -------------------------------
@@ -485,6 +504,13 @@ Constant numbers — const PI = 3.14
 Objects — var name = {firstName:"John", lastName:"Doe"}
 Undefined — var a; console.log(a); retourne undefined
 Null  — var a = null
+
+1. Excepté dans les cas de null ou undefined, pour chaque valeur primitive il existe un objet équivalent 
+qui la contient:
+String pour la primitive string ;
+Number pour la primitive number ;
+Boolean pour la primitive boolean ;
+Symbol pour la primitive symbol
 
 
 Les opérateurs d'égalité
@@ -1323,22 +1349,6 @@ for...in ne doit pas être utilisée pour parcourir un Array lorsque l'ordre des
     // x
     // e
     // l
-
-    Ex3:
-    // Parcourir une Map
-    let iterable = new Map([['a', 1], ['b', 2], ['c', 3]]);
-    for (let element of iterable) {
-      console.log(element);
-    }
-    // ['a', 1]
-    // ['b', 2]
-    // ['c', 3]
-    for (let [clef, valeur] of iterable) {
-      console.log(valeur);
-    }
-    // 1
-    // 2
-    // 3
 
 
 LES DIFFÉRENCES ENTRE FOR...OF ET FOR...IN
