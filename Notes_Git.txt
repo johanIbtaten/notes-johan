@@ -1,10 +1,13 @@
 =================================
 Github
 =================================
-1. Clone repository dans un dossier local
+1. Clone repository dans un dossier local (Un dossier est créé avec le nom du repo)
 git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
-    ex1:
-    git clone https://github.com/johanIbtaten/notes-johan.git
+   ex1:
+   git clone https://github.com/johanIbtaten/notes-johan.git (Un dossier notes-johan est créé)
+
+   To clone git repo into the current and empty folder (Mettre un . à la fin)
+   git clone https://github.com/accountName/repoName.git .
 
 2. Pushing to a remote repository
 git push  <REMOTENAME> <BRANCHNAME>
