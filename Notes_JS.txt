@@ -13,8 +13,10 @@
     La « remontée » des déclarations de fonction
     Définition d'un littéral
     Littéraux de gabarits (template strings en anglais)
+    Les différents types de fonctions
     Les expressions de fonctions
     Les fonctions flechées (arrow function en anglais)
+    IIFE (Expression de fonction invoquée immédiatement)
     Objet Map
     Object Property Value Shorthand
     Boucles
@@ -957,6 +959,91 @@ telles qu'elles ont été entrées, sans traiter les séquences d'échappement.
     // "S,a,l,u,t,\,n,5,!"
   
 
+Les différents types de fonctions
+-------------------------------
+1. Une fonction anonyme est une fonction sans nom de fonction
+    Ex1:    
+    function () {};
+    // ou en utilisant la notation de flèche de ECMAScript 2015
+    () => {};
+
+2. Une fonction nommée est une fonction avec un nom de fonction
+    Ex1:
+    function foo() {};
+    // ou en utilisant la notation de flèche de ECMAScript 2015
+    const foo = () => {};
+
+3. Une fonction imbriquée (ou fonction interne) est une fonction à l'intérieur d'une autre fonction (square dans l'exemple suivant). 
+Une fonction externe est une fonction qui contient une fonction (addSquares dans l'exemple suivant)
+    Ex1:
+    function addSquares(a,b) {
+      function square(x) {
+          return x * x;
+      }
+      return square(a) + square(b);
+    };
+    //En utilisant la notation de flèche de ECMAScript 2015
+    const addSquares = (a,b) => {
+      const square = x => x*x;
+      return square(a) + square(b);
+    };
+
+4. Une fonction récursive est une fonction qui fait appel à elle-même
+    Ex1:
+    function loop(x) {
+      if (x >= 10)
+          return;
+      loop(x + 1);
+    };
+    //En utilisant la notation de flèche de ECMAScript 2015
+    const loop = x => {
+      if (x >= 10)
+          return;
+      loop(x + 1);
+    };
+
+5. Une expression de fonction invoquée immédiatement (IIFE) est une fonction appelée directement après le chargement de la fonction dans le compilateur du navigateur. 
+La façon d'identifier une IIFE est de localiser les parenthèses gauche et droite supplémentaires à la fin de la déclaration de la fonction.
+    Ex1:
+    (function foo() {
+        console.log("Hello Foo");
+    }());
+
+
+L'objet arguments
+-------------------------------
+1. Les arguments d'une fonction sont maintenus dans un objet semblable à un tableau. 
+Dans une fonction, il est possible d'utiliser les arguments passés 
+à la fonction de la façon suivante : arguments[i]
+ù i représente l'index ordinal de l'argument (le premier argument ayant un indice à 0). On accède donc au premier argument avec arguments[0]. 
+Le nombre total d'arguments est fourni grâce à arguments.length. En utilisant l'objet arguments, il est possible de recenser 
+les arguments supplémentaires fournis à la fonction si jamais il y a plus d'arguments fournis que requis. 
+Cet objet est souvent utile si on ne connaît pas le nombre d'arguments passés à la fonction. 
+La propriété arguments.length permet de déterminer le nombre d'arguments réellement passés à la fonction. 
+On peut donc ensuite accéder aux différents arguments en parcourant l'objet arguments.
+    Ex1:
+    // Fonction qui concatène plusieurs chaînes
+    // Le seul argument formellement défini sera la chaîne utilisée comme séparateur 
+    // pour concaténer les différentes chaînes. 
+    function monConcat(séparateur) {
+      var result = ""; // on initialise la liste
+      var i;
+      // on parcourt les arguments
+      for (i = 1; i < arguments.length; i++) {
+          result += arguments[i] + séparateur;
+      }
+      return result;
+    }
+    // On peut passer autant d'arguments que nécessaire à cette fonction. Ils seront tous concaténés dans une chaîne finale
+    // renverra "rouge, orange, bleu, "
+    monConcat(", ", "red", "orange", "blue");
+
+    // renverra "éléphant; girafe; lion; singe; "
+    monConcat("; ", "éléphant", "girafe", "lion", "singe");
+
+    // renverra "sauge. basilic. origan. poivre. échalotte. "
+    monConcat(". ", "sauge", "basilic", "origan", "poivre", "échalotte");    
+
 Les expressions de fonctions
 -------------------------------
 1. Une expression de fonction est très similaire et a presque la même syntaxe qu'une déclaration de fonction. La différence principale entre une expression de fonction et une instruction est le nom de la fonction. En effet, pour les expressions, celui peut être omis (on parle alors d'une fonction anonyme). 
@@ -1103,6 +1190,41 @@ Les fonctions flechées (arrow function en anglais)
     // [6, 0, 18]
     var double = arr.map(v => v * 2);       
     // [10, 12, 26, 0, 2, 36, 46]
+
+
+IIFE (Expression de fonction invoquée immédiatement)
+-------------------------------
+1. IIFE (Immediately Invoked Function Expression) (Expression de fonction invoquée immédiatement) 
+est une fonction JavaScript qui est exécutée dès qu'elle est définie.
+C'est un modèle de conception qui est également connu sous le nom de Fonction anonyme auto-exécutable et contient deux parties principales. 
+La première est la fonction anonyme avec portée lexicale incluse dans le groupement opérateur(). Cela empêche l'accès aux variables dans 
+l'expression idiomatique IIFE ainsi que la pollution de la portée globale.
+La deuxième partie crée la fonction immédiatement exécutable (), à travers laquelle le moteur JavaScript interprétera directement la fonction.
+La fonction devient une expression de fonction qui est immédiatement exécutée. La variable dans l'expression ne peut pas être atteinte de l'extérieur.
+
+    Ex1:
+    (function () { 
+        var aName = "Barry";
+    })();
+    // Le nom de la variable n'est pas accessible depuis le périmètre externe
+    aName // lancement "Exception ReferenceError: aName n'est pas défini"
+
+2. Affecter l'IIFE à une variable ne la stocke pas mais reçoit son résultat.
+
+    Ex1:
+    var result = (function () { 
+        var name = "Barry"; 
+        return name; 
+    })(); 
+    // Crée immédiatement la sortie: 
+    result; // "Barry"
+
+    var myFunction = function hello() {
+        console.log(hello.name); //affiche hello
+    }();
+    console.log(myFunction); //affiche undefined
+
+
 
 
 Objet Map
@@ -1352,7 +1474,7 @@ for...in ne doit pas être utilisée pour parcourir un Array lorsque l'ordre des
 
 
 LES DIFFÉRENCES ENTRE FOR...OF ET FOR...IN
-1. Chaque objet héritera de la propriété objCustom et chaque objet qui est un tableau (Array) héritera de la propriété arrCustom car 
+1. (Voir exemple ci-dessous) Chaque objet héritera de la propriété objCustom et chaque objet qui est un tableau (Array) héritera de la propriété arrCustom car 
 on les ajoute aux prototypes Object.prototype et Array.prototype. L'objet iterable hérite donc des propriétés objCustom et 
 arrCustom grâce à l'héritage et à la chaîne de prototypes.
 Cette boucle ne parcourt que les propriétés énumérables de l'objet iterable dans un ordre arbitraire. 
@@ -1690,6 +1812,60 @@ Si un nouvel élément est ajouté à l'un ou l'autre tableau, le second n'est p
     // Orange,Lemon
     var myBest = fruits.slice(-4, 2);  // Equivaut à fruits.slice(fruits.length-4, 2) équivaut à fruits.slice(1, 2)
     // Orange
+
+INCLUDES()
+// arr.includes(élémentRecherché)
+// arr.includes(élémentRecherché, indiceDépart)
+1. Permet de déterminer si un tableau contient une valeur et renvoie true si c'est le cas, false sinon.
+includes() est une méhtode générique : l'objet sur lequel elle est appelée ne doit pas nécessairement être un tableau. 
+On peut l'utiliser sur des objets semblables à des tableaux (ex. arguments ou des chaînes de caractères)
+
+    [élémentRecherché] 
+        La valeur qu'on souhaite trouver dans le tableau (lorsqu'on manipule des caractères et des chaînes, 
+        la comparaison est sensible à la casse).
+    [indiceDépart]  (Facultatif)
+        La position du tableau à partir de laquelle commencer à chercher élémentRecherché. 
+        Si on utilise une valeur négative, la recherche commencera à partir de la fin du tableau (autrement dit à l'indice array.length - indiceDépart). 
+        La valeur par défaut est 0.
+        SI indiceDépart est supérieur ou égal à la longueur du tableau, la méthode retourne false. Le tableau n'est pas parcouru.
+        Si indiceDépart est strictement négatif, l'indice de départ effectif est la somme entre la taille du tableau et indiceDépart. 
+        Si cette somme est toujours négative, le tableau est intégralement parcouru.
+    Valeur de retour :
+        Un booléen qui vaut true si élémentRecherché est trouvé dans le tableau (à partir de l'indiceDépart si celui-ci est indiqué). 
+        Les valeurs -0, +0 et 0 sont considérées comme équivalentes mais false n'est pas considéré comme équivalent à 0.
+
+    Ex1:
+    [1, 2, 3].includes(2);     // true
+    [1, 2, 3].includes(4);     // false
+    [1, 2, 3].includes(3, 3);  // false
+    [1, 2, 3].includes(3, -1); // true
+    [1, 2, NaN].includes(NaN); // true
+    ['a', 'b', 'c'].includes('c', 5);    // false
+    ['a', 'b', 'c'].includes('c', -100); // true
+
+    var array1 = [1, 2, 3];
+    console.log(array1.includes(2));
+    // expected output: true
+
+    var pets = ['cat', 'dog', 'bat'];
+    console.log(pets.includes('cat'));
+    // expected output: true
+    console.log(pets.includes('at'));
+    // expected output: false
+
+    // indiceDépart supérieur ou égal à la longueur du tableau
+    var arr = ['a', 'b', 'c'];
+    arr.includes('c', 3);   // false
+    arr.includes('c', 100); // false
+
+    // indiceDépart strictement négatif
+    // Le tableau a une taille de 3
+    // indiceDépart vaut -2
+    // L'indice de départ effectif vaut is 3 + (-2) = 1
+    var arr = ['a', 'b', 'c'];
+    arr.includes('a', -2); // false
+    arr.includes('b', -2); // true
+    arr.includes('c', -100); // true
 
 
 Méthodes sur les objets
