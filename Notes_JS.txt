@@ -937,6 +937,23 @@ La fonction utilisée pour le formatage du gabarit peut être nommée comme n'im
     console.log(sortie);
     // ce Michou est un jeunot
 
+    Ex2:
+    // Lors de l'exécution, le contenu du littéral est transmis à la fonction
+    // strings : reçoit dans un tableau les chaînes intermédiaires (« Le résultat de la somme de » , « et » , « est ») ;
+    // ...values : reçoit dans un tableau les valeurs des interpolations (a, b et a + b)
+    var a = 2.3265;
+    var b = 5.02154;
+    function tag(strings, ...values) {
+      var sortie = strings[0]
+      + values[0].toFixed(2)
+      + strings[1]
+      + values[1].toFixed(2)
+      + strings[2]
+      + values[2].toFixed(2);
+      return sortie;
+    }
+    var message = tag`Le résultat de la somme de ${a} et ${b} est ${a + b}`;
+
 3. La propriété spéciale raw, disponible sur le premier argument de la fonction du gabarit étiqueté, vous permet d'accéder aux chaînes brutes, 
 telles qu'elles ont été entrées, sans traiter les séquences d'échappement.
 
