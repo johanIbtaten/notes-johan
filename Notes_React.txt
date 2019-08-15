@@ -1,3 +1,9 @@
+Créer un application react avec react-app
+-------------------------------
+npm init react-app my-app
+// my-app correspond au nom du repertoire qui va être créé pour les fichiers
+// de l'application, on choisi le nom que l'on veut
+
 Component Lifecycle
 -------------------------------
 1. Mounting

@@ -252,6 +252,26 @@ visibility
 z-index
 
 =================================
+Bonnes pratiques
+=================================
+1. Un composant ne doit pas définir sa largeur, sa marge, sa hauteur et sa couleur. Ces attributs doivent être définis par ses parents.
+
+
+=================================
+Variables CSS
+=================================
+/* Initialisation */ 
+:root { 
+  --text-color: blue; 
+} 
+
+/* Utilisation */
+p { 
+  color: var(--text-color, green); /* Le 2ème argument est une valeur par défaut si la première est invalide
+}
+
+
+=================================
 Bootstrap BEM
 =================================
 
