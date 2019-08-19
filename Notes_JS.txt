@@ -30,7 +30,10 @@
     Héritage et chaîne de prototype
     Les différentes façons de créer des objets et les impacts sur la chaîne de prototype
     Comparer des objets
-    Utiliser this    
+    Utiliser this
+    Promise, Async et Await
+    Fetch
+    AJAX
 
 
 
@@ -2877,18 +2880,406 @@ Utiliser this
 -------------------------------
 1. JavaScript possède un mot-clé spécial this, qui peut être utiliser à l'intérieur d'une méthode pour faire référence à l'objet courant.
 
-Ex1:
-// Si on a une fonction valider qui permet de valider la propriété 
-// valeur d'un objet en fonction d'un seuil minimum et d'un seuil maximum
-function valider(obj, seuilMin, seuilMax) {
-  if ((obj.value < seuilMin) || (obj.valeur > seuilMax))
-    console.log("Valeur invalide !");
-}
+    Ex1:
+    // Si on a une fonction valider qui permet de valider la propriété 
+    // valeur d'un objet en fonction d'un seuil minimum et d'un seuil maximum
+    function valider(obj, seuilMin, seuilMax) {
+      if ((obj.value < seuilMin) || (obj.valeur > seuilMax))
+        console.log("Valeur invalide !");
+    }
 
-// Cette fonction pourrait ensuite être appelée via le gestionnaire d'événement onchange 
-// pour les éléments d'un formulaire et la valeur pour l'élément du formulaire serait passée en argument
-<input type="text" name="age" size="3" onChange="valider(this, 18, 99)">
+    // Cette fonction pourrait ensuite être appelée via le gestionnaire d'événement onchange 
+    // pour les éléments d'un formulaire et la valeur pour l'élément du formulaire serait passée en argument
+    <input type="text" name="age" size="3" onChange="valider(this, 18, 99)">
 
 2. En général, this fait référence à l'objet appelant de la méthode.
 
 
+Promise, Async et Await
+-------------------------------
+ 1. La nature asynchrone du JavaScript pose souvent des problèmes en terme d'organisation. Si on vient d'un langage plus classique 
+ il est parfois difficile de concevoir des fonctions avec une résolution asynchrone. 
+ Comment renvoyer les résultats quand le code n'est pas exécuté de manière synchrone ?
+
+ 2. Les callbacks
+ Nous souhaitons donc créer une fonction pour faire un appel Ajax. 
+ La résolution de la requête Ajax se fait de manière asynchrone et il n'est donc pas possible d'utiliser un simple return.
+ Il faut donc être capable de détecter la résolution de la requête afin d'effectuer la suite de nos traitements. La solution pour remédier cette problématique est d'utiliser 
+ des fonctions anonymes que l'on va éxécuter lors de la résolution de notre code. Ces fonctions sont appellées callbacks.
+
+    Ex1:
+    var ajax = function (url) {
+      var req = new XMLHttpRequest()
+      req.open('GET', url, true)
+      req.onreadystatechange = function (aEvt) {
+        if (req.readyState == 4) {
+          if(req.status == 200)
+            // return req.responseText n'est pas possible
+            // On ne peut pas utiliser de "return" ici car on est dans la fonction 
+            // onReadyStateChange
+          else
+            // ...
+        }
+      };
+      req.send(null)
+    }
+    ajax('https://jsonplaceholder.typicode.com/users') 
+    // Comment détecter la fin de la requête ajax ?
+
+    Ex2:
+    var ajax = function (url, success, error) {
+      var req = new XMLHttpRequest()
+      req.open('GET', url, true)
+      req.onreadystatechange = function (aEvt) {
+        if (req.readyState == 4) {
+          if(req.status == 200)
+            success(req.responseText)
+          else
+            error(req)
+        }
+      };
+      req.send(null)
+    }
+    ajax('https://jsonplaceholder.typicode.com/users', function (response) {
+      // response contient la réponse de la requête, on peut faire le reste du traitement
+    }, function (req) {
+      // Le serveur n'a pas répondu comme attendu, on traite l'erreur
+    })
+
+    Ex3:
+    // Cette méthode fonctionne mais si vous souhaitez effectuer des opérations asynchrones en cascade votre code va vite ressembler à ça...
+    ajax('https://jsonplaceholder.typicode.com/users', function (response) {
+      ajax('https://jsonplaceholder.typicode.com/posts', function (response) {
+        ajax('https://jsonplaceholder.typicode.com/tutoriels', function (response) {
+          // Là j'ai tout !
+        }, function (req) { })
+      }, function (req) { })
+    }, function (req) { })
+
+3. Les promesses
+Les promesses permettent une approche différente du problème et sont apparues avec l'ES2015.
+A vu de nez cette méthode semble proche de la méthode précédente. Cependant, les promesses peuvent 
+être enchainées ce qui simplifie grandement la gestion en cascades et en parallèle.
+
+    Ex1:
+    let ajax = function (url) {
+      // On renvoie une promesse qui prend en paramettre une fonction 
+      // avec 2 paramètres, le callback de succès et d'erreur
+      return new Promise(function (resolve, reject) {
+        // Le reste du code ressemble à la méthode précédente
+        let req = new XMLHttpRequest()
+        req.open('GET', url, true)
+        req.onreadystatechange = function (aEvt) {
+          if (req.readyState == 4) {
+            if(req.status == 200)
+              resolve(req.responseText)
+            else
+              reject(req)
+          }
+        };
+        req.send(null)
+      })
+    }
+    // L'appel à la fonction peut se faire de cette manière là
+    ajax('https://jsonplaceholder.typicode.com/users')
+    .then(function (response) {
+      // Le serveur a correctement répondu
+    }).catch(function (req) {
+      // Le serveur n'a pas répondu comme attendu
+    })
+
+    Ex2:
+    let ajax = function (url) {
+      // On renvoie une promesse qui prend en paramettre une fonction 
+      // avec 2 paramètres, le callback de succès et d'erreur
+      return new Promise(function (resolve, reject) {
+        // Le reste du code ressemble à la méthode précédente
+        let req = new XMLHttpRequest()
+        req.open('GET', url, true)
+        req.onreadystatechange = function (aEvt) {
+          if (req.readyState == 4) {
+            if(req.status == 200)
+              resolve(req.responseText)
+            else
+              reject(req)
+          }
+        };
+        req.send(null)
+      })
+    }
+    // Cascade
+    ajax('https://jsonplaceholder.typicode.com/users')
+    .then(function (response) {
+      // Si le then retourne une promesse on peut enchainer
+      return ajax('https://jsonplaceholder.typicode.com/posts')
+    })
+    .then(function (response) {
+      // Si le then retourne une promesse on peut enchainer
+      return ajax('https://jsonplaceholder.typicode.com/comments')
+    })
+    .then(function (response) {
+      // La série d'opération est finie
+    })
+    .catch(function (req) {
+      // Une des requête a échouée
+    })
+
+    Ex3:
+    // En parallèle
+    Promise.all([
+      ajax('https://jsonplaceholder.typicode.com/users'),
+      ajax('https://jsonplaceholder.typicode.com/posts'),
+      ajax('https://jsonplaceholder.typicode.com/comments')
+    ]).then(function (responses) {
+      responses // [response1, response2, response3]
+    }).catch(function (errors) { })
+
+4. Async & Await
+L'ES2017 propose en draft une amélioration du système de promesses avec la création de fonction asynchrones.
+
+    Ex1:
+    let ajax = function (url) {
+      // On renvoie une promesse qui prend en paramettre une fonction 
+      // avec 2 paramètres, le callback de succès et d'erreur
+      return new Promise(function (resolve, reject) {
+        // Le reste du code ressemble à la méthode précédente
+        let req = new XMLHttpRequest()
+        req.open('GET', url, true)
+        req.onreadystatechange = function (aEvt) {
+          if (req.readyState == 4) {
+            if(req.status == 200)
+              resolve(req.responseText)
+            else
+              reject(req)
+          }
+        };
+        req.send(null)
+      })
+    }
+    // Une fonction qui renvoie une promesse peut être marqué comme "async"
+    // Elle peut alors attendre la résolution d'une autre promesse avec "await"
+    let getPost = async function () {
+      // Plutot que d'utiliser le then on peut attendre la résolution
+      let response = await ajax('https://jsonplaceholder.typicode.com/posts')
+      // Return permettra le resolve de la promesse
+      return JSON.parse(response) 
+      // Un throw permettra de reject la promesse
+    }
+    // Cette fonction s'utilise comme précédemment
+    getPost().then(posts => {
+      console.log(posts)
+    }).catch(error => { })
+
+    Ex2:
+    let ajax = function (url) {
+      // On renvoie une promesse qui prend en paramettre une fonction 
+      // avec 2 paramètres, le callback de succès et d'erreur
+      return new Promise(function (resolve, reject) {
+        // Le reste du code ressemble à la méthode précédente
+        let req = new XMLHttpRequest()
+        req.open('GET', url, true)
+        req.onreadystatechange = function (aEvt) {
+          if (req.readyState == 4) {
+            if(req.status == 200)
+              resolve(req.responseText)
+            else
+              reject(req)
+          }
+        };
+        req.send(null)
+      })
+    }
+    let getPosts = async function () {
+      let response = await ajax('https://jsonplaceholder.typicode.com/users')
+      let users = JSON.parse(response)
+      response = await ajax(`https://jsonplaceholder.typicode.com/comments?usersId=${user[0].id}`)
+      let posts = JSON.parse(response)
+      return posts
+    }
+    let getFirtPost = async function () {
+       let posts = await getPosts()
+       return posts[0]
+    }
+    getFirtPost().then(function(post) {
+      console.log(post)
+    }).catch(function(error) {
+      console.log(error)
+    }).then(function() {
+      console.log('Fin des requêtes AJAX')
+    })
+
+
+Fetch
+-------------------------------
+1. Fetch est une nouvelle API qui vient remplacer XMLHttpRequest avec un support natif des Promesses.
+
+    Ex1:
+    const getUsers = async function() {
+      try {
+        let response = await fetch(https://jsonplaceholder.typicode.com/users)
+        if (response.ok) {
+          let data = await response.json()
+            console.log(data)          
+        } else {
+          console.error(`Retour du serveur : `${response.status})
+        }
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    const insertPost = async function(data) {
+      let response = await fetch(https://jsonplaceholder.typicode.com/posts), {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      let responseData = await response.json()
+    }
+    insertPost({
+      name:Jean,
+      age:29
+    })
+
+    Ex2:
+    // Validation AJAX d'un formulaire avec fetch
+    let form = document.querySelector('#contact')
+    let button = form.querySelector('button[type=submit]')
+    let buttonText = button.textContent
+    form.addEventListener('submit', async function (e) {
+      button.disabled = true
+      button.textContent = 'Chargement...'
+      let errorElements = form.querySelectorAll('.has-error')
+      for (let i = 0; i < errorElements.length; i++) {
+        errorElements[i].classList.remove('has-error')
+        let span = errorElements[i].querySelector('.help-block')
+        if (span) {
+          span.parentNode.removeChild(span)
+        }
+      }
+      e.preventDefault()
+      let data = new FormData(form)
+      try {
+        let response = await fetch(form.getAttribute('action'), {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'xmlhttprequest'
+          },
+          body: data
+        })
+        let responseData = await response.json()
+        // La réponse n'est pas bonne (pas 200), on affiche les erreurs
+        if (!response.ok) {
+          let errors = responseData
+          let errorsKey = Object.keys(errors)
+          for (let i = 0; i < errorsKey.length; i++) {
+            let key = errorsKey[i]
+            let error = errors[key]
+            let input = document.querySelector('[name=' + key + ']')
+            let span = document.createElement('span')
+            span.className = 'help-block'
+            span.innerHTML = error
+            input.parentNode.classList.add('has-error')
+            input.parentNode.appendChild(span)
+          }
+        // La réponse est ok, on vide le formulaire
+        } else {
+          let inputs = form.querySelectorAll('input, textarea')
+          for (let i = 0; i < inputs.length; i++) {
+            inputs[i].value = ''
+          }
+          alert('Merci pour votre message')
+        }
+      } catch (e) {
+        alert(e)
+      }
+      // Dans tous les cas on permet la soumission du formulaire à nouveau
+      button.disabled = false
+      button.textContent = buttonText
+    })
+
+
+AJAX
+-------------------------------
+1. L'Ajax permet d'appeller une page en JavaScript et de récupérer les informations 
+afin d'effectuer un traitement particulier.
+Le point d'entré de l'Ajax est l'utilisation d'un objet spécifique : XMLHttpRequest. 
+Malheureusement cet objet n'est pas disponible dans tous les navigateur et il est donc conseillé d'utiliser une fonction pour générer l'objet dont on va avoir besoin.
+
+    Ex1:
+    var getHttpRequest = function () {
+      var httpRequest = false;
+      if (window.XMLHttpRequest) { // Mozilla, Safari,...
+        httpRequest = new XMLHttpRequest();
+        if (httpRequest.overrideMimeType) {
+          httpRequest.overrideMimeType('text/xml');
+        }
+      }
+      else if (window.ActiveXObject) { // IE
+        try {
+          httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        }
+        catch (e) {
+          try {
+            httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          catch (e) {}
+        }
+      }
+      if (!httpRequest) {
+        alert('Abandon :( Impossible de créer une instance XMLHTTP');
+        return false;
+      }
+      return httpRequest
+    }
+    var xhr = getHttpRequest()
+    xhr.open('GET', 'https://jsonplaceholder.typicode.com/users', true)
+    // On envoit un header pour indiquer au serveur que la page est appellée en Ajax
+    xhr.setRequestHeader('X-Requested-With', 'xmlhttprequest')
+    // On lance la requête
+    xhr.send()
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+            console.log(xhr.responseText) // xhr.responseText contient le résultat de la page
+        } else {
+            alert('Impossible de contacter le serveur')// Le serveur a renvoyé un status d'erreur
+        }
+      }
+    }
+
+2. Si vous souhaitez soumettre des informations vous pouvez utiliser l'objet FormData
+
+    Ex1:
+    var data = new FormData() 
+    data.append('name', 'John Doe')
+    data.append('email, 'contact@local.dev')
+
+    var xhr = getHttpRequest()
+    xhr.open('POST', 'http://localhost/demo.php', true)
+    xhr.setRequestHeader('X-Requested-With', 'xmlhttprequest')
+    xhr.send(data)
+
+    Ex2:
+    // si l'on veut poster un formulaire
+    var form = document.querySelector('#form')
+    var data = new FormData(form) 
+
+    var xhr = getHttpRequest()
+    xhr.open('POST', 'http://localhost/demo.php', true)
+    xhr.setRequestHeader('X-Requested-With', 'xmlhttprequest')
+    xhr.send(data)
+
+3. Ajax + JSON 
+Le problème lorsque l'on appelle la page est que l'on récupère les informations sous forme 
+de chaine de caractères. Le problème est que parfois on souhaite transmettre des informations plus complexes. Dans ce cas là on utilisera la format JSON. 
+Ce format à l'avantage d'être facilement compréhensible en JavaScript.
+
+    Ex1:
+    var test = 'UN TRUC EN JSON'
+    var items = JSON.parse(test)
+
+4. Limitation et CORS
+Attention, on ne peut pas appeler une page provenant d'un domaine différent. 
+Si on souhaite appeller une page différente de la page en cours, il faudra que le serveur dispose du CORS.
