@@ -21,7 +21,18 @@
     Object Property Value Shorthand
     Boucles
     Fonctions sur les tableaux
+        FOREACH()
+        CONSOLE.TABLE()
+        REDUCE()
+        MAP()
+        ENTRIES()
+        FROM()
+        SLICE()
     Méthodes sur les objets
+        KEYS()
+    Méthodes sur les fonctions
+        CALL()
+        APPLY()
     Rest parameters
     Spread operator (opérateur de décomposition)
     Le protocole « itérable » (Objets itérables)
@@ -34,6 +45,7 @@
     Promise, Async et Await
     Fetch
     AJAX
+    Les modules JavaScript import / export
 
 
 
@@ -709,21 +721,37 @@ L'opérateur this
 1. this est un opérateur qui permet de retourner une valeur en fonction de son contexte. Deux éléments peuvent influer dessus :
 - Le contexte dans lequel this est appelé : global, fonction, fonction fléchée, méthode d'un objet…
 - Le mode utilisé : strict ou non-strict.
-Attention par contre, this est utilisé this sans qu'il soit défini à son appel.
+Attention par contre, quand this est utilisé sans qu'il soit défini à son appel.
 Grâce à apply() et call(), il est en effet possible de définir une valeur de this au sein de la fonction, 
 ce qui change forcément l'utilisation que l'on peut en faire.
+
+    Ex1:
+    // Un objet peut être passé en premier argument
+    // de call ou de apply
+    var obj = { a: "Toto" };
+
+    // Ici, on définit une propriété sur l'objet
+    // global
+    var a = "Global";
+
+    function whatsThis(arg) {
+      // La valeur de this ici dépend de la façon
+      // dont la fonction est appelée
+      return this.a;
+    }
+
+    whatsThis();          // "Global"
+    whatsThis.call(obj);  // "Toto"
+    whatsThis.apply(obj); // "Toto"
 
 2. this dans un contexte global
 Le contexte global, c'est lorsque l'on exécute du code en dehors de toute fonction, de tout bloc. 
 Si on utilise this dans ce contexte, il retourne l'objet global.
 
     Ex1:
-    console.log(this);
-    // Dans un navigateur, cela retourne l'objet DOM window
-    this.alert('Message');
-    // Ouvre une boite de dialogue avec comme contenu : "Message".
-    window.alert('Message');
-    // C'est donc le même résultat que window.alert()
+    console.log(this); // Dans un navigateur, cela retourne l'objet DOM window    
+    this.alert('Message'); // Ouvre une boite de dialogue avec comme contenu : "Message".    
+    window.alert('Message'); // C'est donc le même résultat que window.alert()    
 
     Ex2:
     // En mode strict, this retourne exactement la même chose qu'en mode non-strict
@@ -816,6 +844,7 @@ this fait référence à l’objet nouvellement créé.
     // Retourne 120
     // En mode strict, la valeur de this est similaire au mode non-strict
 
+7. Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Op%C3%A9rateurs/L_op%C3%A9rateur_this
 
 La « remontée » des déclarations de fonction
 -------------------------------
@@ -1720,8 +1749,6 @@ Si on utilise cette méthode sans utiliser le résultat, mieux vaudra utiliser f
       return valCouranteDuTableau+2;
     })
 
-
-
 ENTRIES()
 // arr.entries()
 1. La méthode entries() renvoie un nouvel objet de type Array Iterator qui contient le couple clef/valeur pour chaque éléments du tableau.
@@ -1929,6 +1956,288 @@ Si on souhaite lister toutes les propriétés, y compris celles qui ne sont pas 
     var an_obj = { 100: "a", 2: "b", 7: "c"};
     console.log(Object.keys(an_obj));
     // affichera ['2', '7', '100'] Les clés se classent dans l'ordre croissant de la valeur des indices
+
+
+Méthodes sur les fonctions
+-------------------------------
+CALL()
+//fun.call(thisArg, arg1, arg2, ...)
+1. La méthode call() réalise un appel à une fonction avec une valeur this donnée et des arguments fournis individuellement.
+Ce qui peut se traduire par : J'appelle ma fonction avec call et je remplace le this qui se trouve 
+dans la fonction par l'objet que je passe en premier argument et j'utilise les arguments attendus 
+passé par call dans les arguments passés en second et après.
+
+    [thisArg]
+        La valeur this fournie pour l'appel de la fonction fun.
+
+    [arg1, arg2, ...]
+        Les arguments pour la fonction.
+       
+    Valeur de retour :
+        Le résultat de l'appel de la fonction invoquée avec la valeur this indiquée et les arguments fournis.
+
+2. La méthode call() permet d'appeler une fonction rattachée à un objet donné sur un autre objet. Il est possible d'utiliser call pour chaîner le constructeur d'un objet.
+
+    Ex1:
+    /* 
+    Dans l'exemple suivant, le constructeur de l'objet Product est défini avec deux paramètres, name et price. 
+    Deux autres fonctions, Food et Toy invoquent Product en passant this, name et price. 
+    Product initialise les propriétés name et price, tandis que les fonctions spécialisées définissent la propriété category.
+    */
+
+    function Product(name, price) {
+      this.name = name;
+      this.price = price;
+    }
+
+    function Food(name, price) {
+      Product.call(this, name, price);
+      this.category = 'food';
+    }
+
+    function Toy(name, price) {
+      Product.call(this, name, price);
+      this.category = 'toy';
+    }
+
+    var cheese = new Food('feta', 5);
+    var fun = new Toy('robot', 40);
+
+
+    Ex2:
+    function Product(name, price) {
+      this.name = name;
+      this.price = price;
+    }
+
+    function Food(name, price) {
+      Product.call(this, name, price);
+      this.category = 'food';
+    }
+
+    console.log(new Food('cheese', 5).name);
+    // expected output: "cheese"
+
+3. Utiliser call() pour invoquer une fonction anonyme
+
+    Ex1:
+    /*
+    Dans cet exemple (purement inventé), on crée une fonction anonyme et on utilise call pour 
+    l'invoquer sur chaque objet d'un tableau. Le principal but de cette fonction anonyme est 
+    d'ajouter une fonction print sur chaque élément qui permet d'afficher l'index de l'objet
+    */
+
+    var animaux = [
+      {espece: 'Lion', nom: 'Roi'},
+      {espece: 'Éléphant', nom: 'Dumbo'}
+    ];
+
+    for (var i = 0; i < animaux.length; i++) {
+      (function (i) { 
+        this.print = function () { 
+          console.log('#' + i  + ' ' + this.espece + ' : ' + this.nom); 
+        } 
+        this.print();
+      }).call(animaux[i], i);
+      // Ce qui peut se traduire par : J'appelle ma fonction anonyme avec call et je remplace le this 
+      // qui se trouve dans la fonction par l'objet que je passe en premier argument et j'utilise les arguments attendus
+      // passé par call dans les arguments passés en second et après.
+    }
+
+4. Utiliser call() pour appeler une fonction avec un objet pour this
+
+    Ex1:
+    /*
+    Dans l'exemple qui suit, on utilise la méthode call() 
+    sur la fonction saluer() afin de l'appliquer à l'objet personne1
+    */
+
+    function saluer() {
+      var reponse = [this.nom, "est un", this.role, "."].join(" ");
+      console.log(reponse);
+    }
+
+    var personne1 = {
+      nom: "Sénèque",
+      role: "philosophe"
+    };
+
+    saluer.call(personne1); // Sénèque est un philosophe.
+
+5. Utiliser call() pour appeler une fonction sans indiquer de premier argument
+
+    Ex1:
+    /*
+    Dans l'exemple qui suit, on appelle la fonction afficher() sans lui passer d'argument. 
+    C'est donc l'objet global qui est utilisé comme contexte
+    */
+    var prenom = 'Archibald';
+
+    function afficher() {
+      console.log('prenom vaut ' + this.prenom);
+    }
+    afficher.call(); // prenom est Archibald
+
+    /*
+    La valeur de this sera undefined en mode strict.
+    */
+    'use strict';
+
+    var prenom = 'Archibald';
+
+    function afficher() {
+      console.log('prenom vaut ' + this.prenom);
+    }
+    afficher.call(); // Cannot read the property prenom' of undefined
+
+
+APPLY()
+//fun.apply(thisArg, argsArray)
+1. La méthode apply() appelle une fonction en lui passant une valeur this et des arguments sous forme d'un tableau (ou d'un objet semblable à un tableau).
+apply() est similaire à call(), hormis pour le type d'arguments supporté. Il est possible d'utiliser un tableau à la place d'un ensemble de paramètres. 
+Avec apply(), il est également possible d'utiliser un littéral de tableau, par exemple, fun.apply(this, ['manger', 'bananes']), 
+ou un objet Array, par exemple, fun.apply(this, new Array('manger', 'bananes')).
+
+On peut aussi passer arguments en tant que paramètre argsArray. arguments étant une variable locale à la fonction. 
+Celle-ci peut également être utilisée pour tous les arguments non spécifiés de l'objet appelé. 
+Ainsi, il n'est pas nécessaire de connaître les arguments de l'objet appelé lors d'un appel à la méthode apply. 
+arguments peut être utilisé pour passer tous les arguments à l'objet appelé. L'objet appelé gèrera alors la manipulation des arguments.
+
+Depuis la cinquième édition d'ECMAScript, il est possible d'utiliser des objet semblables à des tableaux à la place. 
+En pratique tout objet possédant une propriété length et une propriété entière comprise entre [0..length[ est un objet semblable à un tableau. 
+On peut ainsi, par exemple, utiliser un objet NodeList ou un objet quelconque comme {'length': 2, '0': 'manger', '1': 'bananes'}.
+
+    [thisArg]
+        La valeur this fournie pour l'appel de la fonction fun.
+
+    [argsArray]
+        Un objet semblable à un tableau qui définit les arguments avec lesquel fun devrait être appelée, 
+        ou null ou undefined si aucun argument n'est passé à la fonction. Avec ECMAScript 5, 
+        ces arguments peuvent être représentés par un objet semblable un tableau. 
+       
+    Valeur de retour :
+        Le résultat de l'appel de la fonction invoquée avec la valeur this indiquée et les arguments fournis.
+
+2. Utiliser apply et des fonctions natives.
+Quand on utilise undefined ou null comme premier argument pour cette fonction, on peut obtenir un résultat similaire à la syntaxe de décomposition.
+
+    Ex1:
+    function sum(x, y, z) {
+      return x + y + z;
+    }
+
+    const numbers = [1, 2, 3];
+
+    console.log(sum.apply(null, numbers));
+    // expected output: 6
+
+    console.log(sum(...numbers));
+    // expected output: 6
+
+
+    Ex2:
+    var numbers = [5, 6, 2, 3, 7];
+
+    var max = Math.max.apply(null, numbers);
+
+    console.log(max);
+    // expected output: 7
+
+    var min = Math.min.apply(null, numbers);
+
+    console.log(min);
+    // expected output: 2
+
+
+BIND()
+//fun.bind(thisArg, arg1, arg2, ...)
+1. La fonction bind() crée une nouvelle fonction qui, lorsqu'elle est appelée, 
+a pour contexte this la valeur passée en paramètre et éventuellement une suite d'arguments 
+qui précéderont ceux fournis à l'appel de la fonction créée.
+Ce qui peut se traduire par : Je crée une nouvelle fonction avec bind et je remplace le this qui se trouve 
+dans la fonction par l'objet que je passe en premier argument et je précède les arguments attendus par ma fonction
+par les arguments passés en second et après dans bind. 
+
+    [thisArg]
+        La valeur que l'on doit passer au paramètre this de la fonction cible quand la fonction est appelée. 
+        La valeur est ignorée si la fonction liée est construite en utilisant l'opérateur new.
+
+    [arg1, arg2, ...]
+        Les arguments qui doivent précéder les arguments fournis lors de l'appel à la fonction liée lors 
+        de l'appel à la fonction cible.
+       
+    Valeur de retour :
+        Une copie de la fonction fournie avec la valeur this indiquée et les arguments initiaux fournis.
+
+2. Créer une fonction liée
+
+    Ex1:
+    this.x = 9; // en dehors de tout contexte,
+                // pour un navigateur, this est
+                // l'objet window
+    var module = {
+      x: 81,
+      getX: function() { return this.x; }
+    };
+
+    module.getX(); // 81
+
+    var getX = module.getX;
+    getX(); // 9, car ici, this fait référence à l'objet global
+
+    // On crée une nouvelle fonction à laquelle on lie module en
+    // tant que 'this'
+    var boundGetX = getX.bind(module);
+    boundGetX(); // 81
+
+
+    Ex2:
+    var module = {
+      x: 42,
+      getX: function() {
+        return this.x;
+      }
+    }
+
+    var unboundGetX = module.getX;
+    console.log(unboundGetX()); // The function gets invoked at the global scope
+    // expected output: undefined
+
+    var boundGetX = unboundGetX.bind(module);
+    console.log(boundGetX());
+    // expected output: 42
+
+3. Utiliser bind() afin de créer une fonction avec des arguments initiaux prédéfinis.
+
+    Ex1:
+    /*
+    Dans l'exemple suivant, on utilise bind() afin de créer une fonction avec des arguments initiaux prédéfinis.
+    Ces arguments, s'il y en a, suivent le this fourni et sont ensuite insérés au début des arguments passés 
+    à la fonction cible, suivis par les arguments passés à la fonction liée au moment où celle-ci est appelée.
+    */
+
+    function list() {
+      // Retourne un tableau à partir du tableau arguments des paramètres que l'on passe à la fonction list
+      return Array.prototype.slice.call(arguments); 
+    }
+
+    var list1 = list(1, 2, 3); // [1, 2, 3]
+
+    // Créer une fonction avec un argument prédéfini (ici 37)
+    var leadingThirtysevenList = list.bind(null, 37); 
+
+    var list2 = leadingThirtysevenList(); // [37]
+    var list3 = leadingThirtysevenList(1, 2, 3); // [37, 1, 2, 3]
+
+
+    function sommeArguments(arg1, arg2){
+      return arg1 + arg2;
+    }
+
+    var ajouter37 = sommeArguments.bind(null, 37);
+
+    var resultat = ajouter37(5); // 37 + 5 = 42
+
 
 
 Rest parameters
@@ -3283,3 +3592,8 @@ Ce format à l'avantage d'être facilement compréhensible en JavaScript.
 4. Limitation et CORS
 Attention, on ne peut pas appeler une page provenant d'un domaine différent. 
 Si on souhaite appeller une page différente de la page en cours, il faudra que le serveur dispose du CORS.
+
+
+Les modules JavaScript import / export
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Modules

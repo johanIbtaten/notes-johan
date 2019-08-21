@@ -1,8 +1,27 @@
 Créer un application react avec react-app
+Component Lifecycle
+Component Lifecycle functions
+Stateless Functional Component (Composant fonctionnel sans état)
+Class Components
+Stateful Class Components
+PureComponent
+
+
+Créer un application react avec react-app
 -------------------------------
-npm init react-app my-app
-// my-app correspond au nom du repertoire qui va être créé pour les fichiers
-// de l'application, on choisi le nom que l'on veut
+    Ex1:
+    npm init react-app my-app
+    // my-app correspond au nom du repertoire qui va être créé pour les fichiers
+    // de l'application, on choisi le nom que l'on veut
+
+    Ex2:
+    npm install -g npx // Si il n'est pas déjà installé
+    npx create-react-app nom_du_projet // Créera un dossier nom_du_projet dans le dossier courant
+    // Installation d'outils
+    npm install redux react-redux // Pour installer redux
+    npm install react-boostrap boostrap // Pour installer react-boostrap et boostrap
+    npm install styled-components // Pour installer styled-components
+    npm install polished // Pour installer polished
 
 Component Lifecycle
 -------------------------------
@@ -29,6 +48,8 @@ This method is called when a component is being removed from the DOM :
 These methods are called when there is an error during rendering, in a lifecycle method, or in the constructor of any child component :
     static getDerivedStateFromError()
     componentDidCatch()
+
+5. Voir https://fr.reactjs.org/docs/react-component.html#static-getderivedstatefromprops
 
 
 Component Lifecycle functions
@@ -127,3 +148,89 @@ Stateful Class Components
       <App />,
       document.getElementById('root')
     );
+
+
+PureComponent
+-------------------------------
+1. React.PureComponent est similaire à React.Component. La seule différence est que React.Component 
+n’implémente pas la méthode shouldComponentUpdate(), alors que React.PureComponent l’implémente en 
+réalisant une comparaison de surface de l’état et des propriétés.
+
+Si la fonction render() d’un de vos composants React produit un rendu identique pour le même état et 
+les mêmes propriétés, le faire étendre React.PureComponent devrait améliorer les performances dans certains cas.
+
+La méthode shouldComponentUpdate() de React.PureComponent réalise une simple comparaison de surface. 
+Avec des données complexes, elle peut produire des faux négatifs si la structure de données subit des changements profonds. 
+Ne créez des composants avec PureComponent que si vous avez des états et des props simples, 
+et le cas échéant utilisez forceUpdate() si vous savez que vos données ont changé en profondeur. 
+Vous pouvez aussi envisager d’utiliser des objets immuables pour simplifier la comparaison rapide de données imbriquées.
+
+De plus, la méthode shouldComponentUpdate() de React.PureComponent ignore la mise à jour des propriétés 
+de tout l’arbre des composants enfants. Assurez-vous donc que tous les composants enfants sont également « purs ».
+
+A shallow equality (comparaison de surface) check means that JS only checks that the value’s object ids 
+(as in, the memory address for where JS stores the information for that particular object) are the same, not that their content is the same.
+
+    Ex1:
+    const value = 'cat';
+
+    const item1 = value;
+    const item2 = value;
+    console.log(item1 === item2); // Retourne true
+
+    const array1 = [value];
+    const array2 = [value];
+    console.log(array1 === array2); // Retourne false pourtant les deux tableaux sont identiques mais n'ont pas la même adresse mémoire (référence)
+
+
+Hook d'état
+-------------------------------
+1. Déclaration
+
+    Ex1:
+    /*
+    Cette syntaxe Javascript est appelée « déstructuration positionnelle ». 
+    Ça signifie que nous créons deux nouvelles variables fruit et setFruit, avec fruit qui reçoit 
+    la première valeur renvoyée par useState, et setFruit qui reçoit la deuxième. 
+    */
+    const [fruit, setFruit] = useState('banane');
+
+    // C’est équivalent au code ci-dessous
+    var fruitStateVariable = useState('banana'); // Renvoie une paire
+    var fruit = fruitStateVariable[0]; // Premier élément dans une paire
+    var setFruit = fruitStateVariable[1]; // Deuxième élément dans une paire
+
+
+2. Dois-je utiliser une ou plusieurs variables d’état local ?
+
+    Ex1:
+    // On pourra itfaire comme ceci
+    function Box() {
+      const [state, setState] = useState({ left: 0, top: 0, width: 100, height: 100 });    
+      // ...
+      useEffect(() => {
+        function handleWindowMouseMove(e) {
+          // La décomposition de "...state" permet de s’assurer qu’on ne « perd » pas width et height
+          setState(state => ({ ...state, left: e.pageX, top: e.pageY }));
+        }
+        // Remarque : cette implémentation est un peu simplifiée
+        window.addEventListener('mousemove', handleWindowMouseMove);
+        return () => window.removeEventListener('mousemove', handleWindowMouseMove);
+      }, []);
+      // ...
+    }
+
+    // Mais il est préférable de séparer les variables d'états indépendantes comme cela
+    function Box() {
+      const [position, setPosition] = useState({ left: 0, top: 0 });
+      const [size, setSize] = useState({ width: 100, height: 100 });
+
+      useEffect(() => {
+        function handleWindowMouseMove(e) {
+          setPosition({ left: e.pageX, top: e.pageY });
+        }
+        // ...
+
+
+
+
