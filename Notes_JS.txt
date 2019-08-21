@@ -30,6 +30,7 @@
         SLICE()
     Méthodes sur les objets
         KEYS()
+        ASSIGN()
     Méthodes sur les fonctions
         CALL()
         APPLY()
@@ -1956,6 +1957,69 @@ Si on souhaite lister toutes les propriétés, y compris celles qui ne sont pas 
     var an_obj = { 100: "a", 2: "b", 7: "c"};
     console.log(Object.keys(an_obj));
     // affichera ['2', '7', '100'] Les clés se classent dans l'ordre croissant de la valeur des indices
+
+ASSIGN()
+// Object.assign(cible, ...sources)
+
+    [cible]
+        L'objet cible. Ce peut être un objet vide {}
+
+    [sources]
+        Le(s) objet(s) source(s).
+   
+    Valeur de retour :
+        L'objet cible, éventuellement modifié, est renvoyé.
+
+1. La méthode Object.assign permet de ne copier que les propriétés énumérables et propres 
+(les propriétés qui ne sont pas héritées) depuis un objet source vers un objet cible. 
+Elle utilise [[Get]] sur l'objet source et [[Set]] sur l'objet cible, ainsi, elle déclenchera 
+les accesseurs/mutateurs. De cette façon, elle affecte les propriétés plutôt que de juste 
+les copier ou d'en définir de nouvelles. Aussi, il est déconseillé d'utiliser cette méthode 
+si on souhaite uniquement fusionner de nouvelles propriétés dans un prototype si un des 
+objets sources contient des accesseurs. Pour uniquement copier les définitions des 
+propriétés (y compris leur énumérabilité) dans des prototypes, on utilisera plutôt 
+Object.getOwnPropertyDescriptor() et Object.defineProperty().
+
+Les propriétés String et Symbol sont copiées. Les propriétés de l'objet cible sont 
+surchargées par celles de l'objet source si elles ont la même clé.
+
+En cas d'erreur, si une propriété n'est pas accessible en écriture par exemple, une 
+exception TypeError sera levée mais l'objet cible aura été modifié avec les propriétés ajoutées avant l'erreur.
+
+Object.assign ne donnera pas d'erreur si on fournit les valeurs null ou undefined pour la valeur source.
+
+2. Cloner un objet
+Attention, pour un clone réel (deep clone), il faudra utiliser d'autres méthodes car Object.assign() 
+ne copie que les valeurs des propriétés depuis l'objet source, il ne recopie pas intégralement une nouvelle propriété. 
+Si la valeur est une référence à un objet, il copiera uniquement la référence.
+    
+    Ex1:
+    var obj = { a: 1 };
+    var copie = Object.assign({}, obj);
+    console.log(copie); // {a: 1}
+
+3. Fusionner des objets
+
+    Ex1:
+    var o1 = { a: 1 };
+    var o2 = { b: 2 };
+    var o3 = { c: 3 };
+
+    var obj = Object.assign(o1, o2, o3);
+    console.log(obj); // { a: 1, b: 2, c: 3 }
+    console.log(o1);  // { a: 1, b: 2, c: 3 }, l'objet cible est aussi modifié
+
+4. Fusionner des objets partageant des propriétés
+
+    Ex1:
+    var o1 = { a: 1, b: 1, c: 1 };
+    var o2 = { b: 2, c: 2 };
+    var o3 = { c: 3 };
+
+    var obj = Object.assign({}, o1, o2, o3);
+    console.log(obj); // { a: 1, b: 2, c: 3 }
+    // Les propriétés communes sont surchargées selon l'ordre des paramètres.
+
 
 
 Méthodes sur les fonctions

@@ -1,0 +1,262 @@
+Using Object Spread Operator
+Component Lifecycle
+Component Lifecycle functions
+Stateless Functional Component (Composant fonctionnel sans état)
+Class Components
+Stateful Class Components
+PureComponent
+
+
+Using Object Spread Operator in reducer
+-------------------------------
+1. On ne doit pas modifier le state original dans un reducer mais une copie
+    Ex1:
+    // Avec Object.assign
+    import { VisibilityFilters } from './actions'
+
+    const initialState = {
+      visibilityFilter: VisibilityFilters.SHOW_ALL,
+      todos: []
+    }
+
+    function todoApp(state = initialState, action) {
+      switch (action.type) {
+        case SET_VISIBILITY_FILTER:
+          return Object.assign({}, state, {
+            visibilityFilter: action.filter
+          })
+        default:
+          return state
+      }
+    }
+
+    Ex2:
+    // Avec Object.assign
+    import { VisibilityFilters } from './actions'
+
+    const initialState = {
+      visibilityFilter: VisibilityFilters.SHOW_ALL,
+      todos: []
+    }
+
+    function todoApp(state = initialState, action) {
+      switch (action.type) {
+        case SET_VISIBILITY_FILTER:
+          return { ...state, visibilityFilter: action.filter }
+        default:
+          return state
+      }
+    }
+    
+
+Component Lifecycle
+-------------------------------
+1. Mounting
+These methods are called in the following order when an instance of a component is being created and inserted into the DOM :
+    constructor()
+    static getDerivedStateFromProps()
+    render()
+    componentDidMount() (Remplace componentWillMount())
+
+2. Updating
+An update can be caused by changes to props or state. These methods are called in the following order when a component is being re-rendered :
+    static getDerivedStateFromProps()
+    shouldComponentUpdate()
+    render()
+    getSnapshotBeforeUpdate()
+    componentDidUpdate()
+
+3. Unmounting
+This method is called when a component is being removed from the DOM :
+    componentWillUnmount()
+
+4. Error Handling
+These methods are called when there is an error during rendering, in a lifecycle method, or in the constructor of any child component :
+    static getDerivedStateFromError()
+    componentDidCatch()
+
+5. Voir https://fr.reactjs.org/docs/react-component.html#static-getderivedstatefromprops
+
+
+Component Lifecycle functions
+-------------------------------
+componentDidMount() 
+est appelée immédiatement après que le composant est monté (inséré dans l’arbre). C’est ici que vous devriez placer les initialisations qui requièrent l’existence de nœuds du DOM. Si vous avez besoin de charger des données depuis un point d’accès distant, c’est aussi le bon endroit pour déclencher votre requête réseau.
+
+componentDidUpdate() 
+est appelée immédiatement après que la mise à jour a eu lieu. Cette méthode n’est pas appelée pour le rendu initial.
+
+
+Stateless Functional Component (Composant fonctionnel sans état)
+-------------------------------
+1. Composant qui ne fait qu'afficher du contenu
+    Ex1:
+    // Sans props
+    const NotFound = () => {
+        return (
+            <h2 className="notFound">Y'a rien ici!</h2>
+        )
+    }
+
+    Ex2:
+    // Avec props
+    const HelloWorld = (props) => {
+      return <p>Hello {props.user}</p>
+    }
+    // le passage de props à notre composant se fait de la façon suivante en JSX: <HelloWorld user='Gaël' />
+
+    Ex3:
+    const Hello = ({ name }) => (<div>Hello, {name}!</div>);
+
+    Ex4:
+    // Avec export
+    import React from 'react';
+    const NotFound = () => {
+        return (
+            <h2 className="notFound">Y'a rien ici!</h2>
+        )
+    }
+    export default NotFound;
+
+
+Class Components
+-------------------------------
+1. Un composant class étend la classe Component de React.
+    Ex1:
+    class Welcome extends React.Component {
+      render() {
+        return <h1>Bonjour, {this.props.name}</h1>;
+      }
+    }
+    // le passage de props à notre composant se fait de la façon suivante en JSX: <Welcome name='Gaël' />
+
+
+Stateful Class Components
+-------------------------------
+1. Un composant class étend la classe Component de React.
+    Ex1:
+    // [...]
+    // JS PERSO
+    import { sampleText } from './sampleText';
+
+    class App extends React.Component {
+        state = {
+            text: sampleText
+        };
+
+        editText = (event) => {
+            const text = event.target.value;
+            this.setState({ text });
+        };
+
+        render() {
+            return (
+                <div className="container">
+                    <div className="row">
+
+                      <div className="col-sm-6">
+                        <textarea value={this.state.text} rows="35" className="form-control" onChange={(e) => this.editText(e)} >
+                        </textarea>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <div>{this.state.text}</div>
+                        </div>
+
+                    </div>
+                </div>
+            )
+        }
+
+    }
+
+    render(
+      <App />,
+      document.getElementById('root')
+    );
+
+
+PureComponent
+-------------------------------
+1. React.PureComponent est similaire à React.Component. La seule différence est que React.Component 
+n’implémente pas la méthode shouldComponentUpdate(), alors que React.PureComponent l’implémente en 
+réalisant une comparaison de surface de l’état et des propriétés.
+
+Si la fonction render() d’un de vos composants React produit un rendu identique pour le même état et 
+les mêmes propriétés, le faire étendre React.PureComponent devrait améliorer les performances dans certains cas.
+
+La méthode shouldComponentUpdate() de React.PureComponent réalise une simple comparaison de surface. 
+Avec des données complexes, elle peut produire des faux négatifs si la structure de données subit des changements profonds. 
+Ne créez des composants avec PureComponent que si vous avez des états et des props simples, 
+et le cas échéant utilisez forceUpdate() si vous savez que vos données ont changé en profondeur. 
+Vous pouvez aussi envisager d’utiliser des objets immuables pour simplifier la comparaison rapide de données imbriquées.
+
+De plus, la méthode shouldComponentUpdate() de React.PureComponent ignore la mise à jour des propriétés 
+de tout l’arbre des composants enfants. Assurez-vous donc que tous les composants enfants sont également « purs ».
+
+A shallow equality (comparaison de surface) check means that JS only checks that the value’s object ids 
+(as in, the memory address for where JS stores the information for that particular object) are the same, not that their content is the same.
+
+    Ex1:
+    const value = 'cat';
+
+    const item1 = value;
+    const item2 = value;
+    console.log(item1 === item2); // Retourne true
+
+    const array1 = [value];
+    const array2 = [value];
+    console.log(array1 === array2); // Retourne false pourtant les deux tableaux sont identiques mais n'ont pas la même adresse mémoire (référence)
+
+
+Hook d'état
+-------------------------------
+1. Déclaration
+
+    Ex1:
+    /*
+    Cette syntaxe Javascript est appelée « déstructuration positionnelle ». 
+    Ça signifie que nous créons deux nouvelles variables fruit et setFruit, avec fruit qui reçoit 
+    la première valeur renvoyée par useState, et setFruit qui reçoit la deuxième. 
+    */
+    const [fruit, setFruit] = useState('banane');
+
+    // C’est équivalent au code ci-dessous
+    var fruitStateVariable = useState('banana'); // Renvoie une paire
+    var fruit = fruitStateVariable[0]; // Premier élément dans une paire
+    var setFruit = fruitStateVariable[1]; // Deuxième élément dans une paire
+
+
+2. Dois-je utiliser une ou plusieurs variables d’état local ?
+
+    Ex1:
+    // On pourra itfaire comme ceci
+    function Box() {
+      const [state, setState] = useState({ left: 0, top: 0, width: 100, height: 100 });    
+      // ...
+      useEffect(() => {
+        function handleWindowMouseMove(e) {
+          // La décomposition de "...state" permet de s’assurer qu’on ne « perd » pas width et height
+          setState(state => ({ ...state, left: e.pageX, top: e.pageY }));
+        }
+        // Remarque : cette implémentation est un peu simplifiée
+        window.addEventListener('mousemove', handleWindowMouseMove);
+        return () => window.removeEventListener('mousemove', handleWindowMouseMove);
+      }, []);
+      // ...
+    }
+
+    // Mais il est préférable de séparer les variables d'états indépendantes comme cela
+    function Box() {
+      const [position, setPosition] = useState({ left: 0, top: 0 });
+      const [size, setSize] = useState({ width: 100, height: 100 });
+
+      useEffect(() => {
+        function handleWindowMouseMove(e) {
+          setPosition({ left: e.pageX, top: e.pageY });
+        }
+        // ...
+
+
+
+
