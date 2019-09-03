@@ -28,12 +28,17 @@
         ENTRIES()
         FROM()
         SLICE()
+        FILTER()
+        INCLUDES()
     Méthodes sur les objets
         KEYS()
         ASSIGN()
     Méthodes sur les fonctions
         CALL()
         APPLY()
+        BIND()
+    Méthodes sur les chaînes de caratères
+        INCLUDES()
     Rest parameters
     Spread operator (opérateur de décomposition)
     Le protocole « itérable » (Objets itérables)
@@ -1217,6 +1222,33 @@ Les fonctions flechées (arrow function en anglais)
     }
     var p = new Personne();
 
+    Ex2:
+    // Dans React
+    class App extends Component {
+        constructor( {
+            super()
+
+            this.state = {
+                monster: [],
+                searchfield: ''
+            };
+
+
+            // Sans utilisation d'une arrow function pour la méthode handlechange
+            // On doit attacher le contexte de la classe au this de la méthode handlechange
+            // this.handleChange = this.handleChange.bind(this);
+        })        
+
+        handleChange = e => {
+            // Avec une arrow function le this est automatiquement attaché au contexte
+            // où la méthode est déclarée, ici la class App
+            this.setState({ searField: e.target.value });
+        }
+
+        [...]
+    }
+
+
 
 10. Exemples d'utilisation
     Ex1:
@@ -1861,6 +1893,83 @@ Si un nouvel élément est ajouté à l'un ou l'autre tableau, le second n'est p
     var myBest = fruits.slice(-4, 2);  // Equivaut à fruits.slice(fruits.length-4, 2) équivaut à fruits.slice(1, 2)
     // Orange
 
+FILTER()
+// var nouveauTableau = arr.filter(callback, thisArg);
+// callback(elementCourant[, index[, tableauEntier]])
+1. filter() appelle la fonction callback fournie pour chacun des éléments d'un tableau, et 
+construit un nouveau tableau contenant tous les éléments pour lesquels l'appel de callback 
+retourne true ou une valeur équivalente à true dans un contexte booléen. La fonction callback 
+n'est utilisée que pour les éléments du tableau ayant une valeur assignée — les index supprimés 
+ou pour lesquels il n'y a jamais eu de valeur ne sont pas pris en compte. Les éléments du tableau 
+qui ne passent pas le test effectué par la fonction callback sont ignorés, ils ne sont pas 
+inclus dans le nouveau tableau.
+La liste des éléments parcourus par filter() est définie avant la première invocation de la fonction callback. 
+Les éléments qui sont ajoutés à la liste après le début de l'appel de filter() (grâce à la fonction callback par exemple) 
+ne seront pas concernés par le filtre. Si des éléments de la liste sont modifiés ou supprimés au cours du traitement, 
+la valeur fournie à la fonction callback sera la valeur de ces éléments au moment où filter() les traite — 
+les éléments supprimés ne seront pas traités par la fonction.
+
+    [callback] 
+        La fonction de test (ou prédicat) à appliquer à chaque élément du tableau. Cette fonction est appelée avec les arguments suivants :
+
+        [elementCourant]
+            L'élément à traiter
+
+        [index] (Facultatif)
+            Son indice
+            
+        [tableauEntier] (Facultatif)            
+            Le tableau complet
+
+        Valeur de retour :
+            Cette fonction renvoie true — ou une valeur équivalente — si l'élément doit être conservé pour le tableau résultat et false dans le cas contraire.        
+
+    [thisArg] (Facultatif)
+        Objet à utiliser en tant que this quand la fonction callback est exécutée.
+
+    Valeur de retour :
+        Un nouveau tableau contenant les éléments qui respectent la condition du filtre. Si aucun élément ne respecte la condition, c'est un tableau vide qui est renvoyé.
+
+    Ex1:
+    // Filtrer les petites valeurs
+    function suffisammentGrand(element) {
+      return element >= 10;
+    }
+    var filtre = [12, 5, 8, 130, 44].filter(suffisammentGrand);
+    // filtre vaut [12, 130, 44]
+
+    Ex2:
+    Filtrer des éléments JSON invalides en fonction d'un id
+    var arr = [
+      { id: 15 },
+      { id: -1 },
+      { id: 0 },
+      { id: 3 },
+      { id: 12.2 },
+      { },
+      { id: null },
+      { id: NaN },
+      { id: 'undefined' }
+    ];
+    var elementsInvalides = 0;
+
+    function filtrerParID(obj) {
+      // Si c'est un nombre
+      if (obj.id !== undefined && typeof(obj.id) === 'number' && !isNaN(obj.id)) {
+        return true;
+      } else {
+        elementsInvalides++;
+        return false;
+      }
+    }
+    var arrByID = arr.filter(filtrerParID);
+
+    console.log('Tableau filtré\n', arrByID);
+    // Le tableau filtré est :
+    // [{ id: 15 }, { id: -1 }, { id: 0 }, { id: 3 }, { id: 12.2 }]
+    console.log('Nombre d\'éléments invalides = ', elementsInvalides);
+    // Nombre d'éléments invalides 4
+
 INCLUDES()
 // arr.includes(élémentRecherché)
 // arr.includes(élémentRecherché, indiceDépart)
@@ -1871,6 +1980,7 @@ On peut l'utiliser sur des objets semblables à des tableaux (ex. arguments ou d
     [élémentRecherché] 
         La valeur qu'on souhaite trouver dans le tableau (lorsqu'on manipule des caractères et des chaînes, 
         la comparaison est sensible à la casse).
+
     [indiceDépart]  (Facultatif)
         La position du tableau à partir de laquelle commencer à chercher élémentRecherché. 
         Si on utilise une valeur négative, la recherche commencera à partir de la fin du tableau (autrement dit à l'indice array.length - indiceDépart). 
@@ -1878,6 +1988,7 @@ On peut l'utiliser sur des objets semblables à des tableaux (ex. arguments ou d
         SI indiceDépart est supérieur ou égal à la longueur du tableau, la méthode retourne false. Le tableau n'est pas parcouru.
         Si indiceDépart est strictement négatif, l'indice de départ effectif est la somme entre la taille du tableau et indiceDépart. 
         Si cette somme est toujours négative, le tableau est intégralement parcouru.
+
     Valeur de retour :
         Un booléen qui vaut true si élémentRecherché est trouvé dans le tableau (à partir de l'indiceDépart si celui-ci est indiqué). 
         Les valeurs -0, +0 et 0 sont considérées comme équivalentes mais false n'est pas considéré comme équivalent à 0.
@@ -2302,6 +2413,36 @@ par les arguments passés en second et après dans bind.
 
     var resultat = ajouter37(5); // 37 + 5 = 42
 
+
+Méthodes sur les chaînes de caratères
+-------------------------------
+INCLUDES()
+// str.includes(chaîneRecherchée);
+// str.includes(chaîneRecherchée, position);
+1. La méthode includes() détermine si une chaîne de caractères est contenue dans une 
+autre et renvoie true ou false selon le cas de figure. includes() est sensible à la casse.
+
+    [chaîneRecherchée]
+        Une chaîne à rechercher dans la chaîne courante.
+
+    [position] (Facultatif)
+        La position dans la chaîne à partir de laquelle commencera la recherche. La valeur par défaut de position est 0.
+       
+    Valeur de retour :
+        true si la chaîne de caractères contient la sous-chaîne recherchée, false sinon.
+
+    Ex1:
+    // includes() est sensible à la casse
+    'Baleine bleue'.includes('baleine'); // false
+
+    Ex2:
+    const str = "Être ou ne pas être, telle est la question.";
+    console.log(str.includes("Être"));       // true
+    console.log(str.includes("question"));   // true
+    console.log(str.includes("pléonasme"));  // false
+    console.log(str.includes("Être", 1));    // false
+    console.log(str.includes("ÊTRE"));       // false
+    console.log(str.includes(""));           // true
 
 
 Rest parameters
