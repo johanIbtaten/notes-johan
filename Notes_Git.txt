@@ -6,6 +6,8 @@ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
    ex1:
    git clone https://github.com/johanIbtaten/notes-johan.git (Un dossier notes-johan est créé)
 
+   git clone https://github.com/johanIbtaten/notes-johan.git notes-apprentissage (Un dossier notes-apprentissage est créé)
+
    To clone git repo into the current and empty folder (Mettre un . à la fin)
    git clone https://github.com/accountName/repoName.git .
 
@@ -15,6 +17,8 @@ git push  <REMOTENAME> <BRANCHNAME>
    git push origin master
 
 3. Adding a remote in the directory your repository is stored at
+git remote remove origin // Si on a cloné un repo distant d'une autre personne on supprime
+                         // le lien au repo de la personne avant d'ajouter son propre repo distant
 git remote add origin https://github.com/user/repo.git
 
 4. Create a new local repository on the command line
@@ -37,15 +41,20 @@ git clone git@github.com:whatever .
 Git
 =================================
 1. Initialiser un dépôt Git local
-// A la racine du dossier qui contient le projet
-git init
+	// A la racine du dossier qui contient le projet
+	git init
 
 2. Force overwrite of local file with what's it origin repo
-// Overwrite only one file
-git fetch
-git checkout origin/master <filepath>
+	// Overwrite only one file
+	git fetch
+	git checkout origin/master <filepath>
 
-// Overwrite all changed files
-git fetch
-git reset --hard origin/master
+	// Overwrite all changed files
+	git fetch
+	git reset --hard origin/master
 
+3. Supprimer un repository local
+	// Delete the .git directory in the root-directory of your repository 
+	// if you only want to delete the git-related information (branches, versions).
+
+	// If you want to delete everything (git-data, code, etc), just delete the whole directory.
