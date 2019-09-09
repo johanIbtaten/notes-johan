@@ -19,6 +19,7 @@
     IIFE (Expression de fonction invoquée immédiatement)
     Objet Map
     Object Property Value Shorthand
+    Noms de propriétés calculés (Computed Properties)
     Boucles
     Fonctions sur les tableaux
         FOREACH()
@@ -1460,6 +1461,35 @@ Object Property Value Shorthand
       const text = event.target.value;
       this.setState({ text }); // au lieu de this.setState({ text: text});
     };
+
+
+Noms de propriétés calculés (Computed Properties)
+-------------------------------
+1. Avec ECMAScript 2015 (ES6), on peut utiliser un initialisateur et avoir des noms de propriétés qui soient calculés lors de l'exécution. Ainsi, en plaçant une expression entre crochets [], celle-ci sera calculée pour déterminer le nom de la propriété. Cette notation est la symétrique des crochets utilisés pour accéder aux propriétés. Il est désormais possible d'utiliser cette notation dans les littéraux objets
+    Ex1:
+	// Calcul des noms de propriétés (ES2015)
+	var i = 0;
+	var a = {
+	  ['toto' + ++i]: i,
+	  ['toto' + ++i]: i,
+	  ['toto' + ++i]: i
+	};
+
+	console.log(a.toto1); // 1
+	console.log(a.toto2); // 2
+	console.log(a.toto3); // 3
+
+	var param = 'taille';
+	var config = {
+	  [param]: 12,
+	  ['mobile' + param.charAt(0).toUpperCase() + param.slice(1)]: 4
+	};
+
+	var prop = "toto";
+	var o = {
+	  [prop]: "hey",
+	  ["tr" + "uc"]: "ho",
+	};
 
 
 Boucles

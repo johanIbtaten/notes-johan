@@ -5,6 +5,7 @@ Stateless Functional Component (Composant fonctionnel sans état)
 Class Components
 Stateful Class Components
 PureComponent
+props.children (Composition)
 
 
 Créer un application react avec react-app
@@ -232,5 +233,93 @@ Hook d'état
         // ...
 
 
+props.children (Composition)
+-------------------------------
+1.  this.props.children or props.children does is that it is used to display whatever you include between the opening and closing tags when invoking a component.
 
+    Ex1:
+    const Picture = (props) => {
+      return (
+        <div>
+          <img src={props.src}/>
+          {props.children}
+        </div>
+      )
+    }
 
+    //App.js
+    render () {
+      return (
+        <div className='container'>
+          <Picture key={picture.id} src={picture.src}>
+              //what is placed here is passed as props.children  
+          </Picture>
+        </div>
+      )
+    }
+
+    Ex2:
+    function FancyBorder(props) {
+      return (
+        <div className={'FancyBorder FancyBorder-' + props.color}>
+          {props.children}
+        </div>
+      );
+    }
+
+    //Autre composant
+    function WelcomeDialog() {
+      return (
+        <FancyBorder color="blue">
+          <h1 className="Dialog-title">
+            Bienvenue
+          </h1>
+          <p className="Dialog-message">
+            Merci de visiter notre vaisseau spatial !
+          </p>
+        </FancyBorder>
+      );
+    }
+
+    //Sortie du composant FancyBorder
+    <div className={'FancyBorder FancyBorder-' + props.color}>
+      <h1 className="Dialog-title">
+        Bienvenue
+      </h1>
+      <p className="Dialog-message">
+        Merci de visiter notre vaisseau spatial !
+      </p>
+    </div>
+
+2. Bien que cela soit moins courant, vous aurez parfois besoin de plusieurs « trous » dans un composant. Dans ces cas-là, vous pouvez créer votre propre convention au lieu d’utiliser children.
+
+    Ex1:
+    function SplitPane(props) {
+      return (
+        <div className="SplitPane">
+          <div className="SplitPane-left">
+            {props.left}
+          </div>
+          <div className="SplitPane-right">
+            {props.right}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <SplitPane
+          left={
+            <Contacts />
+          }
+          right={
+            <Chat />
+          } />
+      );
+    }
+
+    // Des éléments React tels que <Contacts /> et <Chat /> sont simplement des objets, 
+    // vous pouvez les passer comme props au même titre que n’importe quelle autre donnée. 
+    // Cette approche peut vous rappeler la notion de “slots” présente dans d’autres bibliothèques, 
+    // mais il n’y a aucune limitation à ce que vous pouvez passer en props avec React.
