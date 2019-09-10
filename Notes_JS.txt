@@ -1065,6 +1065,18 @@ La façon d'identifier une IIFE est de localiser les parenthèses gauche et droi
         console.log("Hello Foo");
     }());
 
+6. Fonction qui retourne une autre fonction
+	Ex1:
+	function add(x){
+	  return function(y){
+	    return x + y;
+	  };
+	}
+	var addTwo = add(2);
+
+	addTwo(4) === 6; // true
+	add(3)(4) === 7; // true
+
 
 L'objet arguments
 -------------------------------

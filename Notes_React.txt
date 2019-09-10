@@ -6,6 +6,7 @@ Class Components
 Stateful Class Components
 PureComponent
 props.children (Composition)
+import SVG
 
 
 Créer un application react avec react-app
@@ -323,3 +324,20 @@ props.children (Composition)
     // vous pouvez les passer comme props au même titre que n’importe quelle autre donnée. 
     // Cette approche peut vous rappeler la notion de “slots” présente dans d’autres bibliothèques, 
     // mais il n’y a aucune limitation à ce que vous pouvez passer en props avec React.
+
+
+import SVG
+-------------------------------
+1. Import d'un SVG sous forme d'un composant
+
+    ex1:
+    // Permet d'importer le svg directement sous la forme d'un composant react
+    import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg'
+
+    // On l'utilise comme un composant
+    const CartIcon = () => (
+        <div className='cart-icon'
+            <ShoppingIcon />
+            <span> 0 </span>
+        <div>
+    ))

@@ -1,11 +1,15 @@
-Using Object Spread Operator
-Component Lifecycle
-Component Lifecycle functions
-Stateless Functional Component (Composant fonctionnel sans état)
-Class Components
-Stateful Class Components
-PureComponent
+Install Redux
+Using Object Spread Operator in reducer
+Action creator
+Action type
+Reducer
+mapStateToProps
+mapDispatchToProps
+connect()
+React Developer Tools (Extension Chrome)
 
+Install Redux
+-------------------------------
 
 Using Object Spread Operator in reducer
 -------------------------------
@@ -47,216 +51,163 @@ Using Object Spread Operator in reducer
           return state
       }
     }
-    
 
-Component Lifecycle
+
+Action creator
 -------------------------------
-1. Mounting
-These methods are called in the following order when an instance of a component is being created and inserted into the DOM :
-    constructor()
-    static getDerivedStateFromProps()
-    render()
-    componentDidMount() (Remplace componentWillMount())
-
-2. Updating
-An update can be caused by changes to props or state. These methods are called in the following order when a component is being re-rendered :
-    static getDerivedStateFromProps()
-    shouldComponentUpdate()
-    render()
-    getSnapshotBeforeUpdate()
-    componentDidUpdate()
-
-3. Unmounting
-This method is called when a component is being removed from the DOM :
-    componentWillUnmount()
-
-4. Error Handling
-These methods are called when there is an error during rendering, in a lifecycle method, or in the constructor of any child component :
-    static getDerivedStateFromError()
-    componentDidCatch()
-
-5. Voir https://fr.reactjs.org/docs/react-component.html#static-getderivedstatefromprops
-
-
-Component Lifecycle functions
--------------------------------
-componentDidMount() 
-est appelée immédiatement après que le composant est monté (inséré dans l’arbre). C’est ici que vous devriez placer les initialisations qui requièrent l’existence de nœuds du DOM. Si vous avez besoin de charger des données depuis un point d’accès distant, c’est aussi le bon endroit pour déclencher votre requête réseau.
-
-componentDidUpdate() 
-est appelée immédiatement après que la mise à jour a eu lieu. Cette méthode n’est pas appelée pour le rendu initial.
-
-
-Stateless Functional Component (Composant fonctionnel sans état)
--------------------------------
-1. Composant qui ne fait qu'afficher du contenu
+1. C'est une fonction qui créer un action qui pourra ensuite être dispatchée
     Ex1:
-    // Sans props
-    const NotFound = () => {
-        return (
-            <h2 className="notFound">Y'a rien ici!</h2>
-        )
-    }
-
-    Ex2:
-    // Avec props
-    const HelloWorld = (props) => {
-      return <p>Hello {props.user}</p>
-    }
-    // le passage de props à notre composant se fait de la façon suivante en JSX: <HelloWorld user='Gaël' />
-
-    Ex3:
-    const Hello = ({ name }) => (<div>Hello, {name}!</div>);
-
-    Ex4:
-    // Avec export
-    import React from 'react';
-    const NotFound = () => {
-        return (
-            <h2 className="notFound">Y'a rien ici!</h2>
-        )
-    }
-    export default NotFound;
+    export const setCurrentUser = user => ({
+      type: 'SET_CURRENT_USER',
+      payload: user
+    })
+    // user est le paramètre que l'on souhaite passer au payload...
+    // ...qui lui même sera passé au reducer
+    // type est le nom de l'action qui permettra de l'identifier dans...
+    // ...le reducer
 
 
-Class Components
+Reducer
 -------------------------------
-1. Un composant class étend la classe Component de React.
+1. Le reducer spécifie comment le state de l'application change en réponse aux actions envoyées au store.
     Ex1:
-    class Welcome extends React.Component {
-      render() {
-        return <h1>Bonjour, {this.props.name}</h1>;
+    const INITIAL_STATE = {
+      currentUser: null
+    }
+
+    const userReducer = (state = INITIAL_STATE, action) => {
+      switch (action.type) {
+        case 'SET_CURRENT_USER':
+          return {
+            ...state,
+            currentUser: action.payload
+          }
+        default:
+          return state;
       }
     }
-    // le passage de props à notre composant se fait de la façon suivante en JSX: <Welcome name='Gaël' />
+    // On retourne le state associé au user avec les propriétés qui changent selon l'action
 
 
-Stateful Class Components
+Action type
 -------------------------------
-1. Un composant class étend la classe Component de React.
+1. Objet qui liste les noms des actions pour les utiliser dans les actions et le reducer
     Ex1:
-    // [...]
-    // JS PERSO
-    import { sampleText } from './sampleText';
-
-    class App extends React.Component {
-        state = {
-            text: sampleText
-        };
-
-        editText = (event) => {
-            const text = event.target.value;
-            this.setState({ text });
-        };
-
-        render() {
-            return (
-                <div className="container">
-                    <div className="row">
-
-                      <div className="col-sm-6">
-                        <textarea value={this.state.text} rows="35" className="form-control" onChange={(e) => this.editText(e)} >
-                        </textarea>
-                      </div>
-
-                      <div className="col-sm-6">
-                        <div>{this.state.text}</div>
-                        </div>
-
-                    </div>
-                </div>
-            )
-        }
-
+    // Dans cart.types.js
+    const CartActionTypes = {
+      TOGGLE_CART_HIDDEN: 'TOGGLE_CART_HIDDEN'
     }
 
-    render(
-      <App />,
-      document.getElementById('root')
-    );
+    // Dans cart.actions.js
+    import CartActionTypes from './cart.types'
 
+    export const toggleCartHidden = user => ({
+      type: CartActionTypes.TOGGLE_CART_HIDDEN
+    })
 
-PureComponent
--------------------------------
-1. React.PureComponent est similaire à React.Component. La seule différence est que React.Component 
-n’implémente pas la méthode shouldComponentUpdate(), alors que React.PureComponent l’implémente en 
-réalisant une comparaison de surface de l’état et des propriétés.
+    // Dans cart.reducer.js
+    import CartActionTypes from './cart.types'
 
-Si la fonction render() d’un de vos composants React produit un rendu identique pour le même état et 
-les mêmes propriétés, le faire étendre React.PureComponent devrait améliorer les performances dans certains cas.
-
-La méthode shouldComponentUpdate() de React.PureComponent réalise une simple comparaison de surface. 
-Avec des données complexes, elle peut produire des faux négatifs si la structure de données subit des changements profonds. 
-Ne créez des composants avec PureComponent que si vous avez des états et des props simples, 
-et le cas échéant utilisez forceUpdate() si vous savez que vos données ont changé en profondeur. 
-Vous pouvez aussi envisager d’utiliser des objets immuables pour simplifier la comparaison rapide de données imbriquées.
-
-De plus, la méthode shouldComponentUpdate() de React.PureComponent ignore la mise à jour des propriétés 
-de tout l’arbre des composants enfants. Assurez-vous donc que tous les composants enfants sont également « purs ».
-
-A shallow equality (comparaison de surface) check means that JS only checks that the value’s object ids 
-(as in, the memory address for where JS stores the information for that particular object) are the same, not that their content is the same.
-
-    Ex1:
-    const value = 'cat';
-
-    const item1 = value;
-    const item2 = value;
-    console.log(item1 === item2); // Retourne true
-
-    const array1 = [value];
-    const array2 = [value];
-    console.log(array1 === array2); // Retourne false pourtant les deux tableaux sont identiques mais n'ont pas la même adresse mémoire (référence)
-
-
-Hook d'état
--------------------------------
-1. Déclaration
-
-    Ex1:
-    /*
-    Cette syntaxe Javascript est appelée « déstructuration positionnelle ». 
-    Ça signifie que nous créons deux nouvelles variables fruit et setFruit, avec fruit qui reçoit 
-    la première valeur renvoyée par useState, et setFruit qui reçoit la deuxième. 
-    */
-    const [fruit, setFruit] = useState('banane');
-
-    // C’est équivalent au code ci-dessous
-    var fruitStateVariable = useState('banana'); // Renvoie une paire
-    var fruit = fruitStateVariable[0]; // Premier élément dans une paire
-    var setFruit = fruitStateVariable[1]; // Deuxième élément dans une paire
-
-
-2. Dois-je utiliser une ou plusieurs variables d’état local ?
-
-    Ex1:
-    // On pourra itfaire comme ceci
-    function Box() {
-      const [state, setState] = useState({ left: 0, top: 0, width: 100, height: 100 });    
-      // ...
-      useEffect(() => {
-        function handleWindowMouseMove(e) {
-          // La décomposition de "...state" permet de s’assurer qu’on ne « perd » pas width et height
-          setState(state => ({ ...state, left: e.pageX, top: e.pageY }));
-        }
-        // Remarque : cette implémentation est un peu simplifiée
-        window.addEventListener('mousemove', handleWindowMouseMove);
-        return () => window.removeEventListener('mousemove', handleWindowMouseMove);
-      }, []);
-      // ...
+    const INITIAL_STATE = {
+      hidden: true
+    }
+    const cartReducer = (state = INITIAL_STATE, action) => {
+      switch (action.type) {
+        case CartActionTypes.TOGGLE_CART_HIDDEN:
+          return {
+            ...state,
+            hidden: !state.hidden
+          }
+        default:
+          return state;
+      }
     }
 
-    // Mais il est préférable de séparer les variables d'états indépendantes comme cela
-    function Box() {
-      const [position, setPosition] = useState({ left: 0, top: 0 });
-      const [size, setSize] = useState({ width: 100, height: 100 });
 
-      useEffect(() => {
-        function handleWindowMouseMove(e) {
-          setPosition({ left: e.pageX, top: e.pageY });
-        }
-        // ...
+mapStateToProps
+-------------------------------
+1. Permet de placer les données du store dans les props du composant
+pour pouvoir les utiliser
+    Ex1:
+    const mapStateToProps = state => ({
+      currentUser: state.user.currentUser
+    })
+    // state represente le store de redux
+    // state.user représente le reducer qui correspond à la partie du store...
+    // ...qui décrit le user
+    // state.user.currentUser la donnée qui se trouve dans le state user
+    // currentUser : repésente le nom de la Props qui sera transmise au composant
+
+    Ex2:
+    const mapStateToProps = ({ user: { currentUser } }) => ({
+      currentUser
+    }
+    // On destructure le state de redux pour obtenir state.user.currentUser
+    // currentUser écrit seul dans l'objet  équivaut à currentUser: currentUser
+
+    Ex3:
+    const mapStateToProps = ({ user: { currentUser }, cart: { hidden } }) => ({
+      currentUser,
+      hidden
+    }
+    // On destructure le state de redux pour obtenir state.user.currentUser et state.cart.hidden
 
 
+mapDispatchToProps
+-------------------------------
+1. Permet de passer une fonction dans les props du composant qui permettra de dispatcher
+une action aux différents reducers. Cette fonction peut prendre un paramètre qui sera mis
+dans le payload de l'action. 
+    Ex1:
+    // Composant App
+
+    const {setCurrentUser} = this.props // destructuring des props  
+
+    setCurrentUser({
+      currentUser: userAuth
+    })
+    // On dispatch l'action setCurrentUser au reducer en lui passant un objet
+    // en paramètre qui correspond à un user
 
 
+    const mapDispatchToProps = dispatch => ({
+      setCurrentUser: user => dispatch(setCurrentUser(user))
+    })
+    // setCurrentUser: est le nom de la props qui sera passer au composant
+    // setCurrentUser(user) est le nom de l'action creator avec son paramètre qui sera...
+    // ... transmis au payload
+
+
+connect()
+-------------------------------
+1. Permet de connecter un composant au store pour qu'il puisse accéder à ses données
+    Ex1:
+    // Composant Header
+
+    const mapStateToProps = state => ({
+      currentUser: state.user.currentUser
+    })
+
+    export default connect(mapStateToProps)(Header)
+    // On connect mapStateToProps au composant Header pour pouvoir lire le state
+
+    Ex2:
+    // Composant App
+
+    const mapDispatchToProps = dispatch => ({
+      setCurrentUser: user => dispatch(setCurrentUser(user))
+    })
+
+    export default connect(null, mapDispatchToProps)(Header)
+    // On connect mapDispatchToProps au composant App pour pouvoir modifier le state...
+    // ...grâce aux actions
+    // Comme on utilise pas de mapDispatchToProps le 1er argument connect est null
+
+
+React Developer Tools (Extension Chrome)
+-------------------------------
+const store = createStore(
+    rootReducer, 
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // Code à placer dans createStore    
+);
