@@ -1712,12 +1712,15 @@ CONSOLE.TABLE()
 
 
 REDUCE()
-// arr.reduce(callback) 
-// arr.reduce(callback, valeurInitiale)
-1. reduce() exécute la fonction callback une fois pour chaque élément présent dans le tableau et ignore les éléments vides du tableau. La fonction callback utilise quatre arguments. 
-La première fois que la fonction callback est appelée, valeurInitiale et valeurCourante peuvent correspondre à un ou deux éléments. Si valeurInitiale est fournie dans l'appel de reduce(), 
-alors accumulateur sera égale à valeurInitiale et valeurCourante sera égale à la première valeur de la liste. Si valeurInitiale n'est pas fournie, alors accumulateur sera égale à la première valeur de la liste, et valeurCourante sera alors égale à la seconde.
-Autrement dit, si valeurInitiale n'est pas fournie, reduce exécutera la fonction de rappel à partir de l'indice 1 et la première valeur du tableau (d'indice 0) sera utilisée pour valeurInitiale.
+// arr.reduce(callback, [, valeurInitiale])
+// callback(accumulator, currentElement)
+1. reduce() permet d'accumuler les valeurs d'un tableau
+selon la fonction passée en callback.
+valeurInitiale permet de charger l'accumulateur avec une valeur
+de départ et ensuite accumule le reste du tableau.
+Si valeurInitiale n'est pas fournie, reduce exécutera la fonction de callback à partir 
+de l'indice 1 et la première valeur du tableau (d'indice 0) sera utilisée pour valeurInitiale.
+La fonction callback ignore les éléments vides du tableau.
 
     [callback]
       La fonction à exécuter sur chaque valeur de la liste (sauf le premier si aucune valeurInitiale n'est fournie), elle prend quatre arguments en entrée :
@@ -1731,7 +1734,11 @@ Autrement dit, si valeurInitiale n'est pas fournie, reduce exécutera la fonctio
           Le tableau sur lequel on a appelé la méthode reduce().
     [valeurInitiale] (Facultatif)
       Une valeur utilisée comme premier argument lors du premier appel de la fonction callback. Si aucune valeur initiale n'est fournie, le premier élément du tableau est utilisé. Si on appelle reduce() sur un tableau vide sans fournir de valeur initiale, on aura une erreur.
-    
+      Pour être sur d'accumuler tous les éléments du tableau mettre comme valeur 0.
+
+    Valeur de retour :
+        La valeur obtenue grâce à la fonction de réduction.
+
     Ex1:
     // Sans fonction fléchée
     [0, 1, 2, 3, 4].reduce(function(accumulateur, valeurCourante, index, array){
@@ -1742,11 +1749,32 @@ Autrement dit, si valeurInitiale n'est pas fournie, reduce exécutera la fonctio
     // Avec fonction fléchée
     [0, 1, 2, 3, 4].reduce((accumulateur, valeurCourante) => accumulateur + valeurCourante);
     // 10
+    // Premier appel du callback : accumulateur vaut 0 et valeurCourante vaut 1
+    // le callback retourne accumulateur + valeurCourante soit 1 et le place dans l'accumulateur
+    // Deuxième appel du callback : accumulateur vaut 1 et valeurCourante vaut 2
+    // le callback retourne accumulateur + valeurCourante soit 3 et le place dans l'accumulateur
+    // Troisième appel du callback : accumulateur vaut 3 et valeurCourante vaut 3
+    // le callback retourne accumulateur + valeurCourante soit 6 et le place dans l'accumulateur
+    // Quatrième appel du callback : accumulateur vaut 6 et valeurCourante vaut 4
+    // le callback retourne accumulateur + valeurCourante soit 10 et le place dans l'accumulateur
+    // reduce retourne la valeur de l'accumulateur à la fin des appels du callback soit 10
+
 
     Ex2:
     // Avec valeurInitiale
     [0, 1, 2, 3, 4].reduce((accumulateur, valeurCourante) => accumulateur + valeurCourante, 10);
     // 20
+    // Premier appel du callback : accumulateur vaut 10 et valeurCourante vaut 0
+    // le callback retourne accumulateur + valeurCourante soit 10 et le place dans l'accumulateur
+    // Deuxième appel du callback : accumulateur vaut 10 et valeurCourante vaut 1
+    // le callback retourne accumulateur + valeurCourante soit 11 et le place dans l'accumulateur
+    // Troisième appel du callback : accumulateur vaut 11 et valeurCourante vaut 2
+    // le callback retourne accumulateur + valeurCourante soit 13 et le place dans l'accumulateur
+    // Quatrième appel du callback : accumulateur vaut 13 et valeurCourante vaut 3
+    // le callback retourne accumulateur + valeurCourante soit 16 et le place dans l'accumulateur
+    // Cinquième appel du callback : accumulateur vaut 16 et valeurCourante vaut 4
+    // le callback retourne accumulateur + valeurCourante soit 20 et le place dans l'accumulateur
+    // reduce retourne la valeur de l'accumulateur à la fin des appels du callback soit 20
 
 MAP()
 // let nouveauTableau = arr.map(callback [, thisArg])
