@@ -54,6 +54,8 @@
     Fetch
     AJAX
     Les modules JavaScript import / export
+    Memoization
+    Les valeurs évaluées à false
 
 
 
@@ -3931,3 +3933,49 @@ Si on souhaite appeller une page différente de la page en cours, il faudra que 
 Les modules JavaScript import / export
 -------------------------------
 Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Modules
+
+
+Memoization
+-------------------------------
+1. Une fonction mémoïsée stocke les valeurs retournées par ses appels précédents dans une structure de données adaptée et, lorsqu'elle est appelée à nouveau avec les mêmes paramètres, renvoie la valeur stockée au lieu de la recalculer. Une fonction peut être mémoïsée seulement si elle est pure, c'est-à-dire si sa valeur de retour ne dépend que de la valeur de ses arguments.
+
+    Ex1:
+    // A simple function to add something
+    const add = (n) => (n + 10);
+    add(9);
+
+    // A simple memoized function to add something
+    let cache = {};
+    const memoizedAdd = (n) => {
+        
+        if (n in cache) {
+            console.log('Fetching from cache');
+            return cache[n];
+        }
+        else {
+            console.log('Calculating result');
+            let result = n + 10;
+            cache[n] = result;
+            return result;        
+        }
+    }
+   
+    console.log(cache);
+    console.log(memoizedAdd(9)); // Calculating result   
+    console.log(memoizedAdd(9)); // Fetching from cache
+    console.log(memoizedAdd(20)); // Calculating result    
+    console.log(memoizedAdd(20)); // Fetching from cache
+    console.log(cache);
+
+
+Les valeurs évaluées à false
+-------------------------------
+1. C'est 6 valeurs sont évaluées à false dans une condition.
+    
+    Ex1:
+    0 ? "Vrai" : "Faux" // "Faux"
+    undefined ? "Vrai" : "Faux" // "Faux"
+    null ? "Vrai" : "Faux" // "Faux"
+    NaN ? "Vrai" : "Faux" // "Faux"
+    '' ? "Vrai" : "Faux" // "Faux"
+    false ? "Vrai" : "Faux" // "Faux"
