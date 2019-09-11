@@ -31,6 +31,7 @@
         SLICE()
         FILTER()
         INCLUDES()
+        FIND()
     Méthodes sur les objets
         KEYS()
         ASSIGN()
@@ -2067,6 +2068,64 @@ On peut l'utiliser sur des objets semblables à des tableaux (ex. arguments ou d
     arr.includes('a', -2); // false
     arr.includes('b', -2); // true
     arr.includes('c', -100); // true
+
+FIND()
+// var premierElémentTrouvé = arr.find(callback, thisArg);
+// callback(elementCourant[, index[, tableauEntier]])
+1.La méthode find() renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition donnée 
+par la fonction de test passée en argument. Sinon, la valeur undefined est renvoyée.
+La méthode callback est seulement appelée pour les index du tableau pour lesquels on dispose d'une valeur. 
+Elle n'est pas appelée pour les index supprimés ou pour ceux qui n'ont pas de valeur.
+
+	[callback] 
+        Fonction à exécuter sur chaque valeur du tableau. Cette fonction est appelée avec les arguments suivants :
+
+        [elementCourant]
+            L'élément actuellement traité dans le tableau.
+
+        [index] (Facultatif)
+            Son indice
+            
+        [tableauEntier] (Facultatif)            
+            Le tableau pour lequel la méthode find a été appelée.   
+
+    [thisArg] (Facultatif)
+        Objet à utiliser en tant que this quand la fonction callback est exécutée.
+
+    Valeur de retour :
+        La valeur du premier élément du tableau qui réussit le test, 
+        sinon undefined.
+
+    Ex1:
+    // Trouver un objet dans un tableau grâce à une de ses propriétés
+    const inventaire = [
+	  {nom: 'pommes', quantité: 2},
+	  {nom: 'bananes', quantité: 0},
+	  {nom: 'cerises', quantité: 5}
+	];
+	function estCerises(fruit) {
+	  return fruit.nom === 'cerises';
+	}
+	console.log(inventaire.find(estCerises));
+	// { nom: 'cerises', quantité: 5}
+
+	// Avec une fonction fléchée
+	const resultat = inventaire.find( fruit => fruit.nom === 'cerises');
+	console.log(resultat);
+	// { nom: 'cerises', quantité: 5}
+
+    Ex2:
+    // Trouver un nombre premier dans un tableau
+	function estPremier(element, index, array) {
+	    let début = 2;
+	    while (début <= Math.sqrt(element)) {
+	        if (element % début ++ < 1) return false;
+	    }
+	    return (element > 1);
+	}
+
+	console.log( [4, 6, 8, 12].find(estPremier) ); // undefined, rien trouvé
+	console.log( [4, 5, 8, 12].find(estPremier) ); // 5
 
 
 Méthodes sur les objets
