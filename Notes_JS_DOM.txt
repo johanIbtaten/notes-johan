@@ -3,6 +3,7 @@
     Hiérarchie simplifiée des interfaces DOM
     Types de données importants
     Récupérer un noeud (un élément) du DOM
+    Local storage et Session storage
 
 
 Le DOM
@@ -233,3 +234,35 @@ cette méthode prend en paramètre une chaine de caractères correspondant à un
 renvoie tous les éléments du document correspondant à ce sélecteur.
 
 
+Local storage et Session storage
+-------------------------------
+1. Local storage enregistre des chaines de caractères dans le navigateur
+pour créer une persistance des données même si on ferme le navigateur.
+
+  Ex1:
+  // On crée un objet JS
+  const myObjectToStorage = { name: 'Johan'}
+
+  // On le stocke dans le localStorage avec une clé et... 
+  // ...sous forme d'une chaine de caractère
+  window.localStorage.setItem(
+    'myItem', 
+    JSON.stringify(myObjectToStorage)
+  )
+
+  // On récupère la chaine de caractère stockée dans le localStorage
+  const myRetrievedString = JSONwindow.localStorage.setItem('myItem') // "{'name':'Johan'}"
+
+  // On récupère notre objet JS à partir de la chaine de caractère stockée
+  const myRetrievedObject = JSON.parse(myRetrievedString) 
+  // { name: 'Johan'}
+
+
+2. Session storage enregistre des chaines de caractères dans le navigateur
+comme localStorage à la différence que l'information ne dure que pendant la durée 
+de session du navigateur. La fermeture de la fenêtre entraînera donc la perte de l'information.
+Il convient également de noter que sessionStorage ne sert qu'à la fenêtre que vous visualisez. 
+Si l'utilisateur ouvre un lien d'application dans une nouvelle fenêtre ou un nouveau TAB, 
+cette information ne sera pas disponible non plus.
+
+3. localStorage et sessionStorage sont utiles pour la persistance d'informations non sensibles entre les pages. Des informations sensibles telles que des mots de passe ou des informations susceptibles de compromettre la sécurité des utilisateurs ne doivent jamais être stockées.

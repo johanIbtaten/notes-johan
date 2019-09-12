@@ -1068,8 +1068,28 @@ La façon d'identifier une IIFE est de localiser les parenthèses gauche et droi
         console.log("Hello Foo");
     }());
 
-6. Fonction qui retourne une autre fonction
-	Ex1:
+6. Fonction qui retourne une autre fonction (Currying)
+Le currying Permet de passer un paramètre à la fois grâce à des fonctions imbriquées. 
+Cela permet de garder en mémoire un paramètre et de n'exécuter que la fonction imbriquée
+plutôt que toute la fonction.
+
+    Ex1:
+    // Sans currying
+    const multiply = (a, b) => a * b
+
+    // Avec currying
+    const curriedMultiply = (a) => (b) => a * b
+
+    const curriedMultiplyBy5 = curriedMultiply(5)
+
+    // Le premier paramètre 5 est gardé en mémoire de curriedMultiplyBy5...
+    // ...on a plus qu'à passer le deuxième paramètre pour utiliser la fonction
+    // Cette fonction avec currying s'exécute plus rapidement que sans currying
+    curriedMultiplyBy5(4) // 20
+    curriedMultiplyBy5(4) // 20
+    curriedMultiplyBy5(3) // 15
+
+	Ex2:
 	function add(x){
 	  return function(y){
 	    return x + y;
