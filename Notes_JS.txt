@@ -56,6 +56,7 @@
     Les modules JavaScript import / export
     Memoization
     Les valeurs évaluées à false
+    Hashtable / Hashmap  vs Array (Data Normalization)
 
 
 
@@ -3999,3 +4000,114 @@ Les valeurs évaluées à false
     NaN ? "Vrai" : "Faux" // "Faux"
     '' ? "Vrai" : "Faux" // "Faux"
     false ? "Vrai" : "Faux" // "Faux"
+
+
+Hashtable / Hashmap  vs Array (Data Normalization)
+-------------------------------
+1. La table de hachage (HashMap) est une structure indispensable de données classiques dans la programmation d'applications.
+(voir https://fr.wikipedia.org/wiki/Table_de_hachage)
+C'est tellement omniprésent que pratiquement tous les langages modernes la supportent grâce à leur bibliothèque, 
+ou en intégrant les fonctionnalités dans la syntaxe elle-même. Les tables de hachage sont souvent implémentées sous forme de tableau associatif.
+Une HashMap fournit l'accès permanent à une valeur via une clé unique. 
+La méthode la plus commune en JavaScript est d'utiliser un objet littéral comme une HashMap.
+Notez que le traitement d'un objet littéral comme une HashMap est la même syntaxe que l'accès normal à la propriété et à sa manipulation. 
+Nous pouvons tirer parti du langage lui-même comme d'une structure de données.
+
+    Ex1:
+    var map = {};
+    // notation par point
+    map.foo = "bar";
+    console.log(map.foo); // "bar"
+
+    // notation par crochets
+    map["foo"] = "bar";
+    console.log(map["foo"]); // "bar"
+
+    // un mélange des deux
+    map.foo = "bar";
+    console.log(map["foo"]); // "bar"
+
+    Ex2:
+    // Avec une Hashmap
+    // On crée l'objet littéral
+    var myData = new Object();     
+    // On stocke les clés/valeurs dans l'objet 
+    myData["The Beatles"] ="248.3";
+    myData["Elvis Presley"] ="201.2";
+    myData["Michael Jackson"] ="155.8";
+    myData["Madonna"] ="157.8";
+    myData["Elton John"] ="153";
+    myData["Led Zeppelin"] ="133.4";
+    myData["Queen"] ="88.2";
+    myData["ABBA"] ="54.4";
+    myData["Mariah Carey"] ="118.2";
+    myData["Celine Dion"] ="111.4";
+    myData["Pink Floyd"] ="110.1";
+    myData["AC/DC"] ="99.3";
+    myData["The Rolling Stones"] ="89.5";
+    myData["Bee Gees"] ="63.2";
+    // On récupère une donnée
+    alert(myData["ABBA"]);
+
+    // Avec un tableau
+    var myData = []; 
+    myData.push(["The Beatles", "248.3"]);
+    myData.push(["Elvis Presley", "201.2"]);
+    myData.push(["Michael Jackson", "155.8"]);
+    myData.push(["Madonna", "157.8"]);
+    myData.push(["Elton John", "153"]);
+    myData.push(["Led Zeppelin", "133.4"]);
+    myData.push(["Queen", "88.2"]);
+    myData.push(["ABBA", "54.4"]);
+    myData.push(["Mariah Carey", "118.2"]);
+    myData.push(["Celine Dion", "111.4"]);
+    myData.push(["Pink Floyd", "110.1"]);
+    myData.push(["AC/DC", "99.3"]);
+    myData.push(["The Rolling Stones", "89.5"]);
+    myData.push(["Bee Gees", "63.2"]);
+     
+    var artist = "The Rolling Stones";     
+    for (var i = 0; i < myData.length; i++) {
+        if (myData[i][0] == artist) {
+        alert("Sales for " + artist + " is " + myData[i][1]);
+    }
+
+2. L'ordre des clés n'est pas garanti avec une HashMap basique.
+
+    Ex1:
+    var map = {
+        key1 : "one",
+        key2 : "two",
+        key3 : "three",
+    };
+
+    // récupérer toutes les valeurs
+    var values = [];
+    for (var key in map) {
+     if (map.hasOwnProperty(key)) {
+       values.push(map[key]);
+     }
+    }
+
+    // l'ordre des clés n'est pas garanti avec une HashMap basique
+    // et chaque navigateur a son implémentation
+    console.log(values.join(',')); // "two,three,one"
+
+3. Pour conserver l'ordre d'insertion en sortie il faut utiliser une classe LinkedHashMap qui est synchronisée avec une liste doublement chaînée
+(voir https://fr.wikipedia.org/wiki/Liste_cha%C3%AEn%C3%A9e)
+
+    Ex1:
+    var map = new LinkedHashMap();
+
+    map.put("key1", "one");
+    map.put("key2", "two");
+    map.put("key3", "three");
+
+    // l'ordre retournée est maintenant prévisible
+    console.log(map.keys().join(',')); // "key1,key2,key3"
+    console.log(map.values().join(',')); // "one,two,three"
+
+4. En Data Normalization, si l'on doit récupérer un élément individuel contenu dans une liste selon une clé,
+il vaut mieux stocker les données dans une hashmap plutôt qu'un tableau car dans un tableau il faut 
+parcourir tout le tableau à partir de l'index 0 jusqu'à trouver la bonne clé et plus le tableau est long plus ça prend du temps alors que dans une hashmap
+c'est quasi instantané quelquesoit la taille de la liste
