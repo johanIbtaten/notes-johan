@@ -4086,7 +4086,6 @@ Nous pouvons tirer parti du langage lui-même comme d'une structure de données.
     for (var key in map) {
      if (map.hasOwnProperty(key)) {
        values.push(map[key]);
-     }
     }
 
     // l'ordre des clés n'est pas garanti avec une HashMap basique
