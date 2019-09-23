@@ -1655,12 +1655,26 @@ Fonctions sur les tableaux
 FOREACH()
 // arr.forEach(callback);
 // arr.forEach(callback, thisArg);
-1. Permet d'exécuter une fonction donnée sur chaque élément du tableau.
+1. Permet d'exécuter une fonction donnée sur chaque élément du tableau. 
+forEach exécute la fonction callback une fois pour chaque élément ; 
+contrairement à every et some, cette méthode renvoie toujours undefined et ne peut pas être enchaînée.
+Il n'existe aucun moyen d'arrêter une boucle forEach en dehors de lever une exception.
+L'ensemble des éléments traités par forEach est défini avant le premier appel à callback. 
+Les éléments ajoutés au tableau après que l'appel à forEach ait commencé ne seront pas visités par callback. 
+Si des éléments déjà présents dans le tableau sont modifiés, leur valeur telle qu'elle est passée au callback 
+sera la valeur au moment du passage du forEach ; les éléments supprimés ne sont pas parcourus.
     
     [callback] est appelé avec trois arguments :
       - la valeur de l'élément
       - l'index de l'élément
       - le tableau utilisé
+
+    [thisArg] (Facultatif)
+      La valeur à utiliser pour this lors de l'exécution de callback. La valeur par défaut 
+      est l'objet global de l'environnement (Window pour un navigateur).
+
+    Valeur de retour :
+        undefined
 
     Ex1:
     var array1 = ['a', 'b', 'c'];
@@ -1675,6 +1689,36 @@ FOREACH()
       console.log(element); // affiche "3", "5", "7"
       console.log(index);  // affiche "0", "1", "2"
     });
+
+    Ex3:
+    function logArrayElements(element, index, array) {
+        console.log("a[" + index + "] = " + element);
+    }
+    [2, 5, , 9].forEach(logArrayElements);
+    // logs:
+    // a[0] = 2
+    // a[1] = 5
+    // a[3] = 9
+
+    Ex4:
+    // Utiliser this
+    function Compteur() {
+      this.somme = 0;
+      this.compte = 0;
+    }
+
+    Compteur.prototype.ajouter = function(tableau) {
+      tableau.forEach(function(element) {
+        this.somme += element;
+        ++this.compte;
+      },  this);
+      //  ^---- On a ajouté l'argument this ici.
+    };
+
+    var obj = new Compteur();
+    obj.ajouter([2, 5, 9]);
+    console.log(obj.compte); // 3
+    console.log(obj.somme);  // 16
 
 
 CONSOLE.TABLE()
@@ -1748,7 +1792,7 @@ La fonction callback ignore les éléments vides du tableau.
     [callback]
       La fonction à exécuter sur chaque valeur de la liste (sauf le premier si aucune valeurInitiale n'est fournie), elle prend quatre arguments en entrée :
         [accumulateur]
-          La valeur précédemment retournée par le dernier appel du callback, ou valeurInitiale, si elle est fournie (voir ci-après) (c'est la valeur « accumulée » au fur et à mesure des appels
+          La valeur précédemment retournée par le dernier appel du callback, ou valeurInitiale, si elle est fournie (voir ci-après) (c'est la valeur « accumulée » au fur et à mesure des appels)
         [valeurCourante]
           La valeur de l'élément courant actuellement manipulé dans le tableau.
         [index] (Facultatif)
@@ -1757,7 +1801,7 @@ La fonction callback ignore les éléments vides du tableau.
           Le tableau sur lequel on a appelé la méthode reduce().
     [valeurInitiale] (Facultatif)
       Une valeur utilisée comme premier argument lors du premier appel de la fonction callback. Si aucune valeur initiale n'est fournie, le premier élément du tableau est utilisé. Si on appelle reduce() sur un tableau vide sans fournir de valeur initiale, on aura une erreur.
-      Pour être sur d'accumuler tous les éléments du tableau mettre comme valeur 0.
+      Pour être sûr d'accumuler tous les éléments du tableau mettre comme valeur 0 ou un tableau vide [] ou un objet vide {}
 
     Valeur de retour :
         La valeur obtenue grâce à la fonction de réduction.
@@ -2976,27 +3020,33 @@ Si c'est une valeur primitive qui est renvoyée (ex. false ou undefined), une ex
 Les générateurs function*
 -------------------------------
 1. La déclaration function* (le mot-clé function suivi par un astérisque) permet de définir un générateur
-(aussi appelé une fonction génératrice) (un générateur est un objet Generator).
+(aussi appelé une fonction génératrice).
 Les générateurs sont des fonctions qu'il est possible de quitter puis de reprendre. 
 Le contexte d'un générateur (les liaisons avec ses variables) est sauvegardé entre les reprises successives.
 
-2. Les générateurs, combinés avec les promesses, sont des outils de programmation asynchrones puissants qui permettent de réduire 
-les inconvénients causés par les callbacks (fonctions de rappel) et l'inversion de contrôle.
-Lorsqu'on appelle une fonction génératrice, son corps n'est pas exécuté immédiatement, c'est un itérateur 
-qui est renvoyé pour la fonction. Lorsque la méthode next() de l'itérateur est appelée, le corps de la fonction génératrice 
-est utilisé jusqu'à ce que la première expression yield soit trouvée. Cette expression définira la valeur à renvoyer pour l'itérateur.
-Si on utilise yield*, on pourra déléguer la génération des valeurs à une autre fonction génératrice. La méthode next() renvoie 
-un objet dont la propriété value contient la valeur générée et une propriété done qui indique si le générateur a produit sa dernière 
-valeur ou non. Lorsqu'on appelle la méthode next() avec un argument, cela reprendra l'exécution de la fonction génératrice et remplacera 
-la valeur de l'expression yield (là où l'exécution avait été interrompue) avec la valeur de l'argument passé à next().
-
-3. On peut utiliser une instruction return dans un générateur. Lorsque cette instruction sera exécutée, 
-le générateur sera terminé (done vaudra true). La valeur renvoyée par l'instruction return sera la valeur de terminaison du générateur. 
+2. Un générateur retourne un itérateur. Lorsqu'il est appelé, il ne va pas s'exécuter. À la place, il va retourner un objet spécial appelé itérateur.
+L'itérateur posséde une fonction next (iterator.next), qui va exécuter le générateur jusqu'au premier yield.
+next retourne un objet contenant deux clefs : 
+value: indiquant la valeur retournée par yield.
+done: un booléen indiquant si le générateur est arrivé à la fin de son éxécution.
+Un générateur se termine toujours par la valeur retournée par return (done vaudra true), ou undefined si aucun return n'est spécifié.
 Une fois qu'un générateur est terminé, il ne peut plus produire d'autres valeurs.
+
+3. Nous avons donc une fonction capable de produire des valeurs sur demande. 
+Mais, les générateurs, ne s'arrêtent pas là. En plus de donner des valeurs, ils peuvent en recevoir.
+Un indice yield fonctionne dans les deux sens et next accepte un paramètre.
+La ligne i += yield i; se lit de droite à gauche. D'abord, i est retourné. 
+Le générateur attend alors que next soit appelé. Puis il reçoit la valeur passée à next et résume son exécution, en l'additionnant à i.
+La valeur passée au premier next, est toujours ignorée, c'est la valeur passée en argument au générateur qui est prise en compte.
 
 4. À l'instar d'une instruction return, une exception levée à l'intérieur du générateur entraînera la terminaison du 
 générateur sauf si cette exception est interceptée. Lorsqu'un générateur est terminé, les appels suivants à next() n'exécuteront 
 aucun code provenant du générateur, ils renverront simplement un objet de la forme {value: undefined, done: true}.
+
+5. Lorsqu'on appelle la méthode next() avec un argument, cela remplacera 
+la valeur de l'expression yield précédente avec la valeur de l'argument passé à next().
+Si aucun argument n'est pas à next() l'expression yield précédente est remplacée par undefined.  
+Une valeur passée au premier appel de next() sera toujours ignorée.
 
     Ex1:
     // Exemple simple
@@ -3096,6 +3146,192 @@ aucun code provenant du générateur, ils renverront simplement un objet de la f
     };
     const truc = toto();
     console.log(truc.next()); // {value: 10, done: false}
+
+    Ex8:
+    function* gen(i) {
+        yield i
+        yield i + 10
+        return 25
+    }
+    const g = gen(5)
+    g.next() // {value: 5, done: false}
+    g.next() // {value: 15, done: false}
+    g.next() // {value: 25, done: true }
+
+    Ex9:
+    // In the example the generator function accessed directly without a wrapper always executes only until the first yield. 
+    // Hence, by definition you need to assign the Generator to a variable to properly iterate over it
+    function* genFunction(i) {
+        yield i
+        yield i + 1
+    }
+    let generator = genFunction(5) // Create a generator
+
+    console.log(generator.next()); // {value: 5, done: false}
+    console.log(generator.next()); // {value: 6, done: false}
+
+    // Accessing genFunction directly
+    console.log(genFunction(5).next()); // {value: 5, done: false}
+    console.log(genFunction(5).next()); // {value: 5, done: false}
+
+    Ex9:
+    // Passer un argument à next() pour modifier l'état interne du générateur
+    function* fibonacci(){
+      var fn1 = 0;
+      var fn2 = 1;
+      while (true){
+        var current = fn1;
+        fn1 = fn2;
+        fn2 = fn1 + current;
+        var reset = yield current;
+        if (reset){
+            fn1 = 0;
+            fn2 = 1;
+        }
+      }
+    }
+
+    var sequence = fibonacci();
+    console.log(sequence.next().value);     // 0
+    console.log(sequence.next().value);     // 1
+    console.log(sequence.next().value);     // 1
+    console.log(sequence.next().value);     // 2
+    console.log(sequence.next().value);     // 3
+    console.log(sequence.next().value);     // 5
+    console.log(sequence.next().value);     // 8
+    console.log(sequence.next(true).value); // 0
+    console.log(sequence.next().value);     // 1
+    console.log(sequence.next().value);     // 1
+    console.log(sequence.next().value);     // 2
+
+    Ex10:
+    // Assigner yield à une variable
+    function* gen(i) {
+        // 
+        const x = yield 1
+        console.log(x)
+        const y = yield 2
+        console.log(y)
+    }
+    let g = gen()
+    console.log(g.next()) // {value: 1, done: false}, x undefined
+    console.log(g.next()) // {value: 2, done: false}, y undefined
+    console.log(g.next()) // {value: undefined, done: true}
+
+    Ex11:
+    function* gen() {
+       yield 5;
+    }    
+    // équivaut à
+    function* gen() {
+       yield 5;
+       return undefined;
+    }
+
+    Ex12:
+    function* addGenerator(i) {
+        while (true) {
+            i += yield i;
+        }
+    }
+    const iterator = addGenerator(0);
+    iterator.next(); // { value: 0, done: false }
+    iterator.next(2); // { value: 2, done: false }
+    iterator.next(5); // { value: 7, done: false }
+
+    Ex14:
+    function* gen(arg) {
+        return arg;
+    }
+    const it = gen('foo');
+    it.next('bar'); // { value: 'foo', done: true }
+
+    Ex15:
+    function* gen(i) {
+        console.log(i)
+        const j = 5 * (yield (i*10))
+        console.log(j)
+        const k = yield (2*j/4)
+        console.log(k)
+        return (i+j+k)
+    }
+    let iterator = gen(10)
+
+    console.log(iterator.next(20)) 
+    // La valeur passée au premier next, est toujours ignorée, 
+    // c'est la valeur passée en argument au générateur qui est prise en compte.
+    // i vaut donc 10
+    // next(20) renvoie un objet ayant pour valeur i*10 soit 10*10 soit 100
+
+    console.log(iterator.next(10))
+    // La valeur 10 passée au next remplace l'expression du yield précédent yield (i*10) soit 10
+    // j vaut donc 5*10 soit 50
+    // next(10) renvoie un objet ayant pour valeur le résultat de l'expression 2*j/4 du yield courant soit 2*50/4 soit 25
+
+    console.log(iterator.next(5))
+    // La valeur 5 passée au next remplace l'expression du yield précédent yield (2*j/4) soit 5
+    // k vaut 5
+    // next(5) renvoie un objet ayant pour valeur le résultat de l'expression i+j+k du return soit 10+50+5 soit 65 et une valeur done à true
+    // Le générateur est terminé
+
+    // Sortie console
+    // 10
+    // {value: 100, done: false}
+    // 50
+    // {value: 25, done: false}
+    // 5
+    // {value: 65, done: true}
+
+    Ex16:
+    function* gen(i) {
+        yield
+        foo(yield "Iam")
+    }
+    function foo(x) {
+        console.log("Just printing", x)
+    }
+    var iterator = gen()
+
+    console.log(iterator.next())
+    // Le premier yield ne retourne aucune valeur 
+    // next() renvoie donc un objet ayant pour valeur undefined
+
+    console.log(iterator.next())
+    // Ce deuxième yield possède la valeur "Iam"
+    // next() renvoie donc un objet ayant pour valeur "Iam"
+
+    console.log(iterator.next())
+    // Aucune valeur n'est passée au next, il remplace donc l'expression du yield précédent yield "Iam" par undefined
+    // La fonction foo est éxécuté avec l'argument undefined passé en paramètre ce qui affiche Just printing undefined
+    // Comme il n'y a plus de yield, next() renvoie un objet ayant pour valeur undefined et done à true
+
+    // Sortie console
+    // {value: undefined, done: false}
+    // {value: "Iam", done: false}
+    // Just printing undefined
+    // {value: undefined, done: true}
+
+    Ex17:
+    function* fetchUser() {
+        const user = yield getData()
+        console.log("User", user)
+    }
+    function getData() {
+        return {name:'Johan', dob: '1979'}
+    }
+    var iterator = fetchUser()
+
+    console.log(iterator.next().value)
+    // next().value renvoie un objet ayant pour valeur le résultat de l'expression getData() soit {name: "Johan", dob: "1979"}
+
+    console.log(iterator.next())
+    // Aucune valeur n'est passée au next, il remplace donc l'expression du yield précédent yield getData() par undefined
+    // user vaut donc undefined et s'affiche
+    // Comme il n'y a plus de yield, next() renvoie un objet ayant pour valeur undefined et done à true
+
+    // {name: "Johan", dob: "1979"}
+    // User undefined
+    // {value: undefined, done: true}
 
 
 Héritage et chaîne de prototype
@@ -3629,8 +3865,8 @@ A vu de nez cette méthode semble proche de la méthode précédente. Cependant,
 
     Ex1:
     let ajax = function (url) {
-      // On renvoie une promesse qui prend en paramettre une fonction 
-      // avec 2 paramètres, le callback de succès et d'erreur
+      // On renvoie une promesse qui prend en paramètre une fonction 
+      // avec 2 paramètres qui sont eux même deux fonctions, le callback de succès (resolve) et d'erreur (reject)
       return new Promise(function (resolve, reject) {
         // Le reste du code ressemble à la méthode précédente
         let req = new XMLHttpRequest()
@@ -3656,7 +3892,7 @@ A vu de nez cette méthode semble proche de la méthode précédente. Cependant,
 
     Ex2:
     let ajax = function (url) {
-      // On renvoie une promesse qui prend en paramettre une fonction 
+      // On renvoie une promesse qui prend en paramètre une fonction 
       // avec 2 paramètres, le callback de succès et d'erreur
       return new Promise(function (resolve, reject) {
         // Le reste du code ressemble à la méthode précédente
@@ -3699,6 +3935,123 @@ A vu de nez cette méthode semble proche de la méthode précédente. Cependant,
     ]).then(function (responses) {
       responses // [response1, response2, response3]
     }).catch(function (errors) { })
+
+
+The function passed to new Promise is called the executor. 
+When new Promise is created, it runs automatically. It contains the producing code, that should eventually produce a result.
+
+Its arguments resolve and reject are callbacks provided by JavaScript itself. Our code is only inside the executor.
+
+When the executor obtains the result, be it soon or late – doesn’t matter, it should call one of these callbacks:
+resolve(value) — if the job finished successfully, with result value.
+reject(error) — if an error occurred, error is the error object.
+
+C'est le développeur qui place ces deux callback dans le code de l'executor pour dire
+à quel moment la promesse est résolue avec succès et le résultat à retourner en argument de resolve
+ou avec une erreur et l'erreur à retourné en argument de reject
+
+So to summarize: the executor runs automatically, it should do a job and then call either resolve or reject.
+
+The promise object returned by new Promise constructor has internal properties:
+state — initially "pending", then changes to either "fulfilled" when resolve is called or "rejected" when reject is called.
+result — initially undefined, then changes to value when resolve(value) called or error when reject(error) is called.
+
+A promise that is either resolved or rejected is called “settled”, as opposed to a initially “pending” promise.
+
+Rejecting or resolving won't stop the execution of the rest of the function. 
+Pour éviter d'éventuellles problèmes il est conseillé de stopper l'éxécution
+après un resolve ou un reject soit en les retournant dans un return
+soit en utilisant un if/else 
+
+The executor should call only one resolve or one reject. Any state change is final.
+All further calls of resolve and reject are ignored:
+
+In case something goes wrong, the executor should call reject. That can be done with any type of argument (just like resolve). 
+But it is recommended to use Error objects (or objects that inherit from Error). The reasoning for that will soon become apparent.
+
+The properties state and result of the Promise object are internal. We can’t directly access them. 
+We can use the methods .then/.catch/.finally for that. They are described below.
+
+3.1 then
+
+promise.then(
+  function(result) { /* handle a successful result */ },
+  function(error) { /* handle an error */ }
+);
+
+The first argument of .then is a function that runs when the promise is resolved, and receives the result.
+The second argument of .then is a function that runs when the promise is rejected, and receives the error.
+
+    EX:
+    let promise = new Promise(function(resolve, reject) {
+      setTimeout(() => resolve("done!"), 1000);
+    });
+
+    // resolve runs the first function in .then
+    promise.then(
+      result => alert(result), // shows "done!" after 1 second
+      error => alert(error) // doesn't run
+    );
+
+    EX:
+    let promise = new Promise(function(resolve, reject) {
+      setTimeout(() => reject(new Error("Whoops!")), 1000);
+    });
+
+    // reject runs the second function in .then
+    promise.then(
+      result => alert(result), // doesn't run
+      error => alert(error) // shows "Error: Whoops!" after 1 second
+    );
+
+    EX:
+    // If we’re interested only in successful completions, then we can provide only one function argument to .then
+    let promise = new Promise(resolve => {
+      setTimeout(() => resolve("done!"), 1000);
+    });
+
+    promise.then(alert); // shows "done!" after 1 second
+
+3.2 catch
+
+If we’re interested only in errors, then we can use null as the first argument: .then(null, errorHandlingFunction). 
+Or we can use .catch(errorHandlingFunction), which is exactly the same
+
+    EX:
+    let promise = new Promise((resolve, reject) => {
+      setTimeout(() => reject(new Error("Whoops!")), 1000);
+    });
+    
+    promise.catch((error) => alert(error.message)); // shows "Error: Whoops!" after 1 second
+    // .catch(f) is the same as promise.then(null, f)
+
+3.3 finally
+
+La méthode finally peut être utile si on souhaite effectuer un traitement ou du nettoyage (fermetures de flux, libération de ressources, etc.) 
+une fois qu'une promesse est résolue, quel que soit l'état de la résolution (tenue ou rejetée).
+finally ne recevra pas d'argument car on ne peut pas savoir si la promesse a été tenue ou rompue. 
+Cette fonction est précisément appelée lorsqu'on ne s'intéresse pas à la raison du rejet ou à la réussite de la promesse. Une telle valeur est donc superflue.
+
+    EX:
+    let isLoading = true;
+
+    fetch(myRequest).then(function(response) {
+        var contentType = response.headers.get("content-type");
+        if(contentType && contentType.includes("application/json")) {
+          return response.json();
+        }
+        throw new TypeError("Oups, ceci n'est pas du JSON !");
+    })
+    .then(function(json) { /* traiter le JSON */ })
+    .catch(function(error) { console.log(error); 
+       /* La ligne précédent peut aussi déclencher une 
+          erreur (si console vaut {} par exemple) */
+    })
+    .finally(function() { isLoading = false; });
+
+
+
+
 
 4. Async & Await
 L'ES2017 propose en draft une amélioration du système de promesses avec la création de fonction asynchrones.
@@ -4000,6 +4353,31 @@ Les valeurs évaluées à false
     NaN ? "Vrai" : "Faux" // "Faux"
     '' ? "Vrai" : "Faux" // "Faux"
     false ? "Vrai" : "Faux" // "Faux"
+
+2. In JavaScript, the values false, null, undefined, 0, -0, NaN, and '' (empty string) are "falsy" values. 
+All other values are "truthy." 
+
+3. L'opérateur !! (Double bang)
+! is the logical negation or "not" operator. !! is ! twice. It's a way of casting a "truthy" or "falsy" value to true or false, respectively. 
+Given a boolean, ! will negate the value, i.e. !true yields false and vice versa. Given something other than a boolean, the value will 
+first be converted to a boolean and then negated. For example, !undefined will first convert undefined to false and then negate it, yielding true. 
+Applying a second ! operator (!!undefined) yields false, so in effect !!undefined converts undefined to false.
+
+    Ex1:
+    // Here's a truth table of ! and !! applied to various values
+    value     | !value | !!value
+    -----------+--------+-------
+     false     | true   | false
+     true      | false  | true
+     null      | true   | false
+     undefined | true   | false
+     0         | true   | false
+     -0        | true   | false
+     1         | false  | true
+     -5        | false  | true
+     NaN       | true   | false
+     ''        | true   | false
+     'hello'   | false  | true
 
 
 Hashtable / Hashmap  vs Array (Data Normalization)

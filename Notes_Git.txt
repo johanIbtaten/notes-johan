@@ -64,3 +64,31 @@ Git
 
 5. Stager tous les fichiers
 	git add -A
+
+6. Ecrire le message du commit
+	git commit -m "Votre nouveau message"
+
+7. Modifier le message du dernier commit, que si vous n'avez pas encore pushé votre commit sur l'origine !
+	git commit --amend -m "Votre nouveau message" 
+
+8. Se positionner sur un commit donné
+	git checkout SHADuCommit
+
+9. Revenir à votre branche principale (au commit le plus récent)
+	git checkout master
+
+10. Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
+	git revert SHADuCommit
+
+11. Annuler tous les changements que je n'ai pas encore commités.
+	git reset --hard‌
+
+12. Afficher tous les commits
+	git log
+	//Taper q  pour sortir de l'affichahe de git log quand on est dans la console
+
+14. Forcer un push vers une branche distante si on a une erreur
+type : "Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart."
+	git push -f heroku master
+

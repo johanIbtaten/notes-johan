@@ -7,6 +7,7 @@ Stateful Class Components
 PureComponent
 props.children (Composition)
 import SVG
+heroku (déploiement)
 
 
 Créer un application react avec react-app
@@ -341,3 +342,19 @@ import SVG
             <span> 0 </span>
         <div>
     ))
+
+
+heroku (déploiement)
+-------------------------------
+1. Installer Heroku CLI pour Windows 64x
+2. npm install -g heroku 
+3. Vérifier l'installation 
+    heroku --version
+4. Se connecter à heroku
+    heroku login
+5. Cliquer sur Log in dans le navigateur qui s'ouvre
+6. Configurer l'hébergement de l'application
+    heroku create crwn-live75 --buildpack https://github.com/mars/create-react-app-buildpack.git
+7. Pusher l'application sur la branche distante heroku depuis la branche master
+     git push heroku master
+
