@@ -41,6 +41,8 @@
         BIND()
     Méthodes sur les chaînes de caratères
         INCLUDES()
+    Méthodes sur JSON
+        PARSE()
     Rest parameters
     Spread operator (opérateur de décomposition)
     Le protocole « itérable » (Objets itérables)
@@ -51,7 +53,7 @@
     Comparer des objets
     Utiliser this
     Promise, Async et Await
-    Fetch
+    Fetch API
     AJAX
     Les modules JavaScript import / export
     Memoization
@@ -2641,6 +2643,109 @@ autre et renvoie true ou false selon le cas de figure. includes() est sensible �
     console.log(str.includes(""));           // true
 
 
+Méthodes sur JSON
+-------------------------------
+PARSE()
+// JSON.parse(texte[, reviver])
+1. La méthode JSON.parse() analyse une chaîne de caractères JSON et construit la valeur JavaScript ou l'objet décrit par cette chaîne. 
+On peut éventuellement utiliser cette fonction avec un paramètre de modification permettant de traiter l'objet avant qu'il soit renvoyé.
+
+    [texte]
+        La chaine de caractère à analyser comme du JSON.
+
+    [reviver] (Facultatif)
+        Si l'argument est une fonction, effectue une opération de transformation sur la valeur analysée avant de la renvoyer.
+       
+    Valeur de retour :
+        Un objet (Object) correspondant au texte envoyé.
+
+    Exceptions:
+        Lève une exception SyntaxError si la chaine de caractère à analyser ne contient pas du JSON valide.
+
+    EX:
+    var json = '{"result":true, "count":42}';
+    obj = JSON.parse(json);
+    console.log(obj);
+    // expected output: {result: true, count: 42}
+
+    EX:
+    try {
+      JSON.parse('{}');              // {}
+      JSON.parse('true');            // true
+      JSON.parse('"toto"');          // "toto"
+      JSON.parse('[1, 5, "false"]'); // [1, 5, "false"]
+      JSON.parse('null');            // null
+    } catch (e) {
+      console.error("Parsing error:", e); 
+    }
+
+2. Si un reviver est spécifié, la valeur obtenue par l'analyse est transformée avant d'être renvoyée. 
+Plus précisément, la valeur calculée, et toutes les propriétés (commençant avec les propriétés les plus imbriquées), 
+sont passées individuellement au reviver, qui est appelé avec : l'objet contenant la propriété en cours de traitement, 
+le nom de la propriété en chaine de caractères et la valeur de la propriété. Si la fonction reviver retourne undefined 
+(ou ne retourne aucune valeur, par exemple si l'exécution s'arrête à la fin de la fonction), la propriété est supprimée de l'objet. 
+Autrement la propriété est redéfinie avec la valeur retournée.
+Si le reviver ne transforme que certaines valeurs et pas d'autres, assurez-vous que les valeurs inchangées soient renvoyées telles quelles. 
+En effet, si elles ne sont pas renvoyées, elles seront supprimés sur l'objet obtenu !
+
+    EX:
+    JSON.parse(
+        '{"p": 5, "d": 10, "b": "v" "c": {"z": 5}}', 
+        (key, value) => {
+            if (typeof value === 'number') {
+                return value * 2;  // renvoie value * 2 pour les nombres
+            }
+            return value;        // pour le reste, la valeur est inchangée
+        }
+    )
+    
+
+    // {p: 10, d: 20, b: "v", c: {…}}
+
+STRINGIFY()
+// JSON.stringify( valeur[, remplaçant [, espace]])
+1. La méthode JSON.stringify() convertit une valeur JavaScript en chaîne JSON. Optionnellement, 
+elle peut remplacer des valeurs ou spécifier les propriétés à inclure si un tableau de propriétés a été fourni.
+
+    [valeur]
+        La valeur à convertir en chaîne JSON.
+
+    [remplaçant] (Facultatif)
+        Une fonction qui modifie le processus de transformation ou un tableau de chaînes de caractères 
+        et de nombres qui sont utilisés comme liste blanche pour sélectionner/filtrer les propriétés 
+        de l'objet à inclure dans la chaîne JSON. Si cette valeur est null ou n'est pas fournie, 
+        toutes les propriétés de l'objet seront inclues dans la chaîne résultante.
+
+    [espace] (Facultatif)
+        Un objet String ou Number qui est utilisé pour insérer des blancs dans la chaîne JSON produite afin de faciliter la lisibilité.
+            - Si cet argument est un nombre, il indiquera le nombre d'espaces à utiliser pour l'indentation (la valeur est ramenée à 10 si elle dépasse 10).
+            - Si l'argument est une chaîne, les 10 premiers caractères (ou la chaîne si elle est plus courte) seront utilisés pour les blancs.
+            - Si le paramètre n'est pas fourni (ou s'il est null), aucun blanc ne sera utilisé.
+       
+    Valeur de retour :
+        Une chaîne de caractères JSON qui représente la valeur indiquée.
+
+    Exceptions:
+        - Cette méthode lève une exception TypeError (« cyclic object value ») lorsqu'elle trouve une référence circulaire.
+        - Cette méthode lève une exception TypeError (« BigInt value can't be serialized in JSON ») lorsqu'on 
+        tente de convertir une valeur BigInt en une chaîne de caractères JSON.
+
+    EX:
+    console.log(JSON.stringify({ x: 5, y: 6 }));
+    // expected output: "{"x":5,"y":6}"
+
+    console.log(JSON.stringify([new Number(3), new String('false'), new Boolean(false)]));
+    // expected output: "[3,"false",false]"
+
+    console.log(JSON.stringify({ x: [10, undefined, function(){}, Symbol('')] }));
+    // expected output: "{"x":[10,null,null,null]}"
+
+    console.log(JSON.stringify(new Date(2006, 0, 2, 15, 4, 5)));
+    // expected output: ""2006-01-02T15:04:05.000Z""
+
+2. voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/JSON/stringify pour plus de détails
+
+
 Rest parameters
 -------------------------------
 1. Cette syntaxe permet de représenter un nombre indéfini d'arguments sous forme d'un tableau.
@@ -3048,6 +3153,21 @@ la valeur de l'expression yield précédente avec la valeur de l'argument passé
 Si aucun argument n'est pas à next() l'expression yield précédente est remplacée par undefined.  
 Une valeur passée au premier appel de next() sera toujours ignorée.
 
+6. Une expression yield* est utilisée afin de déléguer 
+le mécanisme d'itération/génération à un autre générateur 
+ou à un autre objet itérable. yield* est une expression et non 
+une instruction, elle est donc évaluée et fournit une valeur.
+yield* peut également être utilisé avec d'autres sortes 
+d'itérables (chaînes, tableaux ou arguments)
+
+7. Le mot-clé yield suspend une fonction génératrice et la valeur 
+de l'expression suivant le mot-clé yield est retournée à l'appelant 
+du générateur. Il peut être vu comme une version générateur 
+du mot-clé return.
+
+8. La fin de la fonction génératrice est atteinte ; dans ce cas, l'exécution du générateur se termine et un IteratorResult est retourné à l'appelant, dans lequel la valeur est undefined et done est true.
+Une instruction return est atteinte ; dans ce cas, l'exécution du générateur se termine et un IteratorResult est retourné à l'appelant dans lequel la value est la valeur spécifiée par l'instruction return et done vaut true.
+
     Ex1:
     // Exemple simple
     function* creerID(){
@@ -3332,6 +3452,78 @@ Une valeur passée au premier appel de next() sera toujours ignorée.
     // {name: "Johan", dob: "1979"}
     // User undefined
     // {value: undefined, done: true}
+
+    Ex18:
+    // Yield with Promises
+    function* fetchUser(action) {
+        const user = yield apiCall()
+    }
+    function apiCall() {
+        return new Promise(resolve => {
+            settimeout(() => {
+                resolve ( {name:'Johan', dob: '1979'} )
+            }, 2000);
+        })
+    }
+    var iteratorFetch = fetchUser()
+
+    // prints user data after 2 seconds
+    console.log(iteratorFetch.next().value.then(n => console.log(n))):
+    
+    Ex19:
+    // Délégation de la génération avec yield*
+    function* g1() {
+      yield 2;
+      yield 3;
+      yield 4;
+    }
+    function* g2() {
+      yield 1;
+      yield* g1();
+      yield 5;
+    }
+    var iterator = g2();
+    console.log(iterator.next()); // { value: 1, done: false }
+    console.log(iterator.next()); // { value: 2, done: false }
+    console.log(iterator.next()); // { value: 3, done: false }
+    console.log(iterator.next()); // { value: 4, done: false }
+    console.log(iterator.next()); // { value: 5, done: false }
+    console.log(iterator.next()); // { value: undefined, done: true }
+
+    Ex20:
+    // Les autres objets itérables 
+    function* g3() {
+      yield* [1, 2];
+      yield* "34";
+      yield* Array.from(arguments);
+    }
+    var iterator = g3(5, 6);
+    console.log(iterator.next()); // { value: 1, done: false }
+    console.log(iterator.next()); // { value: 2, done: false }
+    console.log(iterator.next()); // { value: "3", done: false }
+    console.log(iterator.next()); // { value: "4", done: false }
+    console.log(iterator.next()); // { value: 5, done: false }
+    console.log(iterator.next()); // { value: 6, done: false }
+    console.log(iterator.next()); // { value: undefined, done: true }
+
+    Ex21:
+    // La valeur de l'expression yield*
+    function* g4() {
+      yield* [1, 2, 3];
+      return "toto";
+    }
+    var résultat;
+    function* g5() {
+      résultat = yield* g4();
+    }
+    var iterator = g5();
+    console.log(iterator.next()); // { value: 1, done: false }
+    console.log(iterator.next()); // { value: 2, done: false }
+    console.log(iterator.next()); // { value: 3, done: false }
+    console.log(iterator.next()); // { value: undefined, done: true },
+                                  // g4() renvoie{ value: "toto", done: true } at this point
+    console.log(résultat);          // "toto"
+
 
 
 Héritage et chaîne de prototype
@@ -3972,6 +4164,40 @@ But it is recommended to use Error objects (or objects that inherit from Error).
 The properties state and result of the Promise object are internal. We can’t directly access them. 
 We can use the methods .then/.catch/.finally for that. They are described below.
 
+La fonction statique Promise.resolve renvoie un objet Promise qui est résolu.
+
+    EX:
+    var p = Promise.resolve([1,2,3]);
+    p.then(function(v) {
+      console.log(v[0]); // 1
+    });
+
+    EX:
+    // Résoudre une autre Promise
+    var original = Promise.resolve(33);
+    var cast = Promise.resolve(original);
+    cast.then(function(value) {
+      console.log("value: " + value);
+    });
+    console.log("original === cast ? " + (original === cast));
+
+    // affiche ceci dans la console (dans cet ordre) :
+    // original === cast ? true
+    // value: 33
+
+    // L'ordre des traces dans la console est dû au fait que...
+    // ...les gestionnaires then() sont appelés de façon asynchrone
+
+La fonction statique Promise.reject renvoie une Promise qui est rejetée. Pour faciliter le débogage (comprendre plus rapidement le problème et sélectionner une erreur précise), il peut être utile que l'argument raison soit une instance d'Error.
+
+    EX:
+    Promise.reject(new Error("échec")).then(function() {
+      // n'est pas appelée
+    }, function(erreur) {
+      console.log(erreur); // Analyse de la pile d'appels
+    });
+
+
 3.1 then
 
 promise.then(
@@ -3981,6 +4207,7 @@ promise.then(
 
 The first argument of .then is a function that runs when the promise is resolved, and receives the result.
 The second argument of .then is a function that runs when the promise is rejected, and receives the error.
+En fait then() attend simplement que la fonction resolve ou reject soit appelé dans le code de la Promesse pour s'éxécuter.
 
     EX:
     let promise = new Promise(function(resolve, reject) {
@@ -4011,6 +4238,224 @@ The second argument of .then is a function that runs when the promise is rejecte
     });
 
     promise.then(alert); // shows "done!" after 1 second
+
+Chaînage des promesses avec then()
+La méthode then() renvoie un objet Promise, ce qui permet d'enchaîner les opération.
+
+    EX:
+    Promise.resolve("toto")
+      // 1. Première étape, on reçoit "toto" et on le concatène avec
+      //    "truc", ce qui résoud la première étape puis on passe au
+      //    deuxième then
+      .then(function(string) {
+        return new Promise(function(resolve, reject) {
+          setTimeout(function() {
+            string += 'truc';
+            resolve(string);
+          }, 1);
+        });
+      })
+      // 2. Deuxième étape, on reçoit "tototruc" et on enregistre une
+      //    fonction de rappel pour manipuler cette chaîne puis l'imprimer
+      //    dans la console. Avant cela, on passe la chaîne intacte au
+      //    prochain then
+      .then(function(string) {
+        setTimeout(function() {
+          string += 'baz';
+          console.log(string);
+        }, 1)
+        return string;
+      })
+      // 3. On affiche un message sur le code, celui-ci sera affiché
+      //    avant que la chaîne soit traitée dans le bloc précédent
+      //    qui agit comme un bloc asynchrone.
+      .then(function(string) {
+        console.log("Et voilà la dernière, qui risque d'arriver avant la 2e");
+
+        // Ici, la chaîne n'aura pas le morceau 'baz' car la fonction
+        // setTimeout retarde l'exécution du code.
+        console.log(string);
+    });
+
+Lorsqu'une valeur est simplement renvoyée depuis une fonction lambda then, celle-ci renverra Promise.resolve(<la valeur renvoyée par le gestionnaire appelé>).
+
+    EX:
+    var p2 = new Promise(function(resolve, reject) {
+      resolve(1);
+    });
+
+    p2.then(function(valeur) {
+      console.log(valeur); // 1
+      return valeur + 1;
+      }).then(function(valeur) {
+      console.log(valeur + "- cette utilisation synchrone est un peu inutile");
+      // 2- cette utilisation synchrone est un peu inutile
+    });
+
+    p2.then(function(valeur) {
+      console.log(valeur); // 1
+    });
+
+Appeler then() renverra une promesse rompue si la fonction lève une exception ou si elle renvoie une promesse rompue.
+
+    EX:
+    Promise.resolve()
+      .then( () => {
+        // Ici .then() lève une exception
+        throw 'Oh zut :( !';
+      })
+      .then( () => { 
+        console.log( "Ceci n'est pas appelé." );
+      }, raison => {
+        console.error( 'la fonction siRompue est appelée : ' + raison  );
+    });
+
+Dans tous les autres cas, un promesse de résolution est renvoyée. Dans l'exemple qui suit, le premier then() renvoie 42 même si la promesse précédente a été rompue
+
+    EX:
+    Promise.reject()
+      .then( () => 99, () => 42 ) // la valeur 42 est renvoyée dans une promesse
+      .then( solution => console.log( 'Résolue avec ' + solution ) ); // Résolue avec 42
+
+En pratique, il est souvent préférable d'attraper les promesses rompues plutôt que d'utiliser la syntaxe de then() avec deux fonctions
+
+    EX:
+    Promise.resolve()
+      .then( () => {
+        // .then() renvoie une promesse rompue
+        throw 'Oh zut !';
+      })
+      .catch( raison => {
+        console.error( 'fonction siRompue appelée : ' + raison );
+      })
+      .then( () => {
+        console.log("Je suis toujours appelée, même si il y a un souci avant");
+      });
+
+Le chaînage peut également être utilisé pour implémenter une fonction utilisant une API basée sur les promesses et encapsuler une autre fonction
+
+    EX:
+    function fetch_current_data() {
+      // L'API fetch renvoie une promesse. Cette fonction
+      // expose une API similaire mais lorsque la promesse
+      // est tenue, on effectue plus de tâches
+      return fetch("current-data.json").then((response) => {
+        if (response.headers.get("content-type") != "application/json") {
+          throw new TypeError();
+        }
+        var j = response.json();
+        // on peut ici manipuler j si besoin
+        return j; // la valeur fournie à l'utilisateur de
+                  // fetch_current_data().then()
+      });
+    }
+
+Si le gestionnaire siTenue renvoie une promesse, la valeur de retour de then() sera alors résolue/rompue par cette promesse.
+
+    EX:
+    function resoudrePlusTard(resolve, reject) {
+      setTimeout(function () {
+        resolve(10);
+      }, 1000);
+    }
+    function romprePlusTard(resolve, reject) {
+      setTimeout(function () {
+        reject(20);
+      }, 1000);
+    }
+
+    var p1 = Promise.resolve("toto");
+    var p2 = p1.then(function() {
+      // On renvoie une nouvelle promesse
+      // qui sera résolue avec la valeur 10
+      // au bout d'une seconde
+      return new Promise(resoudrePlusTard);
+    });
+    p2.then(function(v) {
+      console.log("tenue", v);  
+      // "tenue", 10
+    }, function(e) {
+      // ceci n'est pas appelé
+      console.log("rompue", e);
+    });
+
+    var p3 = p1.then(function() {
+      // Ici, on renvoie une promesse
+      // qui sera rompue avec la valeur
+      // 20 au bout d'une seconde
+      return new Promise(romprePlusTard);
+    });
+    p3.then(function(v) {
+      // ceci n'est pas appelé
+      console.log("tenue", v);
+    }, function(e) {
+      console.log("rompue", e);
+      // "rompue", 20
+    });
+
+Une fonction loadscript avec des promesses
+
+    EX:
+    function loadScript(src) {
+      return new Promise(function(resolve, reject) {
+        let script = document.createElement('script');
+        script.src = src;
+
+        script.onload = () => resolve(script);
+        script.onerror = () => reject(new Error(`Script load error for ${src}`));
+
+        document.head.append(script);
+      });
+    }
+
+    // Usage
+    let promise = loadScript("https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js");
+    promise.then(
+      script => alert(`${script.src} is loaded!`),
+      error => alert(`Error: ${error.message}`)
+    );
+    promise.then(script => alert('Another handler...'));
+
+    // Chaînage
+    loadScript("/article/promise-chaining/one.js")
+      .then(script => loadScript("/article/promise-chaining/two.js"))
+      .then(script => loadScript("/article/promise-chaining/three.js"))
+      .then(script => {
+        // scripts are loaded, we can use functions declared in scripts
+        one();
+        two();
+        three();
+      });
+
+Thenables objects
+To be precise, a handler may return not exactly a promise, but a so-called “thenable” object.
+an arbitrary object that has method .then, and it will be treated the same way as a promise.
+The idea is that 3rd-party libraries may implement “promise-compatible” objects of their own. 
+They can have extended set of methods, but also be compatible with native promises, because they implement .then.
+
+    EX:
+    class Thenable {
+      constructor(num) {
+        this.num = num;
+      }
+      then(resolve, reject) {
+        alert(resolve); // function() { native code }
+        // resolve with this.num*2 after the 1 second
+        setTimeout(() => resolve(this.num * 2), 1000); // (**)
+      }
+    }
+
+    new Promise(resolve => resolve(1))
+      .then(result => {
+        return new Thenable(result); // (*)
+      })
+      .then(alert); // shows 2 after 1000ms
+
+    // JavaScript checks the object returned by .then handler in the line (*): if it has a callable method named then, 
+    // then it calls that method providing native functions resolve, reject as arguments (similar to executor) and waits until one of them is called. 
+    // In the example above resolve(2) is called after 1 second (**). Then the result is passed further down the chain.
+
+This feature allows to integrate custom objects with promise chains without having to inherit from Promise.
 
 3.2 catch
 
@@ -4128,7 +4573,7 @@ L'ES2017 propose en draft une amélioration du système de promesses avec la cr�
     })
 
 
-Fetch
+Fetch API
 -------------------------------
 1. Fetch est une nouvelle API qui vient remplacer XMLHttpRequest avec un support natif des Promesses.
 
@@ -4217,6 +4662,52 @@ Fetch
       button.disabled = false
       button.textContent = buttonText
     })
+
+2. Fetch retourne une promesse qui résoud un objet Response, représentant la réponse de votre requête.
+Voir https://developer.mozilla.org/fr/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+Voir https://developer.mozilla.org/en-US/docs/Web/API/Response
+Voir https://javascript.info/fetch
+
+3. La méthode json() de Body lit un Stream Response jusqu'au bout. 
+It returns a promise that resolves with the result of parsing the body text as JSON.
+
+    EX:
+    response.json().then(function(data) {
+      // faire quelque chose avec les données
+    });
+
+    EX:
+    var myList = document.querySelector('ul');
+
+    var myRequest = new Request('products.json');
+
+    fetch(myRequest)
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        for (var i = 0; i < data.products.length; i++) {
+          var listItem = document.createElement('li');
+          listItem.innerHTML = '<strong>' + data.products[i].Name + '</strong> can be found in ' +
+                               data.products[i].Location +
+                               '. Cost: <strong>£' + data.products[i].Price + '</strong>';
+          myList.appendChild(listItem);
+        }
+      });
+
+    EX:
+    const getUsers = async function() {
+      try {
+        let response = await fetch(https://jsonplaceholder.typicode.com/users)
+        if (response.ok) {
+          let data = await response.json()
+            console.log(data)          
+        } else {
+          console.error(`Retour du serveur : `${response.status})
+        }
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    
 
 
 AJAX
