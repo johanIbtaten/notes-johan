@@ -1,4 +1,7 @@
-=================================
+Versions
+Création du package.json
+Installation d'un package
+
 Versions
 =================================
 1. Version de node
@@ -6,3 +9,32 @@ node -v
 
 2. Version de npm
 npm -v
+
+
+Création du package.json
+=================================
+1. Création avec entrée des paramètres
+npm init
+
+2. Création avec paramètres par défault (plus rapide)
+npm init --yes 
+ou 
+npm init -y
+
+
+Installation d'un package
+=================================
+1. Installation du package dans les dependencies
+npm install sax
+ou
+npm install sax --save-prod
+ou
+npm install sax -P
+
+2. Installation du package dans les devDependencies
+npm install jest
+ou
+npm install jest --save-dev
+ou
+npm install jest -D
+
