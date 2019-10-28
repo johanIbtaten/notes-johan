@@ -14,6 +14,8 @@ Git
 - Lexique
 - Git Workflow
 - Initialiser un dépôt Git local
+- Configurer Git
+- Aide de Git
 - Force overwrite of local file with what's it origin repo
 - Supprimer un repository local
 - Connaitre le status des fichiers (Modifié, Ajouté, Supprimé, etc.)
@@ -36,6 +38,7 @@ hint: its remote counterpart."
 - Voir les branches
 - Ajouter une nouvelle branche
 - Se positionner sur une branche
+- Afficher les remotes d'un repository
 
 Terminal Windows
 =================================
@@ -51,47 +54,47 @@ Revenir à l'invite de commande
 Github
 =================================
 - Clone repository dans un dossier local (Un dossier est créé avec le nom du repo)
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
-   ex1:
-   git clone https://github.com/johanIbtaten/notes-johan.git (Un dossier notes-johan est créé)
+	git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+	   ex1:
+	   git clone https://github.com/johanIbtaten/notes-johan.git (Un dossier notes-johan est créé)
 
-   git clone https://github.com/johanIbtaten/notes-johan.git notes-apprentissage (Un dossier notes-apprentissage est créé)
+	   git clone https://github.com/johanIbtaten/notes-johan.git notes-apprentissage (Un dossier notes-apprentissage est créé)
 
-   To clone git repo into the current and empty folder (Mettre un . à la fin)
-   git clone https://github.com/accountName/repoName.git .
+	   To clone git repo into the current and empty folder (Mettre un . à la fin)
+	   git clone https://github.com/accountName/repoName.git .
 
 - Pushing to a remote repository
-git push  <REMOTENAME> <BRANCHNAME>
-   ex1:
-   git push origin master
-   ou
-   git push // Si on a cloné le repo, pas besoin de préciser les branches
+	git push  <REMOTENAME> <BRANCHNAME>
+	   ex1:
+	   git push origin master
+	   ou
+	   git push // Si on a cloné le repo, pas besoin de préciser les branches
 
 - Adding a remote in the directory your repository is stored at
-git remote remove origin // Si on a cloné un repo distant d'une autre personne on supprime
-                         // le lien au repo de la personne avant d'ajouter son propre repo distant
-git remote add origin https://github.com/user/repo.git
+	git remote remove origin // Si on a cloné un repo distant d'une autre personne on supprime
+	                         // le lien au repo de la personne avant d'ajouter son propre repo distant
+	git remote add origin https://github.com/user/repo.git
 
 - Create a new local repository on the command line
-echo "# notes-johan" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/johanIbtaten/notes-johan.git
-git push -u origin master
+	echo "# notes-johan" >> README.md
+	git init
+	git add README.md
+	git commit -m "first commit"
+	git remote add origin https://github.com/johanIbtaten/notes-johan.git
+	git push -u origin master
 
-- Push an existing repository from the command line
-git remote add origin https://github.com/johanIbtaten/notes-johan.git
-git push -u origin master
+	- Push an existing repository from the command line
+	git remote add origin https://github.com/johanIbtaten/notes-johan.git
+	git push -u origin master
 
 - Clone a Git repository into a specific folder. If you are in the directory you want.
-git clone git@github.com:whatever .
-// The "." at the end specifies the current folder as the checkout folder.
+	git clone git@github.com:whatever .
+	// The "." at the end specifies the current folder as the checkout folder.
 
-- Récupérer en local les modifications du repo distant
-git pull origin
-ou
-git pull // Si on a cloné le repo, pas besoin de préciser le repo distant
+	- Récupérer en local les modifications du repo distant
+	git pull origin
+	ou
+	git pull // Si on a cloné le repo, pas besoin de préciser le repo distant
 
 
 =================================
@@ -153,6 +156,19 @@ Git
 - Initialiser un dépôt Git local
 	// A la racine du dossier qui contient le projet
 	git init
+
+- Configurer Git
+	git config --global user.name "johanIbtaten"
+	git config --global user.mail "j.ibtaten@hotmail.fr"
+	// Renseigne le nom et l'email qui sera utilisé pour les commits
+
+	git config --global --list
+	// Affiche la config globale
+
+- Aide de Git
+	git
+	ou
+	git --help
 
 - Force overwrite of local file with what's it origin repo
 	// Overwrite only one file
@@ -229,6 +245,9 @@ Git
 	// Se placer d'abord sur le commit voulu avec git checkout SHADuCommit 
 	et ensuite créer le tag v1.4
 
+	git tag  v1.4 -m "my version 1.4"
+	// Ajoute un tag avec un message descriptif
+
 	git tag --delete v1.4
 	// Supprime le tag v1.4
 
@@ -256,19 +275,25 @@ Git
 	git show master
 	// Affiche les modifications du commit au niveau du tag master qui est le dernier commit.
 
+	git show MON_SITE_V1
+	// Affiche les modifications au niveau de ce tag et le message associé à ce tag si il y en a un.
+
 - Forcer un push vers une branche distante si on a une erreur
 type : "Updates were rejected because the tip of your current branch is behind
 hint: its remote counterpart."
 	git push -f heroku master
 
 - Voir les branches
-git branch
+	git branch
 
 - Ajouter une nouvelle branche
-git branch littlefeature
+	git branch littlefeature
 
 - Se positionner sur une branche
-git checkout littlefeature
+	git checkout littlefeature
+
+- Afficher les remotes d'un repository
+	git remote -v
 
 
 =================================
