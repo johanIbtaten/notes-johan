@@ -1,22 +1,28 @@
-Versions
-Création du package.json
-Installation d'un package
+Version de node
+Version de npm
+Création du package.json avec entrée des paramètres
+Création du package.json avec paramètres par défault (plus rapide)
+Installation du package dans les dependencies
+Installation du package dans les devDependencies
+Mise à jour de tous les packages
+Mise à jour d'un package
+Fixer les vulnérabilités
 
 Versions
 =================================
-1. Version de node
+- Version de node
 node -v
 
-2. Version de npm
+- Version de npm
 npm -v
 
 
 Création du package.json
 =================================
-1. Création avec entrée des paramètres
+- Création du package.json avec entrée des paramètres
 npm init
 
-2. Création avec paramètres par défault (plus rapide)
+- Création du package.json avec paramètres par défault (plus rapide)
 npm init --yes 
 ou 
 npm init -y
@@ -24,17 +30,33 @@ npm init -y
 
 Installation d'un package
 =================================
-1. Installation du package dans les dependencies
+- Installation du package dans les dependencies
 npm install sax
+ou
+npm i sax
 ou
 npm install sax --save-prod
 ou
 npm install sax -P
 
-2. Installation du package dans les devDependencies
+- Installation du package dans les devDependencies
 npm install jest
 ou
 npm install jest --save-dev
 ou
 npm install jest -D
 
+
+Mise à jour des packages
+=================================
+- Mise à jour de tous les packages
+npm upgrade
+
+- Mise à jour d'un package
+npm update jest
+
+
+Autres
+=================================
+- Fixer les vulnérabilités
+npm audit fix

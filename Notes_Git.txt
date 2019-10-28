@@ -1,7 +1,56 @@
+
+Github
+=================================
+- Clone repository dans un dossier local (Un dossier est créé avec le nom du repo)
+- Pushing to a remote repository
+- Adding a remote in the directory your repository is stored at
+- Create a new local repository on the command line
+- Push an existing repository from the command line
+- Clone a Git repository into a specific folder. If you are in the directory you want.
+- Récupérer en local les modifications du repo distant
+
+Git
+=================================
+- Lexique
+- Git Workflow
+- Initialiser un dépôt Git local
+- Force overwrite of local file with what's it origin repo
+- Supprimer un repository local
+- Connaitre le status des fichiers (Modifié, Ajouté, Supprimé, etc.)
+- Stager des fichiers
+- Unstager des fichiers
+- Voir la différence entre un fichier modifié unstagé et la dernière version stagé ou commité
+- Ecrire le message du commit
+- Modifier le message du dernier commit, que si vous n'avez pas encore pushé votre commit sur l'origine !
+- Se positionner sur un commit donné
+- Revenir à votre branche principale et au commit le plus récent
+- Gérer les tags
+- Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
+- Annuler les changements d'un fichier qui n'ont pas été encore stagés
+- Annuler tous les changements que je n'ai pas encore commités.
+- Afficher les commits
+- Afficher les modifications d'un commit
+- Forcer un push vers une branche distante si on a une erreur
+type : "Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart."
+- Voir les branches
+- Ajouter une nouvelle branche
+- Se positionner sur une branche
+
+Terminal Windows
+=================================
+Créer un dossier
+Lister des fichiers
+Afficher le chemin complet d'un dossier
+Se rendre dans un dossier spécifique
+Nettoyer la console
+Revenir à l'invite de commande
+
+
 =================================
 Github
 =================================
-1. Clone repository dans un dossier local (Un dossier est créé avec le nom du repo)
+- Clone repository dans un dossier local (Un dossier est créé avec le nom du repo)
 git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
    ex1:
    git clone https://github.com/johanIbtaten/notes-johan.git (Un dossier notes-johan est créé)
@@ -11,17 +60,19 @@ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
    To clone git repo into the current and empty folder (Mettre un . à la fin)
    git clone https://github.com/accountName/repoName.git .
 
-2. Pushing to a remote repository
+- Pushing to a remote repository
 git push  <REMOTENAME> <BRANCHNAME>
    ex1:
    git push origin master
+   ou
+   git push // Si on a cloné le repo, pas besoin de préciser les branches
 
-3. Adding a remote in the directory your repository is stored at
+- Adding a remote in the directory your repository is stored at
 git remote remove origin // Si on a cloné un repo distant d'une autre personne on supprime
                          // le lien au repo de la personne avant d'ajouter son propre repo distant
 git remote add origin https://github.com/user/repo.git
 
-4. Create a new local repository on the command line
+- Create a new local repository on the command line
 echo "# notes-johan" >> README.md
 git init
 git add README.md
@@ -29,22 +80,81 @@ git commit -m "first commit"
 git remote add origin https://github.com/johanIbtaten/notes-johan.git
 git push -u origin master
 
-5. Push an existing repository from the command line
+- Push an existing repository from the command line
 git remote add origin https://github.com/johanIbtaten/notes-johan.git
 git push -u origin master
 
-6. Clone a Git repository into a specific folder. If you are in the directory you want.
+- Clone a Git repository into a specific folder. If you are in the directory you want.
 git clone git@github.com:whatever .
 // The "." at the end specifies the current folder as the checkout folder.
+
+- Récupérer en local les modifications du repo distant
+git pull origin
+ou
+git pull // Si on a cloné le repo, pas besoin de préciser le repo distant
+
 
 =================================
 Git
 =================================
-1. Initialiser un dépôt Git local
+- Lexique
+	Repository or Repo or Git repository (Dépôt) : 
+		c'est un entrepôt virtuel de votre projet. Il vous permet d'enregistrer 
+		les versions de votre code sous forme de commits et d'y accéder au besoin.
+
+	Working tree or Working directory (Répertoire de travail) : 
+		ce sont les fichiers sur lesquels on travail actuellement.
+
+	The index or Staging area (Index) : 
+		c'est l'endroit où les fichiers sont stagés et suivis pour préparer le prochain commit.
+
+	HEAD : 
+		désigne le commit en tête de l’historique, celui sur lequel est positionné le pointeur 
+		de l’état courant du repository. C’est en général le dernier commit, 
+		sauf si on déplace le HEAD pour revenir en arrière par exemple.
+
+	HEAD^ : 
+		désigne le commit précédent HEAD (l’avant dernier en général)
+
+	HEAD~n : 
+		désigne le n-ième commit avant le HEAD. Cette syntaxe permet donc de remonter 
+		dans la chronologie des commits sans avoir à manipuler leur SHA.
+
+	Branche : 
+		ensemble de commit reliés par un pointeur. La branche principale lors 
+		de l'initialisation d'un git repository s'appelle master.
+
+	Tags :
+		étiquettes placées au niveau des commits. Un tag de branche comme master 
+		se place toujours au niveau du dernier commit. Le tag HEAD se place au niveau du commit en cours. 
+		Les tags personnalisés sont liés à un commit et ne se déplacent pas, 
+		ils permettent de les repérer plus facilement (pour des numéros de versions de projet par exemple).
+
+- Git Workflow
+	Basic Git workflow :
+		1. Modify files in the working tree.
+		2. Stage the changes you want to be included in the next commit.
+		3. Commit changes. Committing will take the files from the index and store them as a snapshot in the repository.
+	
+	States of Git files :
+		Remember that each file in your working directory can be in one of two states: tracked or untracked. 
+		Tracked files are files that were in the last snapshot; they can be unmodified, modified, or staged. 
+		In short, tracked files are files that Git knows about.
+
+		Untracked files are everything else — any files in your working directory that were not in your 
+		last snapshot and are not in your staging area. When you first clone a repository, all of your 
+		files will be tracked and unmodified because Git just checked them out and you haven’t edited anything.
+
+	When a file is first modified, the change can only be found in the working tree. You must stage the 
+	changes you want to be included in your next commit. The index contains all file changes that will 
+	be committed. Once you have finished staging files, commit them with a message describing what you changed. 
+	The modified files are now safely stored in the repo.
+	
+- Initialiser un dépôt Git local
 	// A la racine du dossier qui contient le projet
 	git init
 
-2. Force overwrite of local file with what's it origin repo
+- Force overwrite of local file with what's it origin repo
 	// Overwrite only one file
 	git fetch
 	git checkout origin/master <filepath>
@@ -53,42 +163,141 @@ Git
 	git fetch
 	git reset --hard origin/master
 
-3. Supprimer un repository local
-	// Delete the .git directory in the root-directory of your repository 
-	// if you only want to delete the git-related information (branches, versions).
+- Supprimer un repository local
+	Delete the .git directory in the root-directory of your repository 
+	if you only want to delete the git-related information (branches, versions).
+	If you want to delete everything (git-data, code, etc), just delete the whole directory.
 
-	// If you want to delete everything (git-data, code, etc), just delete the whole directory.
-
-4. Connaitre le status des fichiers
+- Connaitre le status des fichiers (Modifié, Ajouté, Supprimé, etc.)
 	git status
 
-5. Stager tous les fichiers
-	git add -A
+- Stager des fichiers
+	git add -A 
+	// Stage tous les fichiers
+	ou
+	git add . 
+	// Stage tous les fichiers
 
-6. Ecrire le message du commit
+	git add hello.html style.css 
+	// Stage des fichiers spécifiques
+
+- Unstager des fichiers
+	git reset -A 
+	// Unstage tous les fichiers
+	ou
+	git reset . 
+	// Unstage tous les fichiers
+
+	git reset style.css
+	// Unstage un fichier spécifique
+
+	git reset hello.html style.css // Unstage des fichiers spécifiques 
+
+- Voir la différence les fichiers
+	La commande git diff permet d’afficher un diff, mais compte tenu des 3 états possibles d’une modification, qui peut être dans le répertoire de travail (working directory), dans l’index (staging area) ou dans le repository, il faut toujours faire attention a ce qu’on compare
+
+	git diff 
+	// Donne le diff de ce qui est modifié mais pas encore dans l’index. C’est donc le diff entre le répertoire de travail et l’index. Dès qu’on fait git add sur un fichier modifié, il n’apparait plus dans le diff donné par cette commande.
+
+	git diff hello.html 
+	// Donne le diff d'un fichier spécifique de ce qui est modifié mais pas encore dans l’index. C’est donc le diff entre le répertoire de travail et l’index. Dès qu’on fait git add sur un fichier modifié, il n’apparait plus dans le diff donné par cette commande.
+
+	git diff --cached 
+	// Donne le diff entre l’index et le repository. Ça donne donc le diff de ce qui est prêt à commit.
+
+	git diff HEAD 
+	// Donne le diff de l’état courant par rapport au HEAD, donc inclue tout ce qui est tracked (staged et unstaged). C’est le diff de tout ce qui est versionné, entre le répertoire de travail et le repository.
+
+	git diff HEAD^ 
+	// Donne le diff entre le HEAD et la révision précédente. Ce sont les modifications du dernier commit, donc (sauf déplacement du HEAD entre temps).
+
+- Ecrire le message du commit
 	git commit -m "Votre nouveau message"
 
-7. Modifier le message du dernier commit, que si vous n'avez pas encore pushé votre commit sur l'origine !
+- Modifier le message du dernier commit, que si vous n'avez pas encore pushé votre commit sur l'origine !
 	git commit --amend -m "Votre nouveau message" 
 
-8. Se positionner sur un commit donné
+- Se positionner sur un commit donné
 	git checkout SHADuCommit
+	// Dans Git Bash double clic pour sélectionner le SHA-1 du commit voulu puis clic roulette de la souris pour le coller après checkout.
 
-9. Revenir à votre branche principale (au commit le plus récent)
+- Revenir à votre branche principale et au commit le plus récent
 	git checkout master
 
-10. Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
+- Gérer les tags
+	git tag v1.4
+	// Se placer d'abord sur le commit voulu avec git checkout SHADuCommit 
+	et ensuite créer le tag v1.4
+
+	git tag --delete v1.4
+	// Supprime le tag v1.4
+
+- Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
 	git revert SHADuCommit
 
-11. Annuler tous les changements que je n'ai pas encore commités.
+- Annuler les changements d'un fichier qui n'ont pas été encore stagés
+	git reset -- style.css
+
+- Annuler toutes les changements que je n'ai pas encore commités.
 	git reset --hard‌
 
-12. Afficher tous les commits
+- Afficher les commits
 	git log
-	//Taper q  pour sortir de l'affichahe de git log quand on est dans la console
+	// Affiche tous les commits au niveau et avant le tag HEAD. Le tag master indique le dernier commit. Le tag HEAD indique sur quel commit se trouve la version du projet en court.
+	//Taper q pour sortir de l'affichage de git log quand on est dans la console
 
-14. Forcer un push vers une branche distante si on a une erreur
+	git log -2
+	// Affiche les n derniers commit. Ici les deux derniers.
+
+- Afficher les modifications d'un commit
+	git show 4aaeefebb6350bf5460d1127899294864ecb49d4
+	// git show suivi du SHA-1 du commit
+
+	git show master
+	// Affiche les modifications du commit au niveau du tag master qui est le dernier commit.
+
+- Forcer un push vers une branche distante si on a une erreur
 type : "Updates were rejected because the tip of your current branch is behind
 hint: its remote counterpart."
 	git push -f heroku master
 
+- Voir les branches
+git branch
+
+- Ajouter une nouvelle branche
+git branch littlefeature
+
+- Se positionner sur une branche
+git checkout littlefeature
+
+
+=================================
+Terminal Windows
+=================================
+- Créer un dossier
+mkdir cours_git 
+// Crée un dossier cours_git dans le dossier courant
+
+- Lister des fichiers
+ls 
+// liste les fichiers du dossier courant
+ou
+ls cours_git 
+// liste les fichiers d'un dossier spécifique
+
+- Afficher le chemin complet d'un dossier
+pwd 
+// affiche le chemin complet du dossier courant
+
+- Se rendre dans un dossier spécifique
+cd /c/Users/jibta/Desktop/projetsJohan/web/cours_git 
+// avec un chemin absolu
+ou
+cd projetsJohan/web/cours_git 
+// avec un chemin relatif (si on se trouve dans Desktop par exemple)
+
+- Nettoyer la console
+clear
+
+- Revenir à l'invite de commande
+ctrl+c
