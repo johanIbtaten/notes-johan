@@ -7,7 +7,7 @@ Github
 - Create a new local repository on the command line
 - Push an existing repository from the command line
 - Clone a Git repository into a specific folder. If you are in the directory you want.
-- Récupérer en local les modifications du repo distant
+- Associer un commit à une issue dans Github
 
 Git
 =================================
@@ -16,6 +16,7 @@ Git
 - Initialiser un dépôt Git local
 - Configurer Git
 - Aide de Git
+- Executer plusieurs commandes git à la suite
 - Force overwrite of local file with what's it origin repo
 - Supprimer un repository local
 - Connaitre le status des fichiers (Modifié, Ajouté, Supprimé, etc.)
@@ -39,15 +40,22 @@ hint: its remote counterpart."
 - Ajouter une nouvelle branche
 - Se positionner sur une branche
 - Afficher les remotes d'un repository
+- Récupérer les données du dépôt distant
+- Récupérer en local les modifications du repo distant
+- Pousser les modifications vers une branche distante
+- Pousser les tags sur la branche distante
+- Supprimer un remote
 
 Terminal Windows
 =================================
-Créer un dossier
-Lister des fichiers
-Afficher le chemin complet d'un dossier
-Se rendre dans un dossier spécifique
-Nettoyer la console
-Revenir à l'invite de commande
+- Créer un dossier
+- Lister des fichiers
+- Afficher le chemin complet d'un dossier
+- Se rendre dans un dossier spécifique
+- Nettoyer la console
+- Revenir à l'invite de commande
+- Ecrire dans un fichier
+- Afficher le contenu d'un fichier
 
 
 =================================
@@ -71,8 +79,9 @@ Github
 	   git push // Si on a cloné le repo, pas besoin de préciser les branches
 
 - Adding a remote in the directory your repository is stored at
-	git remote remove origin // Si on a cloné un repo distant d'une autre personne on supprime
-	                         // le lien au repo de la personne avant d'ajouter son propre repo distant
+	git remote remove origin 
+	// Si on a cloné un repo distant d'une autre personne on supprime le lien au repo de la personne avant d'ajouter son propre repo distant
+
 	git remote add origin https://github.com/user/repo.git
 
 - Create a new local repository on the command line
@@ -91,10 +100,9 @@ Github
 	git clone git@github.com:whatever .
 	// The "." at the end specifies the current folder as the checkout folder.
 
-	- Récupérer en local les modifications du repo distant
-	git pull origin
-	ou
-	git pull // Si on a cloné le repo, pas besoin de préciser le repo distant
+- Associer un commit à une issue dans Github
+	git commit -m"#1: ajout du readme"
+	// #1 correspond à la référence de l'issue dans Github fixée par le commit 
 
 
 =================================
@@ -131,7 +139,7 @@ Git
 		étiquettes placées au niveau des commits. Un tag de branche comme master 
 		se place toujours au niveau du dernier commit. Le tag HEAD se place au niveau du commit en cours. 
 		Les tags personnalisés sont liés à un commit et ne se déplacent pas, 
-		ils permettent de les repérer plus facilement (pour des numéros de versions de projet par exemple).
+		ils permettent de les repérer plus facilement (pour des numéros de versions de projet par exemple). Le tag origin/master se place au niveau du commit où se trouve la branche distante origin
 
 - Git Workflow
 	Basic Git workflow :
@@ -169,6 +177,12 @@ Git
 	git
 	ou
 	git --help
+
+- Executer plusieurs commandes git à la suite
+	git add . && git commit -m "updated pom file" && git push
+	// On utilise && pour séparer les commandes
+
+	git push --set-upstream origin master && git push --tags
 
 - Force overwrite of local file with what's it origin repo
 	// Overwrite only one file
@@ -295,6 +309,36 @@ hint: its remote counterpart."
 - Afficher les remotes d'un repository
 	git remote -v
 
+	git remote show origin
+	// Affiche les informations d'un remote spécifique
+
+- Récupérer les données du dépôt distant
+	git fetch
+	// Cette commande s'adresse au dépôt distant et récupère toutes les données de ce projet que vous ne possédez pas déjà. Après cette action, vous possédez toutes les références à toutes les branches contenues dans ce dépôt, que vous pouvez fusionner ou inspecter à tout moment.
+
+- Récupérer en local les modifications d'une branche distante
+	git pull origin
+	ou
+	git pull 
+	// Si on a cloné le repo, pas besoin de préciser le repo distant.
+	Quand on fait un git pull, git fetch est automatiquement appelé avant.
+
+- Pousser les modifications vers une branche distante
+	git push origin master 
+	// Pousse les modifications vers la branche distante origin depuis la branche locale master.
+
+- Pousser les tags sur la branche distante
+	git push MON_SITE_V1
+	// Pour pousser un tag spécifique.
+
+	git push --tags
+	// Pour pousser tous les tags. Si la branche distante n'est pas précisée
+	Git pousse vers origin. On peut les retrouver dans Github dans releases
+
+- Supprimer un remote
+	git remote remove origin
+	// On supprime le remote origin
+
 
 =================================
 Terminal Windows
@@ -326,3 +370,11 @@ clear
 
 - Revenir à l'invite de commande
 ctrl+c
+
+- Ecrire dans un fichier
+	echo "Mon site web pour le cours git" >> README.md
+	// Ecrit le texte dans le fichier README.md
+
+- Afficher le contenu d'un fichier
+	cat README.md
+	// Affiche le contenu de README.md
