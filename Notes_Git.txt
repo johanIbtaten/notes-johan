@@ -17,6 +17,7 @@ Git
 - Configurer Git
 - Aide de Git
 - Executer plusieurs commandes git à la suite
+- Le fichier .gitignore
 - Force overwrite of local file with what's it origin repo
 - Supprimer un repository local
 - Connaitre le status des fichiers (Modifié, Ajouté, Supprimé, etc.)
@@ -45,10 +46,14 @@ hint: its remote counterpart."
 - Pousser les modifications vers une branche distante
 - Pousser les tags sur la branche distante
 - Supprimer un remote
+- Afficher l'ensemble des modifications sur un fichier
+- Mettre de côté des modifications
+
 
 Terminal Windows
 =================================
 - Créer un dossier
+- Créer un fichier
 - Lister des fichiers
 - Afficher le chemin complet d'un dossier
 - Se rendre dans un dossier spécifique
@@ -56,6 +61,10 @@ Terminal Windows
 - Revenir à l'invite de commande
 - Ecrire dans un fichier
 - Afficher le contenu d'un fichier
+
+
+Commandes Git groupées usuelles
+=================================
 
 
 =================================
@@ -102,7 +111,7 @@ Github
 
 - Associer un commit à une issue dans Github
 	git commit -m"#1: ajout du readme"
-	// #1 correspond à la référence de l'issue dans Github fixée par le commit 
+	// #1 correspond à la référence de l'issue dans Github fixée par le commit
 
 
 =================================
@@ -339,6 +348,73 @@ hint: its remote counterpart."
 	git remote remove origin
 	// On supprime le remote origin
 
+- Afficher l'ensemble des modifications sur un fichier
+	git blame hello.html
+	// Dans la console le chapeau devant le SHA-1 représente le commit qui
+	a créer le fichier.
+
+	git blame -L 10,20 hello.html
+	// Affiche entre la ligne 10 et 20
+
+	git blame -L 10,+4 hello.html
+	// Affiche 4 lignes à partir de la ligne 10 incluse
+
+- Le fichier .gitignore
+	// .gitignore exclu des fichiers ou dossiers du versioning
+	// Les chemins sont relatifs par rapport... 
+	// ... à l'emplacement du fichier .gitignore
+	tmp/todo.txt
+	tmp/* // Exclu tous les fichiers de tmp
+	*.txt // Exclu tous les fichiers avec l'extension .txt
+
+- Mettre de côté des modifications
+	git stash save "Modifications de gitignore"
+	// Sauvegarde les modifications en cours dans un stash avec son message
+	de description. Penser à stager les fichiers qui ne sont pas trackés si on veut les inclures dans le stash
+
+	git stash list
+	// Liste les stashs avec leur index et leur message
+
+	git stash show
+	// Affiche un résumé des modifications du dernier stash
+
+	git stash show stash@{1}
+	// Affiche un résumé des modifications d'un stash spécifique
+
+	git stash show -p
+	// Affiche l'ensemble des modifications d'un stash
+
+	git stash pop
+	// Applique le dernier stash, soit stash@{0}
+	puis l'efface de la pile de stash
+
+	git stash apply stash@{1}
+	// Applique un stash spécifique	
+	puis l'efface de la pile de stash
+
+	git stash apply
+	// Applique le dernier stash, soit stash@{0}
+	sans l'effacer de la pile de stash
+
+	git stash apply stash@{1}
+	// Applique un stash spécifique	
+	sans l'effacer de la pile de stash
+
+	git stash branch test
+	// Crée une nouvelle branche avant d'appliquer le dernier stash
+
+	git stash branch test stash@{1}
+	// Crée une nouvelle branche avant d'appliquer un stash spécifique
+
+	git stash clear
+	// Supprime tous les stash du repository
+
+	git stash drop
+	// Supprime le dernier stash de la pile
+
+	git stash drop stash@{1}
+	// Supprime un stash spécifique de la pile
+ 
 
 =================================
 Terminal Windows
@@ -349,7 +425,7 @@ mkdir cours_git
 
 - Lister des fichiers
 ls 
-// liste les fichiers du dossier courant
+// liste les fichiers et sous-dossiers du dossier courant
 ou
 ls cours_git 
 // liste les fichiers d'un dossier spécifique
@@ -372,9 +448,23 @@ clear
 ctrl+c
 
 - Ecrire dans un fichier
-	echo "Mon site web pour le cours git" >> README.md
+	echo "Mon site web pour le cours git" > README.md
 	// Ecrit le texte dans le fichier README.md
+
+	echo "écriture a la fin du fichier ">> README.md
+	// Pour écrire à la fin d'un texte existant (concaténation)
 
 - Afficher le contenu d'un fichier
 	cat README.md
 	// Affiche le contenu de README.md
+
+- Créer un fichier
+	touch .gitignore
+
+
+=================================
+Commandes Git groupées usuelles
+=================================
+git add . && git commit -m "#2: Modifications"
+
+git add . && git commit -m "#2: Modifications" && git push
