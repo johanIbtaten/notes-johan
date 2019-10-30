@@ -1,3 +1,17 @@
+Terminal Windows
+=================================
+- Créer un dossier
+- Créer un fichier
+- Lister des fichiers
+- Afficher le chemin complet d'un dossier
+- Se rendre dans un dossier spécifique
+- Nettoyer la console
+- Revenir à l'invite de commande
+- Ecrire dans un fichier
+- Afficher le contenu d'un fichier
+
+Commandes Git groupées usuelles
+=================================
 
 Github
 =================================
@@ -8,6 +22,7 @@ Github
 - Push an existing repository from the command line
 - Clone a Git repository into a specific folder. If you are in the directory you want.
 - Associer un commit à une issue dans Github
+- Visualiser les branches et les commits
 
 Git
 =================================
@@ -25,13 +40,15 @@ Git
 - Unstager des fichiers
 - Voir la différence entre un fichier modifié unstagé et la dernière version stagé ou commité
 - Ecrire le message du commit
-- Modifier le message du dernier commit, que si vous n'avez pas encore pushé votre commit sur l'origine !
+- Modifier le message du dernier commit
+- Ajouter un fichier stagé au dernier commit
 - Se positionner sur un commit donné
 - Revenir à votre branche principale et au commit le plus récent
 - Gérer les tags
 - Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
-- Annuler les changements d'un fichier qui n'ont pas été encore stagés
-- Annuler tous les changements que je n'ai pas encore commités.
+- Annuler les changements d'un fichier qui n'ont pas été encore stagé
+- Annuler toutes les changements que je n'ai pas encore commités
+- Annuler les changements d'un fichier qui a déjà été stagé mais pas commité
 - Afficher les commits
 - Afficher les modifications d'un commit
 - Forcer un push vers une branche distante si on a une erreur
@@ -40,6 +57,7 @@ hint: its remote counterpart."
 - Voir les branches
 - Ajouter une nouvelle branche
 - Se positionner sur une branche
+- Supprimer une branche
 - Afficher les remotes d'un repository
 - Récupérer les données du dépôt distant
 - Récupérer en local les modifications du repo distant
@@ -48,23 +66,67 @@ hint: its remote counterpart."
 - Supprimer un remote
 - Afficher l'ensemble des modifications sur un fichier
 - Mettre de côté des modifications
+- Merge manuel dans un fichier
+- Merger (fusionner) deux branches
+- Annuler une tentative de merge lors d'un conflit
+- Faire un rebase lors d'un git pull
+- Copier un commit sur une autre branche
+- Effacer les fichiers qui ne sont pas stagés
+- Créer une branche sur le repo distant lors d'un push d'une nouvelle branche
 
 
+=================================
 Terminal Windows
 =================================
 - Créer un dossier
-- Créer un fichier
+mkdir cours_git 
+// Crée un dossier cours_git dans le dossier courant
+
 - Lister des fichiers
+ls 
+// liste les fichiers et sous-dossiers du dossier courant
+ou
+ls cours_git 
+// liste les fichiers d'un dossier spécifique
+
 - Afficher le chemin complet d'un dossier
+pwd 
+// affiche le chemin complet du dossier courant
+
 - Se rendre dans un dossier spécifique
+cd /c/Users/jibta/Desktop/projetsJohan/web/cours_git 
+// avec un chemin absolu
+ou
+cd projetsJohan/web/cours_git 
+// avec un chemin relatif (si on se trouve dans Desktop par exemple)
+
 - Nettoyer la console
+clear
+
 - Revenir à l'invite de commande
+ctrl+c
+
 - Ecrire dans un fichier
+	echo "Mon site web pour le cours git" > README.md
+	// Ecrit le texte dans le fichier README.md
+
+	echo "écriture a la fin du fichier ">> README.md
+	// Pour écrire à la fin d'un texte existant (concaténation)
+
 - Afficher le contenu d'un fichier
+	cat README.md
+	// Affiche le contenu de README.md
+
+- Créer un fichier
+	touch .gitignore
 
 
+=================================
 Commandes Git groupées usuelles
 =================================
+git add . && git commit -m "#2: Modifications"
+
+git add . && git commit -m "#2: Modifications" && git push
 
 
 =================================
@@ -112,6 +174,10 @@ Github
 - Associer un commit à une issue dans Github
 	git commit -m"#1: ajout du readme"
 	// #1 correspond à la référence de l'issue dans Github fixée par le commit
+
+- Visualiser les branches et les commits
+	https://github.com/johanIbtaten/mon_site_web/network
+	// Ajouter /network après le nom du repo
 
 
 =================================
@@ -253,8 +319,16 @@ Git
 - Ecrire le message du commit
 	git commit -m "Votre nouveau message"
 
-- Modifier le message du dernier commit, que si vous n'avez pas encore pushé votre commit sur l'origine !
-	git commit --amend -m "Votre nouveau message" 
+- Modifier le message du dernier commit
+	git commit --amend -m "Votre nouveau message"
+	// Le SHA-1 du commit est modifié.
+	Utiliser cette avant de pousser le commit sinon ne pas l'utiliser
+
+- Ajouter un fichier stagé au dernier commit
+ 	git commit --amend
+ 	// Les fichiers stagés sont ajouter au dernier commit
+ 	Le SHA-1 est modifié.
+ 	Utiliser cette avant de pousser le commit sinon ne pas l'utiliser
 
 - Se positionner sur un commit donné
 	git checkout SHADuCommit
@@ -264,6 +338,9 @@ Git
 	git checkout master
 
 - Gérer les tags
+	git tag
+	// Liste les tags
+
 	git tag v1.4
 	// Se placer d'abord sur le commit voulu avec git checkout SHADuCommit 
 	et ensuite créer le tag v1.4
@@ -277,11 +354,14 @@ Git
 - Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
 	git revert SHADuCommit
 
-- Annuler les changements d'un fichier qui n'ont pas été encore stagés
-	git reset -- style.css
+- Annuler les changements d'un fichier qui n'ont pas été encore stagé
+	git reset -- style.css	
 
-- Annuler toutes les changements que je n'ai pas encore commités.
+- Annuler toutes les changements que je n'ai pas encore commités
 	git reset --hard‌
+
+- Annuler les changements d'un fichier qui a déjà été stagé mais pas commité
+	git checkout .gitignore
 
 - Afficher les commits
 	git log
@@ -290,6 +370,12 @@ Git
 
 	git log -2
 	// Affiche les n derniers commit. Ici les deux derniers.
+
+	git log --stat
+	// Affiche les commits et les fichiers modifiés
+
+	git log BRANCH_A_MERGE
+	// Affiche les commits d'une branche spécifique
 
 - Afficher les modifications d'un commit
 	git show 4aaeefebb6350bf5460d1127899294864ecb49d4
@@ -309,11 +395,29 @@ hint: its remote counterpart."
 - Voir les branches
 	git branch
 
+	git branch -a
+	// Affiche les branches locales et distantes
+
 - Ajouter une nouvelle branche
 	git branch littlefeature
 
 - Se positionner sur une branche
 	git checkout littlefeature
+
+	git checkout BRANCH_DISTANTE
+	// Crée en local la branche distante et se positionne dessus
+
+	git checkout -b BRANCH_A_REBASE
+	// Permet de créer une branche et se positionner dessus
+	Si on à fait au préalable un checkout sur un commit
+	spécifique la branche est créé à partir de ce commit
+
+- Supprimer une branche
+	// Se positionner sur une autre branche que celle à supprimer
+	git branch -d BRANCH_A_SUPPRIMER
+
+	git push origin --delete BRANCH_A_SUPPRIMER
+	// Supprime la branche distante
 
 - Afficher les remotes d'un repository
 	git remote -v
@@ -330,7 +434,8 @@ hint: its remote counterpart."
 	ou
 	git pull 
 	// Si on a cloné le repo, pas besoin de préciser le repo distant.
-	Quand on fait un git pull, git fetch est automatiquement appelé avant.
+	Quand on fait un git pull, git fetch est automatiquement appelé avant
+	d'essayer de faire le merge avec la branche distante
 
 - Pousser les modifications vers une branche distante
 	git push origin master 
@@ -414,57 +519,99 @@ hint: its remote counterpart."
 
 	git stash drop stash@{1}
 	// Supprime un stash spécifique de la pile
+
+- Merge manuel dans un fichier
+	// Si on essaye de faire un git pull et qu'il apparait un conflit
+	car la même ligne est modifiée de façons différentes. Git ne sait
+	pas si il doit conserver l'une ou l'autre des lignes ou les deux.
+	Il faut donc ouvre le fichier concerné par le conflit restructurer
+	le fichier pour résoudre le conflit en effaçant les lignes de conflit
+	ajoutées par Git. Il faut ensuite stager le fichier une fois le
+	conflit réglé pour finir le merge
+	// On ne peux pas pousser sur une branche distante deux commits qui
+	ont le même commit parent. On doit récupérer le commit distant qui a le
+	même parent que notre commit que l'on veux pousser, le merger avec
+	notre commit puis faire un commit de merge que l'on poussera sur la 
+	branche distante.
+
+	EX:
+	// Avant le merge, il y a un conflit sur la ligne 2
+	tmp/todo.txt
+	<<<<<<< Updated upstream
+	tmp/*
+	=======
+	*.txt
+	>>>>>>> Stashed changes
+
+	// Après le merge, gestion manuel du conflit
+	tmp/todo.txt
+	tmp/*
+	*.txt
+
+	EX:
+	// Avant le merge, il y a un conflit sur la ligne 3
+	// HEAD montre la version du répertoire de travail
+	// b776d... montre le commit que l'on essaye de merger 
+	tmp/todo.txt
+	tmp/*
+	<<<<<<< HEAD
+	*.xml
+	=======
+	*.txt
+	>>>>>>> b776d8a0db34faa00aee48ce171fc5611596f990
+
+	// Après le merge, gestion manuel du conflit
+	tmp/todo.txt
+	tmp/*
+	*.xml
+	*.txt
+
+- Merger (fusionner) deux branches
+	git merge BRANCH_A_MERGE
+	// Si conflit voir "- Merge manuel dans un fichier" au-dessus
+
+- Annuler une tentative de merge lors d'un conflit
+	// Revenir à l'état du répertoire de travail avant le conflit
+	git merge --abort
+
+- Faire un rebase lors d'un git pull
+	git pull --rebase
+	// Permet d'importer le commit de la branche distante qui a 
+	le même parent que notre dernier commit. Si le merge s'effectue automatique,
+	le commit importé devient le parent de notre dernier commit, pour éviter 
+	deux commits avec le même parent.
+
+- Fusionner deux branches avec git rebase
+	// Se positionner sur la branche que l'on souhaite fusionner sur master
+	git rebase master
+	// Résoudre les éventuels conflits
+	// Stager les fichiers qui avaient un conflit
+	git rebase --continue
+	// Permet d'appliquer le rebase
+	// Se positionner sur master
+	git merge BRANCH_A_REBASE
+	// Pour fusionner les deux branches
+	// On peut supprimer la branche à rebase si besoin
+
+	git rebase --abort
+	// Annule le rebase et revient à l'état d'avant si il y a un conflit 
+
+- Copier un commit sur une autre branche
+	// Récupérer le SHA-1 d'un commit d'une branche, 8 caractères suffisent
+	// Se placer sur la branche de destination
+	// Executer la commande qui va appliquer le commit qui a été copié
+	git cherry-pick ee274f0c19330f9f4884cec69f637d55176d04ae
+
+	git cherry-pick --abort
+	// Annule un cherry-pick avec un conflit et retourne 
+	à l'état avant le cherry-pick
+
+- Effacer les fichiers qui ne sont pas stagés
+	git clean -df
+	// -df indique effacer les dossiers et les fichiers qui ne sont pas stagés
+
+- Créer une branche sur le repo distant lors d'un push d'une nouvelle branche
+	git push --set-upstream origin BRANCH_A_MERGE
+
+
  
-
-=================================
-Terminal Windows
-=================================
-- Créer un dossier
-mkdir cours_git 
-// Crée un dossier cours_git dans le dossier courant
-
-- Lister des fichiers
-ls 
-// liste les fichiers et sous-dossiers du dossier courant
-ou
-ls cours_git 
-// liste les fichiers d'un dossier spécifique
-
-- Afficher le chemin complet d'un dossier
-pwd 
-// affiche le chemin complet du dossier courant
-
-- Se rendre dans un dossier spécifique
-cd /c/Users/jibta/Desktop/projetsJohan/web/cours_git 
-// avec un chemin absolu
-ou
-cd projetsJohan/web/cours_git 
-// avec un chemin relatif (si on se trouve dans Desktop par exemple)
-
-- Nettoyer la console
-clear
-
-- Revenir à l'invite de commande
-ctrl+c
-
-- Ecrire dans un fichier
-	echo "Mon site web pour le cours git" > README.md
-	// Ecrit le texte dans le fichier README.md
-
-	echo "écriture a la fin du fichier ">> README.md
-	// Pour écrire à la fin d'un texte existant (concaténation)
-
-- Afficher le contenu d'un fichier
-	cat README.md
-	// Affiche le contenu de README.md
-
-- Créer un fichier
-	touch .gitignore
-
-
-=================================
-Commandes Git groupées usuelles
-=================================
-git add . && git commit -m "#2: Modifications"
-
-git add . && git commit -m "#2: Modifications" && git push
