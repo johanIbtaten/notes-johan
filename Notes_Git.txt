@@ -73,7 +73,7 @@ hint: its remote counterpart."
 - Copier un commit sur une autre branche
 - Effacer les fichiers qui ne sont pas stagés
 - Créer une branche sur le repo distant lors d'un push d'une nouvelle branche
-
+- Commiter seulement certaines modifications d'un même fichier
 
 =================================
 Terminal Windows
@@ -612,6 +612,15 @@ hint: its remote counterpart."
 
 - Créer une branche sur le repo distant lors d'un push d'une nouvelle branche
 	git push --set-upstream origin BRANCH_A_MERGE
+
+- Commiter seulement certaines modifications d'un même fichier
+	// Dans Git GUI sélectionner un fichier unstaged avec plusieurs
+	modifications à plusieurs endroits du fichier.
+	// Sélectionner les lignes que l'on veux placer dans le commit
+	// Faire clique droit et cliquer sur "Stage Lines For Commit"
+	// Le fichier est alors staged et reste aussi unstaged pour
+	les modifications qui restent
+	// Cela équivaut à utiliser la commande git add --patch
 
 
  
