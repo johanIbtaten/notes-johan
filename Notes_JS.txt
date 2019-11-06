@@ -17,6 +17,7 @@
     Les expressions de fonctions
     Les fonctions flechées (arrow function en anglais)
     IIFE (Expression de fonction invoquée immédiatement)
+    Return
     Objet Map
     Object Property Value Shorthand
     Noms de propriétés calculés (Computed Properties)
@@ -1346,7 +1347,53 @@ La fonction devient une expression de fonction qui est immédiatement exécutée
     console.log(myFunction); //affiche undefined
 
 
+L'instruction Return
+-------------------------------
+1. Les fonctions JavaScript retournent undefined si aucun retour n'est
+spécifié ou si un retour vide est spécifié.
+    EX:
+    function test(){}
+    test() // undefined
 
+    EX:
+    function test(){ let a = 2; return; }
+    test() // undefined
+
+2. L'instruction return met fin à l'exécution de la fonction. Toutes
+les instructions après l'exécution du return ne seront pas exécutées.
+
+3. Il ne faut pas de retour à la ligne entre return et la valeur que l'on
+souhaite retournée.
+    EX:
+    return
+    a+b; // Le retour à la ligne peut poser problème.
+
+    return a+b // Bon 
+
+    return ( // Bon avec des parenthèses
+        a+b 
+    );
+
+4. L'instruction return peut renvoyer une fonction.
+    EX:
+    function magique() {
+        return function calc(x {return x * 42})
+    }
+
+    var reponse = magique()
+    reponse(1337) // 56154
+
+5. L'instruction return peut interrompre une boucle au milieu de son
+exécution.
+    EX:
+    function stopAtThree() {
+        for(var i = 0; i <= 10; i++){
+            if(i === 3) return i
+        }
+    }
+
+    stopAtThree() // 3
+        
 
 Objet Map
 -------------------------------
@@ -4151,7 +4198,7 @@ result — initially undefined, then changes to value when resolve(value) called
 A promise that is either resolved or rejected is called “settled”, as opposed to a initially “pending” promise.
 
 Rejecting or resolving won't stop the execution of the rest of the function. 
-Pour éviter d'éventuellles problèmes il est conseillé de stopper l'éxécution
+Pour éviter d'éventuels problèmes il est conseillé de stopper l'éxécution
 après un resolve ou un reject soit en les retournant dans un return
 soit en utilisant un if/else 
 

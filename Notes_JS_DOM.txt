@@ -4,6 +4,8 @@
     Types de données importants
     Récupérer un noeud (un élément) du DOM
     Local storage et Session storage
+    preventDefault
+    stopPropagation
 
 
 Le DOM
@@ -266,3 +268,30 @@ Si l'utilisateur ouvre un lien d'application dans une nouvelle fenêtre ou un no
 cette information ne sera pas disponible non plus.
 
 3. localStorage et sessionStorage sont utiles pour la persistance d'informations non sensibles entre les pages. Des informations sensibles telles que des mots de passe ou des informations susceptibles de compromettre la sécurité des utilisateurs ne doivent jamais être stockées.
+
+
+preventDefault
+-------------------------------
+1. Pour les types d'événements qui l'autorisent, il est possible grâce à cette méthode d'annuler l'action implicite correspondante. Par exemple, l'action implicite associée à un événement de type submit est l'envoi au serveur du formulaire concerné.
+
+  EX:
+  function envoiForm(event) {
+    if (this.elements.adresse.value === "") {
+      alert("L'adresse est vide.");
+      event.preventDefault();
+    }
+  }
+
+  var formulaire = document.getElementById("coordonnees");
+  formulaire.addEventListener("submit", envoiForm, false);
+
+
+stopPropagation
+-------------------------------
+1. Cette méthode permet d'arrêter la propagation de l'événement dans l'arbre DOM après le nœud sur lequel il se trouve.
+
+  EX:
+  document.getElementById("test").addEventListener("click", function( event ) {
+    event.stopPropagation();
+  }, false);
+  
