@@ -1,8 +1,22 @@
 sign-in.component.jsx
 sign-up.component.jsx
-header.component.jsx  
+
+header.component.jsx
+header.styles.jsx
+
+custom-button.component.jsx
+custom-button.styles.jsx
+
 cart-icon.component.jsx
 cart-dropdown.component.jsx
+collections-overview.component.jsx
+collection-preview.component.jsx
+collection.component.jsx
+
+homepage.component.jsx
+homepage.styles.jsx
+
+shop.selectors.js
 
 cart.selectors.js
 cart.utils.js

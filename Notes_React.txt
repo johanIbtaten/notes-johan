@@ -358,3 +358,137 @@ heroku (déploiement)
 7. Pusher l'application sur la branche distante heroku depuis la branche master
      git push heroku master
 
+
+
+HOC
+-------------------------------
+1. Un High Order Component est une fonction qui prend en paramètre un composant et d'autres paramètres 
+si besoin et retourne ce même composant mais avec des props en plus ou un affichage conditionnel comme un loading par exemple.
+
+2. On appelle un fichier js HOC souvent par with- suivi du nom qui décrit le HOC comme with-data.js ou with-spinner.js par exemple.
+
+  EX:
+  //// App.js ////
+  ////////////////////////////
+  import React from 'react';
+
+  import UserProfile from './components/user-profile/user-profile.component';
+  import UserList from './components/user-list/user-list.component';
+
+  import './App.scss';
+
+  function App() {
+    return (
+      <div className='App'>
+        {/*
+        La props dataSource est utilisée par le HOC pour fetch les datas
+        et les transmettre au composant
+        */} 
+        <UserList dataSource='https://jsonplaceholder.typicode.com/users' />
+        <UserProfile
+          name='Yihua'
+          email='yihuazhang@gmail.com'
+          dataSource='https://jsonplaceholder.typicode.com/posts'
+        />
+      </div>
+    );
+  }
+  export default App;
+
+
+
+  //// with-data.js ////
+  ////////////////////////////
+  import React from 'react';
+
+  // On prend le composant WrappedComponent en paramètre
+  // On retourne un composant qui va fetch des données selon
+  // une dataSource que l'on lui passe en props.
+  const withData = WrappedComponent => {
+    class WithData extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          data: []
+        };
+      }
+
+      componentDidMount() {
+        setTimeout(() => {
+          fetch(this.props.dataSource)
+            .then(response => response.json())
+            .then(data => this.setState({ data: data.slice(0, 3) }));
+        }, 1500);
+      }
+
+      render() {
+        const { dataSource, ...otherProps } = this.props;
+
+        // On affiche un loading tant que le tableau data du state est vide
+        return this.state.data.length < 1 ? (
+          <h1>LOADING</h1>
+        ) : (
+        {/*
+        Sinon on affiche le composant entouré auquel on passe la props data
+        ...otherProps représente les props du composant entouré
+        */} 
+          <WrappedComponent data={this.state.data} {...otherProps} />
+        );
+      }
+    }
+
+    return WithData;
+  };
+  export default withData;
+
+
+
+  //// user-list.component.jsx ////
+  ////////////////////////////
+  import React from 'react';
+
+  // On importe le HOC
+  import withData from '../../with-data';
+
+  // Grâce au HOC on accède aux data
+  const UserList = ({ data }) => (
+    <div className='container user-list'>
+      <h1> Users List </h1>
+      {data.map(user => (
+        <div className='post' key={user.id}>
+          <h1> {user.name} </h1>
+          <h2> {user.email} </h2>
+        </div>
+      ))}
+    </div>
+  );
+  // On passe notre composant en argument au HOC
+  export default withData(UserList);
+
+
+
+  //// user-profile.component.jsx ////
+  ////////////////////////////
+  import React from 'react';
+
+  // On importe le HOC
+  import withData from '../../with-data';
+
+  // Grâce au HOC on accède aux data
+  const UserProfile = ({ data, name, email }) => (
+    <div className='container'>
+      <h1>{name}</h1>
+      <h2>{email}</h2>
+      Posts:
+      {data.map(post => (
+        <div className='post' key={post.id}>
+          <h1>{post.title}</h1>
+          <p> {post.body} </p>
+        </div>
+      ))}
+    </div>
+  );
+  // On passe notre composant en argument au HOC
+  export default withData(UserProfile);
+

@@ -17,7 +17,8 @@
     Les expressions de fonctions
     Les fonctions flechées (arrow function en anglais)
     IIFE (Expression de fonction invoquée immédiatement)
-    Return
+    L'instruction Return
+    Différence entre argument et paramètre
     Objet Map
     Object Property Value Shorthand
     Noms de propriétés calculés (Computed Properties)
@@ -60,6 +61,7 @@
     Memoization
     Les valeurs évaluées à false
     Hashtable / Hashmap  vs Array (Data Normalization)
+    Pattern Observable / Observer
 
 
 
@@ -1394,6 +1396,14 @@ exécution.
 
     stopAtThree() // 3
         
+
+Différence entre argument et paramètre
+-------------------------------
+1. Un argument est une valeur qui est passée au moment d'appeler une fonction.
+
+2. Un paramètre est une variable définie par une fonction qui reçoit une valeur lorsque la fonction est appelée.
+Un paramètre est dans la fonction appelée.
+
 
 Objet Map
 -------------------------------
@@ -5026,3 +5036,11 @@ Nous pouvons tirer parti du langage lui-même comme d'une structure de données.
 il vaut mieux stocker les données dans une hashmap plutôt qu'un tableau car dans un tableau il faut 
 parcourir tout le tableau à partir de l'index 0 jusqu'à trouver la bonne clé et plus le tableau est long plus ça prend du temps alors que dans une hashmap
 c'est quasi instantané quelquesoit la taille de la liste
+
+
+Pattern Observable / Observer
+-------------------------------
+1. On utilise le pattern Observable / Observer quand on doit gérer des évenements.
+
+2. Les Promise ne permettent pas de traiter de la donnée au fur et à mesure de son arrivée : elle est remplie une seule fois,
+alors que les observables peuvent le gérer.
