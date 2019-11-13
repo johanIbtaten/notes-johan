@@ -5,9 +5,15 @@ Stateless Functional Component (Composant fonctionnel sans état)
 Class Components
 Stateful Class Components
 PureComponent
+Hook State
+Hook Effect
 props.children (Composition)
 import SVG
 heroku (déploiement)
+HOC
+Les selectors
+Composants de présentation et conteneurs
+(Redux Sagas) take(), takeEvery(), takeLatest()
 
 
 Créer un application react avec react-app
@@ -186,11 +192,30 @@ A shallow equality (comparaison de surface) check means that JS only checks that
     console.log(array1 === array2); // Retourne false pourtant les deux tableaux sont identiques mais n'ont pas la même adresse mémoire (référence)
 
 
-Hook d'état
+Les Hook
 -------------------------------
-1. Déclaration
+Un Hook est une fonction qui permet de « se brancher » sur des fonctionnalités React. 
+Par exemple, useState est un Hook qui permet d’ajouter l’état local React à des fonctions composants.
 
-    Ex1:
+Auparavant, si vous écriviez une fonction composant et que vous réalisiez que vous aviez besoin d’un état local à l’intérieur, 
+vous deviez la convertir en classe. Désormais vous pouvez utiliser un Hook à l’intérieur de votre fonction composant.
+
+Appelez les Hooks uniquement au niveau racine. N’appelez pas de Hooks à l’intérieur de boucles, de code conditionnel ou de fonctions imbriquées.
+
+Appelez les Hooks uniquement depuis des fonctions composants React. N’appelez pas les Hooks depuis des fonctions JavaScript classiques. 
+(Il n’y a qu’un seul autre endroit où vous pouvez appeler des Hooks : vos propres Hook personnalisés.
+
+
+Hook State
+-------------------------------
+Le seul argument à passer au Hook useState() est l’état initial. Contrairement à ce qui se passe dans les classes, 
+l’état local n’est pas obligatoirement un objet. Il peut s’agir d’un nombre ou d’une chaîne de caractères si ça nous suffit.
+
+useState renvoie une paire de valeurs : l’état actuel et une fonction pour le modifier.
+
+1. Déclaration et utilisation.
+
+    EX:
     /*
     Cette syntaxe Javascript est appelée « déstructuration positionnelle ». 
     Ça signifie que nous créons deux nouvelles variables fruit et setFruit, avec fruit qui reçoit 
@@ -203,11 +228,75 @@ Hook d'état
     var fruit = fruitStateVariable[0]; // Premier élément dans une paire
     var setFruit = fruitStateVariable[1]; // Deuxième élément dans une paire
 
+    EX:
+    import React, { useState } from 'react';
+  
+    function Example() {
+      const [count, setCount] = useState(0);
+  
+      return (
+        <div>
+          <p>Vous avez cliqué {count} fois</p>
+          <button onClick={() => setCount(count + 1)}>
+           Cliquez ici
+          </button>
+        </div>
+      );
+    }
+
+    EX:
+    import React, { useState } from 'react';
+
+    import Card from '../card/card.component';
+
+    // Avec les Hooks
+    const UseStateExample = () => {
+      const [name, setName] = useState('Yihua');
+      const [address, setAddress] = useState('Amsterdam');
+
+      return (
+        <Card>
+          <h1> {name} </h1>
+          <h1> {address} </h1>
+          <button onClick={() => setName('Andrei')}>Set Name to Andrei</button>
+          <button onClick={() => setAddress('Canada')}>Set Address</button>
+        </Card>
+      );
+    };
+
+    // Avec une Class
+    export class StateClassComponent extends React.Component {
+      constructor() {
+        super();
+
+        this.state = {
+          name: 'Yihua',
+          address: 'Canada'
+        };
+      }
+
+      render() {
+        return (
+          <Card>
+            <h1> {this.state.name} </h1>
+            <button onClick={this.setState({ name: 'Andrei' })}>
+              Set Name to Andrei
+            </button>
+            <button onClick={this.setState({ address: 'Amsterdam' })}>
+              Set Address
+            </button>
+          </Card>
+        );
+      }
+    }
+
+    export default UseStateExample;
+
 
 2. Dois-je utiliser une ou plusieurs variables d’état local ?
 
     Ex1:
-    // On pourra itfaire comme ceci
+    // On pourra faire comme ceci
     function Box() {
       const [state, setState] = useState({ left: 0, top: 0, width: 100, height: 100 });    
       // ...
@@ -233,6 +322,236 @@ Hook d'état
           setPosition({ left: e.pageX, top: e.pageY });
         }
         // ...
+  
+
+Hook Effect
+-------------------------------
+1. useEffect peut être utilisé comme à une combinaison de componentDidMount, componentDidUpdate, et componentWillUnmount.
+
+  EX:
+  import React, { useState, useEffect } from 'react';
+
+  import Card from '../card/card.component';
+
+  const UseEffectExample = () => {
+    const [user, setUser] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('Bret');
+
+    useEffect(() => {
+      const fetchFunc = async () => {
+        const response = await fetch(
+          `https://jsonplaceholder.typicode.com/users?username=${searchQuery}`
+        );
+        const resJson = await response.json();
+        setUser(resJson[0]);
+      };
+
+      fetchFunc();
+    }, [searchQuery]);
+
+    return (
+      <Card>
+        <input
+          type='search'
+          value={searchQuery}
+          onChange={event => setSearchQuery(event.target.value)}
+        />
+        {user ? (
+          <div>
+            <h3>{user.name}</h3>
+            <h3> {user.username} </h3>
+            <h3> {user.email} </h3>
+          </div>
+        ) : (
+          <p>No user found</p>
+        )}
+      </Card>
+    );
+  };
+
+  export default UseEffectExample;
+
+2. Le fait d’appeler useEffect à l’intérieur de notre composant nous permet d’accéder aux variables d’états count (ou à n’importe quelle prop) directement depuis l’effet.
+
+3. useEffect est exécutée par défaut après le premier affichage et après chaque mise à jour. Au lieu de penser en termes de « montage » et de « démontage », 
+pensez plutôt que les effets arrivent tout simplement « après l’affichage ». React garantit que le DOM a été mis à jour avant chaque exécution des effets.
+
+  EX:
+  // Ce Hook pour indiquer à React que notre composant doit exécuter quelque chose après chaque affichage. 
+  // React enregistre la fonction passée en argument (que nous appellerons « effet »), et l’appellera plus tard, 
+  // après avoir mis à jour le DOM.
+  import React, { useState, useEffect } from 'react';
+
+  function Example() {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+      document.title = `Vous avez cliqué ${count} fois`;
+    });
+
+    return (
+      <div>
+        <p>Vous avez cliqué {count} fois</p>
+        <button onClick={() => setCount(count + 1)}>
+          Cliquez ici
+        </button>
+      </div>
+    );
+  }
+
+4. Effets avec nettoyage.
+Nous pourrions souhaiter nous abonner à une source de données externe. Dans ce cas-là, il est impératif de nettoyer par la suite pour éviter les fuites de mémoire !
+Dans une classe React, on s’abonne généralement dans componentDidMount, et on se désabonne dans componentWillUnmount.
+React effectue le nettoyage lorsqu’il démonte le composant. Cependant, comme nous l’avons appris précédemment, 
+les effets sont exécutés à chaque affichage, donc potentiellement plus d’une fois. C’est la raison pour laquelle 
+React nettoie aussi les effets du rendu précédent avant de les exécuter une nouvelle fois.
+
+  EX:
+  // Avec une Class
+  class FriendStatus extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { isOnline: null };
+      this.handleStatusChange = this.handleStatusChange.bind(this);
+    }
+
+    componentDidMount() {
+      ChatAPI.subscribeToFriendStatus(
+        this.props.friend.id,
+        this.handleStatusChange
+      );
+    }
+
+    componentWillUnmount() {
+      ChatAPI.unsubscribeFromFriendStatus(
+        this.props.friend.id,
+        this.handleStatusChange
+      );
+    }
+
+    handleStatusChange(status) {
+      this.setState({
+        isOnline: status.isOnline
+      });
+    }
+
+    render() {
+      if (this.state.isOnline === null) {
+        return 'Chargement...';
+      }
+      return this.state.isOnline ? 'En ligne' : 'Hors-ligne';
+    }
+  }
+
+  // Avec un Hook
+  import React, { useState, useEffect } from 'react';
+
+  function FriendStatus(props) {
+    const [isOnline, setIsOnline] = useState(null);
+
+    useEffect(() => {
+      function handleStatusChange(status) {
+        setIsOnline(status.isOnline);
+      }
+
+      ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+      // Indique comment nettoyer l'effet :
+      return function cleanup() {
+        ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+      };
+    });
+
+    if (isOnline === null) {
+      return 'Chargement...';
+    }
+    return isOnline ? 'En ligne' : 'Hors-ligne';
+  }
+
+5. Optimiser les performances en sautant des effets.
+Dans certains cas, exécuter ou nettoyer l’effet après chaque affichage risque de nuire aux performances. Dans les composants à base de classe, 
+une solution consiste à comparer prevProps ou prevState dans componentDidUpdate.
+
+  EX:
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.count !== this.state.count) {
+      document.title = `Vous avez cliqué ${this.state.count} fois`;
+    }
+  }
+
+Ce genre de comportement est tellement courant qu’il est intégré dans l’API du Hook useEffect. 
+Il est possible d’indiquer à React de sauter l’exécution d’un effet si certaines valeurs n’ont pas été modifiées entre deux affichages. 
+Pour cela, il suffit de passer une liste comme second argument optionnel à useEffect.
+
+  EX:
+  useEffect(() => {
+    document.title = `Vous avez cliqué ${count} fois`;
+  }, [count]); // N’exécute l’effet que si count a changé
+
+Dans le cas où la liste contiendrait plusieurs éléments, React ré-appliquera l’effet si au moins l’un d’entre eux est différent de sa version précédente.
+Le fonctionnement est le même pour la phase de nettoyage.
+  
+  EX:
+  useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+
+    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+    };
+  }, [props.friend.id]); // Ne se ré-abonne que si props.friend.id change
+
+Si vous utilisez cette optimisation, assurez-vous que votre tableau inclut bien toutes les valeurs 
+dans la portée du composant (telles que les props et l’état local) qui peuvent changer avec le temps et sont utilisées par l’effet.
+
+Il est généralement préférable de déclarer les fonctions dont votre effet a besoin à l’intérieur de celui-ci. 
+Il devient alors facile de voir de quelles valeurs de la portée du composant dépend cet effet.
+
+  EX:
+  function Example({ someProp }) {
+    useEffect(() => {
+      function doSomething() {
+        console.log(someProp);
+      }
+
+      doSomething();
+    }, [someProp]); // OK (notre effet n’utilise que `someProp`)
+  }
+
+  EX:
+  function ProductPage({ productId }) {
+    const [product, setProduct] = useState(null);
+
+    useEffect(() => {
+      // En déplaçant cette fonction dans l'effet, on voit clairement quelles valeurs il utilise.
+      async function fetchProduct() {
+        const response = await fetch('http://myapi/product' + productId);
+        const json = await response.json();
+        setProduct(json);
+      }
+
+      fetchProduct();
+    }, [productId]); // Correct car notre effet n’utilise que `productId`
+    // ...
+  }
+
+6. Exécuter l'effet une seule fois.
+Si vous voulez exécuter un effet et le nettoyer une seule fois (au montage puis au démontage), vous pouvez passer un tableau vide ([]) comme second argument. 
+Ça indique à React que votre effet ne dépend d’aucune valeur issue des props ou de l’état local, donc il n’a jamais besoin d’être ré-exécuté.
+Autrement dit l'effet ne watch aucune valeur, donc il n'a pas de raison de réagir à un changement.
+Il ne s’agit pas d’un cas particulier : ça découle directement de la façon dont le tableau des dépendances fonctionne à la base.
+Si vous passez un tableau vide ([]), les props et l’état local vus depuis l’intérieur de l’effet feront toujours référence à leurs valeurs initiales. 
+Même si passer [] comme second argument vous rapproche du modèle mental habituel de componentDidMount et componentWillUnmount.
+
+  EX:
+  useEffect(() => {
+    function doSomething() {
+      console.log('bonjour');
+    }
+
+    doSomething();
+  }, []); // OK dans ce cas précis car nous n’utilisons *aucune* valeur de la portée du composant
 
 
 props.children (Composition)
@@ -357,7 +676,6 @@ heroku (déploiement)
     heroku create crwn-live75 --buildpack https://github.com/mars/create-react-app-buildpack.git
 7. Pusher l'application sur la branche distante heroku depuis la branche master
      git push heroku master
-
 
 
 HOC
@@ -492,3 +810,255 @@ si besoin et retourne ce même composant mais avec des props en plus ou un affic
   // On passe notre composant en argument au HOC
   export default withData(UserProfile);
 
+
+Les selectors
+-------------------------------
+1. Un selector est tout simplement une fonction qui prend en paramètre tout ou partie du state de l’application et 
+en renvoie une version formatée et/ou réduite, propice aux besoins de nos vues.
+
+  EX:
+  // Selector simple qui renvoie une partie du state
+  const getToDoList = state => state.toDoList;
+
+  // Le selector est importé par les composants Container ayant besoin de la donnée formatée.
+  ... 
+  import { getToDoList } from '../reducers'; 
+
+  ... 
+  const mapStateToProps = (state) => {
+    return {
+      toDoList: getToDoList(state)
+    }
+  };
+
+2. Combiner les selectors.
+Au même titre que n’importe quelle fonction, un sélecteur doit être simple, pur et responsable d’une seule opération. 
+Il devient alors possible d’imaginer des combinaisons de sélecteurs afin d’obtenir le modèle souhaité.
+  EX:
+  const getToDoList = state => state.toDoList;
+  const getDone = state => state.reduce(element => element.done);
+  const getDoneTodos = state => getDone(getToDoList(state)); 
+
+3. Un selector est donc :
+- une fonction prenant en paramètre au moins le state de l’application
+- une fonction renvoyant un modèle spécifique à un besoin
+- situé dans le même fichier que le reducer correspondant
+- combinable avec d’autres selectors
+- un moyen d’accéder à des sous-parties du state de l’application
+- un moyen de reformater des parties du state à la volée pour les vues
+- un moyen de conserver un state global simple et sans répétition
+
+4. La librairie Reselect vous permet notamment de combiner des sélecteurs très simplement ou d’utiliser 
+la memoization pour éviter de recalculer les résultats d’un sélecteur à chaque appel.
+
+
+Composants de présentation et conteneurs
+-------------------------------
+1. Composants de présentation :
+- s’intéressent à quoi les choses ressemblent,
+- peuvent contenir à la fois des composants de présentation et des conteneurs et, 
+  généralement, possèdent des balises DOM et des styles qui leur sont propres,
+- offrent souvent de l’intégration via this.props.children,
+- sont indépendants du reste de l’application comme les actions redux ou le stockage,
+- ne spécifient pas comment les données sont chargées ou modifiées,
+- reçoivent des données et des fonction de rappel exclusivement par props,
+- ont rarement leur propre état (quand c’est le cas, il s’agit d’un état d’interface plutôt que de données),
+- sont écrits en tant que composants fonctionnels à moins qu’ils ne nécessitent un état, des actions lors d’un cycle de vie ou des optimisations de performances.
+- Exemples : Page, Sidebar, Story, UserInfo, List
+
+2. Composants conteneurs :
+- se préoccupent de comment les choses fonctionnent,
+- peuvent contenir à la fois des composants de présentations et conteneurs** mais ne possèdent généralement pas 
+  de balises DOM propres à l’exception des balises div qui les entourent, et ils  n’ont jamais de styles,
+- fournissent les données et le comportement aux composants de présentation ou aux autres composants de contenu,
+- appellent des actions Flux et les fournissent aux composants idiots en tant que callbacks,
+- sont souvent d’état car ils tendent à servir de source de données,
+- sont habituellement générés en utilisant des composants de plus haut niveau comme connect() de React Redux, createContainer() 
+  de Relay ou Container.create() de Flux Utils plutôt qu’écrits à la main.
+- Exemples : UserPage, FollowersSidebar, StoryContainer, FollowedUserList
+
+
+(Redux Sagas) take(), takeEvery(), takeLatest(), delay()
+-------------------------------
+1. take() reçoit une action dispatchée et exécute le code
+de sa fonction generator un seule fois, si la même action est
+dispatchée une seconde fois rien ne se passera car le generator
+aura été done la première fois.
+
+  EX:
+  import { take } from 'redux-saga/effects';  
+
+  export function* incrementSaga() {
+    yield take('INCREMENT');
+    console.log('I am incremented')
+  }
+
+
+take() peut retourner le payload de l'action.
+
+  EX:
+  import { take } from 'redux-saga/effects';  
+
+  export function* incrementSaga() {
+    const incrementPayload = yield take('INCREMENT');
+    console.log(incrementPayload)
+  }
+
+Pour que take() puisse répondre à chaque action reçue plutôt
+qu'une seule fois à la première action, on peut
+utiliser une boucle while
+
+  EX:
+  import { take } from 'redux-saga/effects';  
+
+  export function* incrementSaga() {
+    while(true) {
+      yield take('INCREMENT');
+      console.log('I am incremented')
+    }    
+  }
+
+On peut utiliser delay() comme setTimeOut pour bloquer 
+le script pendant un certain temps en millisecondes pour
+simuler un appel asynchrone par exemple.
+
+Dans le script ci-dessous l'exécution de la boucle va être
+bloqué pendant 5s et les actions INCREMENT qui arriveront
+pendant ce temps ne seront pas prise en compte par take
+et 'I am incremented' ne s'affichera pas.
+
+  EX:
+  import { take, delay } from 'redux-saga/effects';  
+
+  export function* incrementSaga() {
+    while(true) {
+      yield take('INCREMENT');
+      console.log('I am incremented')
+      yield delay(5000)
+    }    
+  }
+
+
+2. takeEvery() reçoit une action dispatchée et appelle une autre
+fonction generator qui va exécuter le code souhaité à chaque
+fois que l'action est dispatchée mais si le code exécuté est asynchrone,
+car à chaque action il génère une nouvelle fonction generator
+indépendante qui va exécuter son code.
+'I am incremented' sera affiché à chaque action même si il y a
+un delay de 3s juste après. Et 3s après chaque action une action
+INCREMENT_FROM_SAGA sera dispatchée grâce à put()
+
+
+  EX:
+  import { takeEvery, delay, put } from 'redux-saga/effects';
+
+  export function* onIncrement() {
+    yield console.log('I am incremented');
+    yield delay(3000);
+    yield put({ type: 'INCREMENT_FROM_SAGA' });
+  }
+
+  export function* incrementSaga() {
+    yield takeEvery('INCREMENT', onIncrement);
+  }
+
+
+3. takeLatest() reçoit une action dispatchée et appelle une autre
+fonction generator qui va exécuter le code souhaité seulement pour
+la dernière action dispatchée. 
+Dès qu'une nouvelle action est dispatchée takeLatest() supprime 
+l'exécution des précédentes et ne continue l'exécution de la fonction generator que pour la dernière. 
+
+Si la première instruction du generator est synchrone et immédiate elle s'exécutera à chaque action, c'est 
+pourquoi malgré takeLatest() 'I am incremented' s'affichera à chaque click. 
+Par contre comme il y a un delay de 3s avant l'action INCREMENT_FROM_SAGA,
+elle ne sera dispatchée que pour le dernier click si il se produit 
+avant les 3s de l'action précédente.
+
+  EX:
+  import { takeLatest, delay, put } from 'redux-saga/effects';
+
+  export function* onIncrement() {
+    yield console.log('I am incremented');
+    yield delay(3000);
+    yield put({ type: 'INCREMENT_FROM_SAGA' });
+  }
+
+  export function* incrementSaga() {
+    yield takeLatest('INCREMENT', onIncrement);
+  }
+
+
+(Redux) Les actions, les action creators
+-------------------------------
+1. Les  actions sont des  objets servant à représenter une interaction. Elles n'apportent rien de fonctionnel, 
+et ne sont là que pour apporter un nom ("type") qui les représente et, optionnellement, un ou plusieurs arguments 
+qui seront transmis depuis l'application au store. Les actions sont la seule source de données du store.
+Les actions sont envoyées au store grâce à dispatch().
+
+Les actions doivent obligatoirement avoir une propriété type qui définit l'interaction. Le type est couramment définit sous forme d'une constante qui
+contient une chaîne de caractère. Cela vous permettra d'éviter les fautes de frappe lorsque vous souhaitez utiliser vos types au moment de l'import. 
+De plus, même dans le cas d'une faute de frappe, votre IDE ou Redux pourrait vous afficher une erreur. Cela vous permettra de localiser plus rapidement l'erreur.
+
+  EX:
+  const ADD_TODO = 'ADD_TODO'
+  { 
+    type: ADD_TODO,
+    text: 'Build my first Redux app'
+  }
+
+2. Les action creators. Dans la pratique, on n'écrit pas d'action  directement, mais ce qu'on appelle des action creators : 
+il s'agit de simples fonctions qui peuvent prendre des arguments (aussi appelés payload) et qui retournent une action.
+
+  EX:
+  //// user.types.js ////
+  const UserActionTypes = {
+    SET_CURRENT_USER: 'SET_CURRENT_USER',
+    GOOGLE_SIGN_IN_START: 'GOOGLE_SIGN_IN_START',
+    EMAIL_SIGN_IN_START: 'EMAIL_SIGN_IN_START',
+    SIGN_IN_SUCCESS: 'SIGN_IN_SUCCESS',
+    SIGN_IN_FAILURE: 'SIGN_IN_FAILURE',
+    CHECK_USER_SESSION: 'CHECK_USER_SESSION',
+    SIGN_OUT_START: 'SIGN_OUT_START',
+    SIGN_OUT_SUCCESS: 'SIGN_OUT_SUCCESS',
+    SIGN_OUT_FAILURE: 'SIGN_OUT_FAILURE',
+    SIGN_UP_START: 'SIGN_UP_START',
+    SIGN_UP_SUCCESS: 'SIGN_UP_SUCCESS',
+    SIGN_UP_FAILURE: 'SIGN_UP_FAILURE'
+  };
+  export default UserActionTypes;
+
+
+  //// user.actions.js ////
+  import UserActionTypes from './user.types';
+
+  // emailSignInStart un action creator. 
+  // Pour le nommer, on reprend souvent le type de l'action mais en camelCase
+  // Il prend en paramètre emailAndPassword qui est utilisé dans la
+  // propriété payload de l'action
+  export const emailSignInStart = emailAndPassword => (
+  // Cette objet est l'action retournée par l'action creator
+  // On appelle souvent payload la propriété qui contient les données contenues
+  // dans l'action.
+  {
+    type: UserActionTypes.EMAIL_SIGN_IN_START,
+    payload: emailAndPassword
+  });
+
+  export const signUpSuccess = ({ user, additionalData }) => ({
+    type: UserActionTypes.SIGN_UP_SUCCESS,
+    payload: { user, additionalData }
+  });
+
+  export const signOutSuccess = () => ({
+    type: UserActionTypes.SIGN_OUT_SUCCESS
+  });
+
+  export const signUpFailure = error => ({
+    type: UserActionTypes.SIGN_UP_FAILURE,
+    payload: error
+  });
+
+
+3. Les  actions  sont, par la suite, utilisées par les reducers.
+Le  reducer a pour rôle d'utiliser l'action pour mettre à jour le store.
