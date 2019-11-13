@@ -4790,7 +4790,6 @@ It returns a promise that resolves with the result of parsing the body text as J
     }
     
 
-
 AJAX
 -------------------------------
 1. L'Ajax permet d'appeller une page en JavaScript et de récupérer les informations 

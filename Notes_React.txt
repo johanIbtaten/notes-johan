@@ -5,8 +5,11 @@ Stateless Functional Component (Composant fonctionnel sans état)
 Class Components
 Stateful Class Components
 PureComponent
-Hook State
-Hook Effect
+Les Hook
+useSate Hook
+useEffect Hook
+Custom Hook
+Fragments
 props.children (Composition)
 import SVG
 heroku (déploiement)
@@ -14,6 +17,7 @@ HOC
 Les selectors
 Composants de présentation et conteneurs
 (Redux Sagas) take(), takeEvery(), takeLatest()
+
 
 
 Créer un application react avec react-app
@@ -206,7 +210,7 @@ Appelez les Hooks uniquement depuis des fonctions composants React. N’appelez 
 (Il n’y a qu’un seul autre endroit où vous pouvez appeler des Hooks : vos propres Hook personnalisés.
 
 
-Hook State
+useSate Hook
 -------------------------------
 Le seul argument à passer au Hook useState() est l’état initial. Contrairement à ce qui se passe dans les classes, 
 l’état local n’est pas obligatoirement un objet. Il peut s’agir d’un nombre ou d’une chaîne de caractères si ça nous suffit.
@@ -324,7 +328,7 @@ useState renvoie une paire de valeurs : l’état actuel et une fonction pour le
         // ...
   
 
-Hook Effect
+useEffect Hook
 -------------------------------
 1. useEffect peut être utilisé comme à une combinaison de componentDidMount, componentDidUpdate, et componentWillUnmount.
 
@@ -552,6 +556,242 @@ Même si passer [] comme second argument vous rapproche du modèle mental habitu
 
     doSomething();
   }, []); // OK dans ce cas précis car nous n’utilisons *aucune* valeur de la portée du composant
+
+
+Custom Hook
+-------------------------------
+1. Traditionnellement en React, nous avions deux manières répandues de partager une logique d’état 
+entre des composants : les props de rendu et les composants d’ordre supérieur. Nous allons voir comment 
+les Hooks règlent la majeure partie de ces problèmes sans vous obliger à ajouter des composants dans l’arbre.
+
+2. Lorsque nous souhaitons partager de la logique entre deux fonctions JavaScript, nous l’extrayons dans une troisième fonction. 
+Les composants et les Hooks sont des fonctions, ça fonctionne donc aussi pour eux !
+Un Hook personnalisé est une fonction JavaScript dont le nom commence par ”use” et qui peut appeler d’autres Hooks.
+
+3. Comme lorsque vous êtes dans un composant, assurez-vous d’appeler les autres Hooks de façon inconditionnelle et au niveau racine de votre Hook personnalisé.
+
+4. Contrairement à un composant React, un Hook personnalisé n’a pas besoin d’avoir une signature particulière. 
+Nous pouvons décider s’il a besoin d’accepter des arguments et ce qu’il doit éventuellement renvoyer. 
+En d’autres termes, c’est une simple fonction. Son nom doit toujours commencer par use pour qu’au premier 
+coup d’œil vous sachiez que les règles des Hooks lui sont applicables.
+
+  EX:
+  // Imaginons deux commposants qui qui affichent un message selon qu’un ami est en ligne ou hors-ligne.
+  // Composant 1 
+  import React, { useState, useEffect } from 'react';
+
+  function FriendStatus(props) {
+    const [isOnline, setIsOnline] = useState(null);
+
+    useEffect(() => {
+      function handleStatusChange(status) {
+        setIsOnline(status.isOnline);
+      }
+
+      ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+      return () => {
+        ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+      };
+    });
+
+    if (isOnline === null) {
+      return 'Chargement...';
+    }
+    return isOnline ? 'En ligne' : 'Hors-ligne';
+  }
+
+  // Composant 2 
+  import React, { useState, useEffect } from 'react';
+
+  function FriendListItem(props) {
+    const [isOnline, setIsOnline] = useState(null);
+
+    useEffect(() => {
+      function handleStatusChange(status) {
+        setIsOnline(status.isOnline);
+      }
+
+      ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+      return () => {
+        ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+      };
+    });
+
+    return (
+      <li style={{ color: isOnline ? 'green' : 'black' }}>
+        {props.friend.name}
+      </li>
+    );
+  }
+
+Nous aimerions partager la logique dupliquée entre FriendStatus et FriendListItem. Nous allons donc créer
+un hook personnalisé useFriendStatus.
+L’objectif de notre Hook useFriendStatus est de nous abonner au statut d’un ami. 
+C’est pourquoi il prend friendID comme argument et nous renvoie si notre ami est en ligne. 
+
+  EX:
+  import React, { useState, useEffect } from 'react';
+
+  function useFriendStatus(friendID) {
+    const [isOnline, setIsOnline] = useState(null);
+
+    useEffect(() => {
+      function handleStatusChange(status) {
+        setIsOnline(status.isOnline);
+      }
+
+      ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+      return () => {
+        ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+      };
+    });
+
+    return isOnline;
+  }
+
+À la base, notre but était de supprimer la logique dupliquée entre les composants FriendStatus et FriendListItem. 
+Les deux veulent savoir si un ami est en ligne. Maintenant que nous avons extrait cette logique dans un hook useFriendStatus, 
+nous pouvons simplement l’utiliser dans nos deux composants.
+
+  EX:
+  // Composant 1 
+  function FriendStatus(props) {
+    const isOnline = useFriendStatus(props.friend.id);
+
+    if (isOnline === null) {
+      return 'Chargement...';
+    }
+    return isOnline ? 'En ligne' : 'Hors-ligne';
+  }
+
+  // Composant 2
+  function FriendListItem(props) {
+    const isOnline = useFriendStatus(props.friend.id);
+
+    return (
+      <li style={{ color: isOnline ? 'green' : 'black' }}>
+        {props.friend.name}
+      </li>
+    );
+  } 
+
+5. Chaque appel à un Hook se voit attribuer un état isolé. Comme nous appelons useFriendStatus directement, 
+du point de vue de React notre composant appelle simplement useState et useEffect. 
+Et comme nous l’avons appris précédemment, nous pouvons appeler useState et useEffect plusieurs fois dans un composant et ils seront complètement indépendants.
+
+  EX:
+  // Nous pouvons ainsi savoir si l’ami actuellement sélectionné est en ligne. 
+  // Si nous sélectionnons un autre ami et mettons à jour la variable d’état recipientID, 
+  // notre Hook useFriendStatus va se désabonner de l’ami précédemment sélectionné et s’abonner au statut de son remplaçant.
+
+  const friendList = [
+    { id: 1, name: 'Phoebe' },
+    { id: 2, name: 'Rachel' },
+    { id: 3, name: 'Ross' },
+  ];
+
+  function ChatRecipientPicker() {
+    const [recipientID, setRecipientID] = useState(1);
+    const isRecipientOnline = useFriendStatus(recipientID);
+
+    return (
+      <>
+        {/*
+        Le cercle s'affiche en vert ou en rouge selon l'ami selectionné dans la drop-down list
+        */}
+        <Circle color={isRecipientOnline ? 'green' : 'red'} />
+        <select
+          value={recipientID}
+          /*
+          Permet de passer l'ID de l'ami au hook useFriendStatus pour qu'il nous renvoie son statut
+          */
+          onChange={e => setRecipientID(Number(e.target.value))}
+        >
+          {friendList.map(friend => (
+            <option key={friend.id} value={friend.id}>
+              {friend.name}
+            </option>
+          ))}
+        </select>
+      </>
+    );
+  }
+
+
+Fragments
+-------------------------------
+1. En React, il est courant pour un composant de renvoyer plusieurs éléments. 
+Les fragments nous permettent de grouper une liste d’enfants sans ajouter de nœud supplémentaire au DOM.
+
+  EX:
+  class Table extends React.Component {
+    render() {
+      return (
+        <table>
+          <tr>
+            <Columns />
+          </tr>
+        </table>
+      );
+    }
+  }
+
+  // Le composant Columns sans <React.Fragment>
+  class Columns extends React.Component {
+    render() {
+      return (
+        <div>
+          <td>Bonjour</td>
+          <td>Monde</td>
+        </div>
+      );
+    }
+  }
+
+  // Ce code donne en sortie le <Table /> invalide suivant avec une div dans les tr :
+
+  <table>
+    <tr>
+      <div>
+        <td>Bonjour</td>
+        <td>Monde</td>
+      </div>
+    </tr>
+  </table>
+
+  // Le composant Columns avec <React.Fragment>
+  class Columns extends React.Component {
+    render() {
+      return (
+        <React.Fragment>
+          <td>Bonjour</td>
+          <td>Monde</td>
+        </React.Fragment>
+      );
+    }
+  }
+
+  // Ce qui donne en sortie le <Table /> correct suivant :
+
+  <table>
+    <tr>
+      <td>Hello</td>
+      <td>World</td>
+    </tr>
+  </table>
+
+  // Il existe une nouvelle syntaxe plus concise, que vous pouvez utiliser pour déclarer des fragments. Ça ressemble à des balises vides :
+
+  class Columns extends React.Component {
+    render() {
+      return (
+        <>
+          <td>Bonjour</td>
+          <td>Monde</td>
+        </>
+      );
+    }
+  }
 
 
 props.children (Composition)
