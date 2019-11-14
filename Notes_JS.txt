@@ -62,7 +62,7 @@
     Les valeurs évaluées à false
     Hashtable / Hashmap  vs Array (Data Normalization)
     Pattern Observable / Observer
-    .json()
+    .json()    
 
 
 

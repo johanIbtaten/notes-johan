@@ -17,6 +17,7 @@ HOC
 Les selectors
 Composants de présentation et conteneurs
 (Redux Sagas) take(), takeEvery(), takeLatest()
+Gérer les erreurs dans les gestionnaires d’événements
 
 
 
@@ -1300,5 +1301,16 @@ il s'agit de simples fonctions qui peuvent prendre des arguments (aussi appelés
   });
 
 
-3. Les  actions  sont, par la suite, utilisées par les reducers.
+3. Les  actions sont, par la suite, utilisées par les reducers.
 Le  reducer a pour rôle d'utiliser l'action pour mettre à jour le store.
+
+
+Gérer les erreurs dans les gestionnaires d’événements
+-------------------------------
+1. Les périmètres d’erreurs n’interceptent pas les erreurs qui surviennent au sein des gestionnaires d’événements.
+
+2. React n’a pas besoin de périmètres d’erreurs pour gérer les erreurs dans les gestionnaires d’événements. 
+Contrairement aux méthodes de rendu ou de cycle de vie, les gestionnaires d’événements ne sont pas appelés pendant le rendu. 
+Du coup même si ces gestionnaires lèvent une erreur, React saura tout de même quoi afficher à l’écran.
+
+3. Si vous avez besoin d’intercepter une erreur au sein d’un gestionnaire d’événements, il suffit d’utiliser un classique try / catch JavaScript
