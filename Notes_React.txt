@@ -1,4 +1,5 @@
 Créer un application react avec react-app
+Le state
 Component Lifecycle
 Component Lifecycle functions
 Stateless Functional Component (Composant fonctionnel sans état)
@@ -36,6 +37,12 @@ Créer un application react avec react-app
     npm install react-boostrap boostrap // Pour installer react-boostrap et boostrap
     npm install styled-components // Pour installer styled-components
     npm install polished // Pour installer polished
+
+Le state
+-------------------------------
+1. A chaque fois que le state d'un composant est modifié par sa référence ou ses valeurs,
+le composant est rendu ainsi que tous ses composants enfants. 
+
 
 Component Lifecycle
 -------------------------------
@@ -181,6 +188,17 @@ Vous pouvez aussi envisager d’utiliser des objets immuables pour simplifier la
 
 De plus, la méthode shouldComponentUpdate() de React.PureComponent ignore la mise à jour des propriétés 
 de tout l’arbre des composants enfants. Assurez-vous donc que tous les composants enfants sont également « purs ».
+
+  EX:
+  // shouldComponentUpdate() est appelée avant le rendu 
+  // quand de nouvelles props ou un nouvel état local sont reçues. 
+  // Par défaut, elle renvoie true.
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('shouldComponentUpdate!', nextProps)
+    // Le composant sera rendu une nouvelle fois si
+    // Les props sont différentes donc renvoient false 
+    return nextProps.text != this.props.text
+  }
 
 A shallow equality (comparaison de surface) check means that JS only checks that the value’s object ids 
 (as in, the memory address for where JS stores the information for that particular object) are the same, not that their content is the same.
@@ -1314,3 +1332,31 @@ Contrairement aux méthodes de rendu ou de cycle de vie, les gestionnaires d’�
 Du coup même si ces gestionnaires lèvent une erreur, React saura tout de même quoi afficher à l’écran.
 
 3. Si vous avez besoin d’intercepter une erreur au sein d’un gestionnaire d’événements, il suffit d’utiliser un classique try / catch JavaScript
+
+  EX:
+  class MyComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { error: null };
+      this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+      try {
+        // Faites ici quelque chose qui va lever une erreur
+      } catch (error) {
+        this.setState({ error });
+      }
+    }
+
+    render() {
+      if (this.state.error) {
+        return <h1>Une erreur a été interceptée.</h1>
+      }
+      return <div onClick={this.handleClick}>Cliquez ici</div>
+    }
+  }
+
+
+React.memo
+-------------------------------
