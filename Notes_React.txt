@@ -10,6 +10,8 @@ Les Hook
 useSate Hook
 useEffect Hook
 Custom Hook
+useCallback Hook
+useMemo Hook
 Fragments
 props.children (Composition)
 import SVG
@@ -213,6 +215,65 @@ A shallow equality (comparaison de surface) check means that JS only checks that
     const array1 = [value];
     const array2 = [value];
     console.log(array1 === array2); // Retourne false pourtant les deux tableaux sont identiques mais n'ont pas la même adresse mémoire (référence)
+
+
+2. React.memo
+React.memo est un composant d’ordre supérieur. Il joue le même rôle que
+React.PureComponent, mais pour les composants créés à l’aide de fonctions
+plutôt que de classes.
+
+Si vous avez une fonction composant qui affiche toujours le même résultat
+pour un même jeu de propriétés, vous pouvez l’enrober avec React.memo, ce 
+qui mémoïsera le résultat et devrait augmenter les performances dans 
+certains cas. Cela signifie que React sautera le rafraîchissement du 
+composant en réutilisant son dernier rendu en date.
+
+Par défaut, seule une comparaison de surface des props et des objets de props sera faite. Si vous
+voulez gérer cette comparaison vous-même, vous pouvez fournir une fonction
+de comparaison personnalisée en deuxième argument.
+
+  EX:
+  function MyComponent(props) {
+    /* Faire le rendu en utilisant les props */
+  }
+  function areEqual(prevProps, nextProps) {
+    /*
+    Renvoie `true` si passer l'objet nextProps à la fonction de rendu
+    produira le même résultat que de lui passer l'objet prevProps.
+    Renvoie `false` dans le cas contraire.
+    */
+  }
+  export default React.memo(MyComponent, areEqual);
+
+  EX:
+  export function Movie({ title, releaseDate }) {
+    return (
+      <div>
+        <div>Movie title: {title}</div>
+        <div>Release date: {releaseDate}</div>
+      </div>
+    );
+  }
+
+  function moviePropsAreEqual(prevMovie, nextMovie) {
+    return prevMovie.title === nextMovie.title
+      && prevMovie.releaseDate === nextMovie.releaseDate;
+  }
+  export const MemoizedMovie = React.memo(Movie);
+
+
+  // First render. React calls MemoizedMovie function.
+  <MemoizedMovie 
+    title="Heat" 
+    releaseDate="December 15, 1995" 
+  />
+
+  // On next round React does not call MemoizedMovie function,
+  // preventing rendering
+  <MemoizedMovie
+    title="Heat" 
+    releaseDate="December 15, 1995" 
+  />
 
 
 Les Hook
@@ -736,6 +797,89 @@ Et comme nous l’avons appris précédemment, nous pouvons appeler useState et 
     );
   }
 
+
+useCallback Hook
+-------------------------------
+1. Prend en arguments une fonction et un tableau de dépendances des
+variables utilisées par la fonction.
+
+2. useCallback renverra une version mémoïsée de la fonction qui changera uniquement si une des dépendance a changé.
+chaque valeur référencée dans la fonction de rappel devrait aussi apparaître dans le tableau d’entrées.
+
+3. useCallback(fn, inputs) est équivalent à useMemo(() => fn, inputs)
+
+  EX:
+  import React, { useState, useCallback } from 'react';
+  import logo from './logo.svg';
+  import './App.css';
+
+  const App = () => {
+    const [count1, setCount1] = useState(0);
+    const [count2, setCount2] = useState(0);
+
+    // La fonction est mémoïsée et ne sera réinstancié que si count1 change
+    const incrementCount1 = useCallback(() => setCount1(count1 + 1), [count1]);
+    const incrementCount2 = useCallback(() => setCount2(count2 + 1), [count2]);
+
+
+    return (
+      <div className='App'>
+        <header className='App-header'>
+          <img src={logo} className='App-logo' alt='logo' />
+          Count1: {count1}
+          <button onClick={incrementCount1}>Increase Count1</button>
+          Count2: {count2}
+          <button onClick={incrementCount2}>Increase Count2</button>
+        </header>
+      </div>
+    );
+  };
+
+  export default App;
+
+
+useMemo Hook
+-------------------------------
+1. Prend en arguments une fonction et un tableau de dépendances des
+variables utilisées par la fonction.
+
+2. useMemo eenvoie une valeur mémoïsée et recalculera la valeur mémoïsée seulement si une des entrées a changé. 
+Cette optimisation permet d’éviter des calculs coûteux à chaque rendu.
+
+EX:
+import React, { useState, useCallback, useMemo } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+const App = () => {
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(0);
+
+  const incrementCount1 = useCallback(() => setCount1(count1 + 1), [count1]);
+  const incrementCount2 = useCallback(() => setCount2(count2 + 1), [count2]);
+
+  // La valeur retournée par la fonction est mémoïsée et ne sera recalculer
+  // que si count1 change
+  const doSomethingComplicated = useMemo(() => {
+    console.log('I am computing something complex');
+    return ((count1 * 1000) % 12.4) * 51000 - 4000;
+  }, [count1]);
+
+  return (
+    <div className='App'>
+      <header className='App-header'>
+        <img src={logo} className='App-logo' alt='logo' />
+        Count1: {count1}
+        <button onClick={incrementCount1}>Increase Count1</button>
+        Count2: {count2}
+        <button onClick={incrementCount2}>Increase Count2</button>
+        complexValue: {doSomethingComplicated}
+      </header>
+    </div>
+  );
+};
+
+export default App;
 
 Fragments
 -------------------------------
