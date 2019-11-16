@@ -74,6 +74,7 @@ hint: its remote counterpart."
 - Effacer les fichiers qui ne sont pas stagés
 - Créer une branche sur le repo distant lors d'un push d'une nouvelle branche
 - Commiter seulement certaines modifications d'un même fichier
+- Lister les fichiers modifiés
 
 =================================
 Terminal Windows
@@ -401,16 +402,16 @@ hint: its remote counterpart."
 - Ajouter une nouvelle branche
 	git branch littlefeature
 
-- Se positionner sur une branche
-	git checkout littlefeature
-
-	git checkout BRANCH_DISTANTE
-	// Crée en local la branche distante et se positionne dessus
-
 	git checkout -b BRANCH_A_REBASE
 	// Permet de créer une branche et se positionner dessus
 	Si on à fait au préalable un checkout sur un commit
 	spécifique la branche est créé à partir de ce commit
+
+	git checkout BRANCH_DISTANTE
+	// Crée en local la branche distante et se positionne dessus	
+
+- Se positionner sur une branche
+	git checkout littlefeature	
 
 - Supprimer une branche
 	// Se positionner sur une autre branche que celle à supprimer
@@ -621,6 +622,9 @@ hint: its remote counterpart."
 	// Le fichier est alors staged et reste aussi unstaged pour
 	les modifications qui restent
 	// Cela équivaut à utiliser la commande git add --patch
+
+- Lister les fichiers modifiés
+	git ls-files --modified
 
 
  
