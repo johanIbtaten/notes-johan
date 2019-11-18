@@ -1,0 +1,70 @@
+- Règles de sécurité
+
+
+Règles de sécurité
+---------------------------------
+	EX:
+	// Configuration par défaut
+	rules_version = '2';
+	service cloud.firestore {
+	  match /databases/{database}/documents {
+	    match /{document=**} {
+	      allow read, write;
+	    }
+	  }
+	}
+
+	EX:
+	rules_version = '2';
+	service cloud.firestore { // Ligne obligatoire (mandatory line en anglais)
+	  match /databases/{database}/documents { // Ligne obligatoire (mandatory line en anglais)
+	    match /{document=**} { // La règle s'applique à tous les documents et collections
+	      allow read, write; // Autorise la lecture et l'écriture
+	      allow get // Autorise seulement la récupération d'un document spécifique
+	      allow list // Autorise seulement la récupération d'une ou plusieurs collections
+	      allow create, update // Autorise la création d'un document et la mise à jour d'un document
+	    }
+	  }
+	}
+
+	EX:
+	rules_version = '2';
+	service cloud.firestore {
+	  match /databases/{database}/documents {
+
+	  	// La règle s'applique à un document (objet) user de la collections users 
+	  	//// match /users/{user} { 
+	  	// La règle s'applique à un document (objet) user avec pour id userId de la collections users
+	    match /users/{userId} { 
+
+	      // Autorise la lecture d'un document (objet) user si la requête provient 
+	      // d'un utilisateur connecté (request.auth != null)
+	      // et que son uid correspond à id du document demandé
+	      // allow read: if request.auth != null && request.auth.uid == userId;
+	      // Le get au lieu du read permet d'être sur que la requête ne sera pas 
+	      // autorisée à récupérer toute la collection de users.
+	      // Le create permet de n'autoriser la création d'un document user seulement à 
+	      // l'emplacement qui a un id correspondant à l'uid d'un utilisateur connecté.
+	      allow get, create: if request.auth != null && request.auth.uid == userId;
+
+	      // Si on veut autoriser l'utilisateur à modifier son user on peut ajouter update pour l'autoriser
+	      //// allow get, create, update: if request.auth != null && request.auth.uid == userId; 
+	      // Pour regrouper create, update on peut utiliser write
+	      //// allow get, write: if request.auth != null && request.auth.uid == userId; 
+	    }
+
+	    // La règle s'applique à tous les documents (objets) collection
+	    // de la collection collections
+	    match /collections/{collection} {
+
+	    	// read regroupe get et list
+	    	allow read;
+
+	    	// Autorise seulement l'uid de l'administrateur pour
+	    	// create et update des documents collection
+	    	allow write: if request.auth != null && request.auth.uid == "SDgfuKsfhuksSDF785sfsf"
+	  	}
+	}
+
+
+
