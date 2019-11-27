@@ -4,13 +4,36 @@
 Règles de sécurité
 ---------------------------------
 	EX:
-	// Configuration par défaut
+	// Configuration par défaut Dev
 	rules_version = '2';
 	service cloud.firestore {
 	  match /databases/{database}/documents {
 	    match /{document=**} {
 	      allow read, write;
 	    }
+	  }
+	}
+
+	// Configuration Prod
+	rules_version = '2';
+	service cloud.firestore {
+	  match /databases/{database}/documents {
+	  	// match /users/{user} { // La règle s'applique à un document (objet) user de la collections users 
+	    match /users/{userId} { // La règle s'applique à un document (objet) user avec pour id userId de la collections users 
+	      // Autorise la lecture d'un document (objet) user si la requête provient d'un utilisateur connecté (request.auth != null)
+	      // et que son uid correspond à id du document demandé
+	      allow get, create: if request.auth != null && request.auth.uid == userId; 
+	    }
+      match /collections/{collection} {
+	    	// read regroupe get et list
+	    	allow read;
+	    	// Autorise seulement l'uid de l'administrateur pour
+	    	// create et update des documents collection
+	    	allow write: if request.auth != null && request.auth.uid == "ikuCtmR761dH8C51CxA8duKZBTk1"
+	  	}
+      match /carts/{cartId} {
+	    	allow get, write: if request.auth != null && request.auth.uid == cartId;
+	  	}      
 	  }
 	}
 

@@ -1,0 +1,29 @@
+- To select all occurrences of current selection
+- Annule la sélection précédente (fonctionne avec ctrl+D)
+- Formater le code
+- Multiple curseurs en colonne
+- Dupliquer une ligne vers le haut ou vers le bas
+
+Racourcis clavier
+-------------------------------
+- To select all occurrences of current selection
+Ctrl + Shift + L
+
+- Annule la sélection précédente (fonctionne avec ctrl+D)
+Ctrl + U
+
+- Formater le code
+Shift + Alt + F
+
+- Multiple curseurs en colonne
+Shift + Alt + Sélection
+
+- Dupliquer une ligne vers le haut ou vers le bas
+Shift + Alt + Down
+Shift + Alt + Up
+
+- Supprimer une ligne
+Ctrl + K
+
+- Naviguer dans les fichiers
+Ctrl + P + Nom ou lettres qui composent le fichier à afficher

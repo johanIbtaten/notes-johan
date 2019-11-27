@@ -63,7 +63,10 @@
     Les valeurs évaluées à false
     Hashtable / Hashmap  vs Array (Data Normalization)
     Pattern Observable / Observer
-    .json()    
+    .json()
+    Les différents types de tests
+    Fonctions pures
+    Fonction à effet de bord (side effects)
 
 
 
@@ -5265,3 +5268,78 @@ alors que les observables peuvent le gérer.
       error: error => console.error(error),
       complete: () => alert(keys.join(""))
     });
+
+
+Les différents types de tests
+-------------------------------
+1. Unit tests (tests unitaires)
+Permettent de tester des fonctions individuellement ou des classes et de voir
+si elles font bien ce qu'on leur demande. Les fonctions testées doivent être pures.
+
+
+2. Integrations tests
+Permettent de tester si des morceaux de codes fonctionnent bien ensembles.
+Comme une application express avec les appels à la bdd par exemple ou
+un fonction avec une autre fonction.
+
+3. Automation tests ou UI test
+Permettent de tester l'interaction utilisateur de l'application dans le navigateur par exemple
+et de voir si l'application réagit comme attendue. Ces test peuvent être fait par un être humain
+ou des robots qui simule les interactions utilisateur programmatiquement.
+
+
+
+Fonctions pures
+-------------------------------
+1. Une fonction pure ne dépend pas et ne modifie pas l’état de variables hors de sa portée et ne pas change pas son environnement.
+    EX:
+    // Fonction pure
+    let somme = (x, y) => {
+      return x + y;
+    }
+
+    // Fonction impure car le résultat dépend de la variable b qui est hors de sa portée et n'est pas passée en paramètre.
+    let b = 3
+    let somme2 = (x, y) => {
+      return x + y + b;
+    }
+
+    // Fonction impure car en utilisant console.log(“la somme est”) la fonction altère l’environnement.
+    let somme3 = (x, y) => {
+      console.log("la somme est ");
+      return x + y;
+    }
+
+    // Fonction impure car en utilisant la fonction modifie une variable hors de sa portée qui n'est pas passée en paramètre.
+    let b = 3
+    let somme4 = (x, y) => {
+      b = 4
+      return x + y;
+    }
+
+2. En pratique, cela signifie qu’une fonction pure retourne toujours le même résultat avec des paramètres identiques.
+
+3. L’avantage d’une fonction pure, c’est qu’elle n’a pas d’effets de bord. 
+Elles ne modifient pas l’état du système en dehors de leur portée. 
+Ainsi, elles simplifient et clarifient le code : quand on appelle une fonction pure, 
+on peut se concentrer sur la valeur qu’elle retourne puisqu’on sait qu’elle ne va pas impacter le système en passant.
+
+4. De même, il est très simple de tester une fonction pure puisqu’il n’y a pas de contexte considérer. 
+Il suffit de se concentrer sur les entrées / sorties.
+
+5. Une fonction pure est également robuste. Son ordre d’exécution n’a pas d’impact sur le système.
+
+6. Enfin, maximiser le nombre de fonctions pures rend le code plus simple, plus flexible.
+
+7. Simplifier le code en limitant le nombre de fonctions qui ont un impact sur l’état du système.
+En s’efforçant à écrire un maximum de fonctions pures, en limitant le nombre de fonctions qui ne le sont pas, on se simplifie la vie !
+En tout cas, c’est l’idée. Et souvent, en pratique, c’est surtout une question de design, de choix entre un get (pure) et un set (impure) par exemple.
+
+
+Fonction à effet de bord (side effects)
+-------------------------------
+1. Une fonction est dite à effet de bord si elle modifie un état en dehors de son environnement local, 
+c'est-à-dire a une interaction observable avec le monde extérieur autre que retourner une valeur ou
+si elle appelle d'autres fonctions à effet de bord.
+
+2. Les effets de bord peuvent être des appels sur un réseau ou à une bdd ou une api.
