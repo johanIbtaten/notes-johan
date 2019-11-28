@@ -20,11 +20,13 @@ collection.component.jsx
 homepage.component.jsx
 homepage.styles.jsx
 
-
 shop.selectors.js
 shop.sagas.js
 
 cart.selectors.js
+cart.utils.js
+cart.reducer.js
+cart.sagas.js
 cart.utils.js
 
 user.actions.js

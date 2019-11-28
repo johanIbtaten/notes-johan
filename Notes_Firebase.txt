@@ -17,9 +17,8 @@ Règles de sécurité
 	// Configuration Prod
 	rules_version = '2';
 	service cloud.firestore {
-	  match /databases/{database}/documents {
-	  	// match /users/{user} { // La règle s'applique à un document (objet) user de la collections users 
-	    match /users/{userId} { // La règle s'applique à un document (objet) user avec pour id userId de la collections users 
+	  match /databases/{database}/documents {	    
+	    match /users/{userId} { // La règle s'applique à un document (objet) user avec pour id userId dans la collections users 
 	      // Autorise la lecture d'un document (objet) user si la requête provient d'un utilisateur connecté (request.auth != null)
 	      // et que son uid correspond à id du document demandé
 	      allow get, create: if request.auth != null && request.auth.uid == userId; 
@@ -29,10 +28,13 @@ Règles de sécurité
 	    	allow read;
 	    	// Autorise seulement l'uid de l'administrateur pour
 	    	// create et update des documents collection
-	    	allow write: if request.auth != null && request.auth.uid == "ikuCtmR761dH8C51CxA8duKZBTk1"
+	    	allow write: if request.auth != null && request.auth.uid == "ikuCtmR761dH8C51CxA8duKZBTk1";
 	  	}
-      match /carts/{cartId} {
-	    	allow get, write: if request.auth != null && request.auth.uid == cartId;
+      match /carts/{cart} {        
+	    	allow read, create;
+        // Autorise seulement seulement l'utilisateur à mettre à jour le document
+        // qui correspond à son panier et qui a la propriété userId égale à son uid de connexion à Firabase
+        allow update:  if request.auth != null && request.auth.uid == resource.data.userId;
 	  	}      
 	  }
 	}

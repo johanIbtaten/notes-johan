@@ -65,6 +65,7 @@
     Pattern Observable / Observer
     .json()
     Les différents types de tests
+    Les tests avec JEST
     Fonctions pures
     Fonction à effet de bord (side effects)
 
@@ -5270,6 +5271,18 @@ alors que les observables peuvent le gérer.
     });
 
 
+Regression d'une application
+-------------------------------
+1. Une régression est un défaut introduit dans un logiciel à l'occasion de corrections de bogues ou n'importe quel changement établi dans un logiciel : 
+ajout de nouvelles fonctionnalités, modification de fonctionnalités existantes ou modification d'un composant externe au logiciel lui-même : 
+nouvelle version du système, de l'interface graphique, d'un compilateur ou d'une bibliothèque tierce qui interviennent dans son fonctionnement. 
+La régression fonctionnelle est donc un bug informatique qui entraîne un retour en arrière non désiré et préjudiciable sur une fonctionnalité qui marchait avant. 
+Elle menace le bon fonctionnement du logiciel, ce qu'il est important d'éviter ; on effectue à cette fin des tests de régression. 
+Il est également courant de parler de tests de non-régression, ou TNR
+
+2. Voir https://fr.wikipedia.org/wiki/Test_de_r%C3%A9gression
+
+
 Les différents types de tests
 -------------------------------
 1. Unit tests (tests unitaires)
@@ -5288,6 +5301,343 @@ et de voir si l'application réagit comme attendue. Ces test peuvent être fait 
 ou des robots qui simule les interactions utilisateur programmatiquement.
 
 
+Les tests avec JEST
+-------------------------------
+1. L'installation se fait simplement à l'aide de votre paquets. Vous pouvez aussi installer les fichiers de déclarations pour aider votre éditeur.
+    EX:
+    npm install -D jest @types/jest
+
+2. Vous pouvez aussi en profiter pour créer un fichier de configuration automatiquement avec la commande.
+    EX:
+    npx jest --init
+
+3. Pour lancer les tests il vous suffit ensuite d'utiliser la commande jest ou d'utiliser le script test (si vous avez choisi de l'ajouter à votre package.json).
+Cette commande cherchera les fichiers se terminant par .test.js ou se trouvant dans le dossier __tests__ et essaiera de les éxécuter.
+    EX:
+    npx jest
+
+4. Jest intègre l'ensemble des fonctions nécessaires aux test.
+
+5. Les fonctions basiques.
+describe() pour définir un scénario (un ensemble de tests dans un même domaine)
+it() ou test() pour décrire un test
+expect() pour gérer les assertions (les résultats attendus)
+
+6. Les matchers d'égalité
+    EX:
+    // toBe est à utiliser seulement pour les types primitifs, il équivaut à tester ===
+    it('two plus two is four', () => {
+      expect(2 + 2).toBe(4); // toBe(4) est un matcher 
+    });
+
+    // toEqual teste l'égalité des propriétés et valeurs d'un objet ou d'un tableau et pas simplement l'égalité des références.
+    it('object assignment', () => {
+      const data = {one: 1};
+      data['two'] = 2;
+      expect(data).toEqual({one: 1, two: 2}); // toEqual({one: 1, two: 2}) est un matcher
+    });
+
+    // not devant un matcher permet de tester l'opposé d'un matche
+    it('adding positive numbers is not zero', () => {
+      for (let a = 1; a < 10; a++) {
+        for (let b = 1; b < 10; b++) {
+          expect(a + b).not.toBe(0); // .not.toBe(0) est l'opposé du matcher toBe(0)
+        }
+      }
+    });
+
+7. Les matchers pour null, undefined, false, true.
+toBeNull matches only null
+toBeUndefined matches only undefined
+toBeDefined is the opposite of toBeUndefined
+toBeTruthy matches anything that an if statement treats as true
+toBeFalsy matches anything that an if statement treats as false
+    EX:
+    it('null', () => {
+      const n = null;
+      expect(n).toBeNull();
+      expect(n).toBeDefined();
+      expect(n).not.toBeUndefined();
+      expect(n).not.toBeTruthy();
+      expect(n).toBeFalsy();
+    });
+
+    it('zero', () => {
+      const z = 0;
+      expect(z).not.toBeNull();
+      expect(z).toBeDefined();
+      expect(z).not.toBeUndefined();
+      expect(z).not.toBeTruthy();
+      expect(z).toBeFalsy();
+    });
+
+8. Les matchers pour les nombres.
+    EX:
+    it('two plus two', () => {
+      const value = 2 + 2;
+      expect(value).toBeGreaterThan(3);
+      expect(value).toBeGreaterThanOrEqual(3.5);
+      expect(value).toBeLessThan(5);
+      expect(value).toBeLessThanOrEqual(4.5);
+
+      // toBe and toEqual are equivalent for numbers
+      expect(value).toBe(4);
+      expect(value).toEqual(4);
+    });
+
+    // Pour les égalités de nombres à virgule il faut utiliser toBeCloseTo à la place de toEqual
+    it('adding floating point numbers', () => {
+      const value = 0.1 + 0.2;
+      //expect(value).toBe(0.3); // This won't work because of rounding error
+      expect(value).toBeCloseTo(0.3); // This works.
+    });
+
+9. Les matchers pour les chaînes de caractères
+    EX:
+    // Avec une expression régulière.
+    it('there is no I in team', () => {
+      expect('team').not.toMatch(/I/);
+    });
+
+    it('but there is a "stop" in Christoph', () => {
+      expect('Christoph').toMatch(/stop/);
+    });
+
+10. Les matchers pour les tableaux et itérables
+    EX:
+    // Vérifie si un tableau ou un itérabble contient un item particulier
+    const shoppingList = [
+      'diapers',
+      'kleenex',
+      'trash bags',
+      'paper towels',
+      'beer',
+    ];
+
+    it('the shopping list has beer on it', () => {
+      expect(shoppingList).toContain('beer'); 
+      expect(new Set(shoppingList)).toContain('beer');
+    });
+
+11. Les matchers pour les exceptions
+    EX:
+    // Vérifie si une exception est lancée par une fonction quand elle est appelée
+    function compileAndroidCode() {
+      throw new Error('you are using the wrong JDK');
+    }
+
+    it('compiling android goes as expected', () => {
+      expect(compileAndroidCode).toThrow();
+      expect(compileAndroidCode).toThrow(Error);
+
+      // You can also use the exact error message or a regexp
+      expect(compileAndroidCode).toThrow('you are using the wrong JDK');
+      expect(compileAndroidCode).toThrow(/JDK/);
+    });
+
+    EX:
+    function drinkFlavor(flavor) {
+      if (flavor == 'octopus') {
+        throw new DisgustingFlavorError('yuck, octopus flavor');
+      }
+      // Do some other stuff
+    }
+
+    it('throws on octopus', () => {
+      function drinkOctopus() {
+        drinkFlavor('octopus');
+      }
+
+      // Test that the error message says "yuck" somewhere: these are equivalent
+      expect(drinkOctopus).toThrowError(/yuck/); // toThrowError est un alias de toThrow
+      expect(drinkOctopus).toThrowError('yuck');
+
+      // Test the exact error message
+      expect(drinkOctopus).toThrowError(/^yuck, octopus flavor$/);
+      expect(drinkOctopus).toThrowError(new Error('yuck, octopus flavor'));
+
+      // Test that we get a DisgustingFlavorError
+      expect(drinkOctopus).toThrowError(DisgustingFlavorError);
+    });
+
+12. Voir https://jestjs.io/docs/en/expect pour voir l'ensemble des matchers.
+
+14. Tester des fonctions asynchrones
+    EX:
+    describe('Timer', function () {
+      // Mettre async à la fonction callback de it et utiliser await dans la fonction    
+      it.concurrent('should wait 3 seconds', async function () { // .concurrent permet de lancer des tests en parallèles.
+        const t = Date.now()
+        await sleep(3)
+        expect(Date.now() - t).toBeGreaterThanOrEqual(3000)
+      })
+
+      it.concurrent('should wait 2 seconds', async function () {
+        const t = Date.now()
+        await sleep(2)
+        expect(Date.now() - t).toBeGreaterThanOrEqual(2000)
+      })
+    })
+
+15. Utiliser des mock.
+Vous pouvez aussi créer des mock pour tester vos fonctions sans dépendre des composants tiers. 
+Par exemple, si vous voulez tester une fonction de votre bot Discord il faut être capable de simuler les opérations.
+Pour créer un mock il suffit d'utiliser la fonction Jest.fn(), cette fonction renvoie un mock qui est 
+une fonction qui renvoie undefined si appellée. Il est possible ensuite d'inspecter les appels et de modifier les valeurs de retour si nécessaire.
+    EX:
+    // La fonction à tester
+    export async function ping(message) {
+        message.delete().catch(console.error)
+        return message.author.createDM()
+            .then(ch => ch.send('pong'))
+            .catch(() => message.reply('pong'))
+    }
+
+    // On importe le fonction ping à tester
+    import {ping} from '../src/discord.js'
+
+    // On crée un groupe de tests
+    describe('Discord', function () {
+
+      it('should dm the user', async function () {
+        // On crée un faux objet channelMock
+        const channelMock = {
+          send: jest.fn()
+        }
+
+        // On crée une fausse fonction createDMMock qui renvoie une promesse
+        // résolue avec un objet channelMock
+        const createDMMock = jest.fn().mockResolvedValue(channelMock)
+
+        // On crée un faux objet message avec des fonction mock
+        const message = {
+          delete: jest.fn().mockResolvedValue({}),
+          reply: jest.fn(),
+          author: {
+            createDM: createDMMock
+          }
+        }
+        On passe le mock message à la vrai fonction ping à tester
+        await ping(message)
+
+        // Le matcher .toHaveBeenCalled() permet de savoir si la méthode message.delete 
+        // a bien été appelée.
+        expect(message.delete).toHaveBeenCalled() 
+      })
+
+      it('should reply to the user if dm are deactivated', async function () {
+        const createDMMock = jest.fn().mockRejectedValue({})
+        const message = {
+          delete: jest.fn().mockResolvedValue({}),
+          reply: jest.fn(),
+          author: {
+            createDM: createDMMock
+          }
+        }
+        await ping(message)
+
+        // Le matcher .toHaveBeenCalled() permet de savoir si la méthode message.delete 
+        // a bien été appelée.
+        expect(message.delete).toHaveBeenCalled()
+
+        // Le matcher .toHaveBeenCalledWith() permet de savoir si la méthode message.reply 
+        // a bien été appelée avec l'argument 'pong'
+        expect(message.reply).toHaveBeenCalledWith('pong')
+      })
+    })
+
+    EX:
+    import axios from 'axios'
+
+    export default {
+        async getLastUsername() {
+            let users = await axios.get('https://jsonplaceholder.typicode.com/users')
+            return users.data[0].name
+        },
+        async getLastUsernameFetch() {
+            let users = await fetch('https://jsonplaceholder.typicode.com/users')
+                .then(r => r.json())
+            return users.data[0].name
+        }
+    }
+
+    import Users from '../src/users.js'
+    import axios from 'axios'
+
+    // On mock axios c'est-à-dire que toute les méthodes d'axios renverront undefined
+    jest.mock('axios')
+
+    describe('Users', function () {
+      // beforeEach, permet de lancer ces traitement avant chaque test.
+      beforeEach(() => {
+        // On reset le mock d'axios avant chaque test
+        axios.mockClear()
+      })
+
+      const fakeResponse = [{name: 'John Doe'}]
+
+      it ('should return last user', async () => {
+        // On mock la méthode get d'axios pour qu'elle renvoie une promesse résolue
+        // avec un objet ayant une propriété data égale à fakeResponse
+        axios.get.mockResolvedValue({data: fakeResponse})
+
+        // On attend de la fonction getLastUserName() qu'elle nous renvoie 'John Doe'
+        expect(await Users.getLastUserName()).toBe('John Doe')
+      })
+
+      // Pour mocker fetch il faut installer jest-fetch-mock (https://www.npmjs.com/package/jest-fetch-mock)
+      it ('should return last user with fetch', async () => {
+        // On souhaite que le mock de fetch nous renvoie une chaîne au format JSON
+        // à partir de l'objet fakeResponse
+        fetch.mockResponseOnce(JSON.stringify(fakeResponse))
+
+        // On attend de la fonction getLastUserNameFetch() qu'elle nous renvoie 'John Doe'
+        expect(await Users.getLastUserNameFetch()).toBe('John Doe')
+      })
+    })
+
+16. Les drapeaux utiles
+afterAll(fn, timeout)
+afterEach(fn, timeout)
+// Runs a function before any of the tests in this file run. 
+// If the function returns a promise or is a generator, 
+// Jest waits for that promise to resolve before running tests.
+beforeAll(fn, timeout) 
+beforeEach(fn, timeout) // Permet de faire un traitement avant chaque test du fichier
+describe(name, fn)
+describe.each(table)(name, fn, timeout)
+describe.only(name, fn)
+describe.only.each(table)(name, fn)
+describe.skip(name, fn)
+describe.skip.each(table)(name, fn)
+it(name, fn, timeout)
+it.each(table)(name, fn, timeout)
+it.only(name, fn, timeout) // Permet d'exécuter seulement ce test
+it.only.each(table)(name, fn)
+it.skip(name, fn) // Permet d'ignorer un test
+it.skip.each(table)(name, fn)
+it.todo(name)
+
+
+17. Tester le DOM sans navigateur via JSDOM
+Si votre librairie manipule le DOM il est possible de la tester sans forcément utiliser un navigateur. 
+Pour cela Jest intègre jsdom qui implémente plusieurs standard web directement sur NodeJS.
+Installer jest-dom pour ajouter des matchers liés au DOM (https://github.com/testing-library/jest-dom)
+    EX:
+    test('displays content after click', function () {
+
+      document.body.innerHTML = `<div>Voici mon <span class="spoiler">contenu caché</span></div>`
+      require('../src/spoiler.js')
+      const spoilerButton = document.querySelector('.spoiler button')
+      const spoilerText = document.querySelector('.spoiler span')
+
+      expect(spoilerButton).not.toBeNull() // On vérifie qu'il y a bien un bouton qui a été créé dans le span .spoiler
+      expect(spoilerText).not.toBeNull() // On vérifie qu'il y a bien un span qui a été créé dans le span .spoiler
+      expect(spoilerText).not.toHaveClass('visible') // On vérifie que spoilerText n'a pas la class visible et donc qu'il n'est pas affiché
+      spoilerButton.click() // On click sur le bouton créé
+      expect(spoilerText).toHaveClass('visible') // On vérifie que spoilerText cette fois a bien la class visible et donc qu'il est bien affiché
+
+    })
 
 Fonctions pures
 -------------------------------
