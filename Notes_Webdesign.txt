@@ -1,0 +1,8 @@
+- Hero image
+
+
+Hero image
+-------------------------------
+- De préférence 1600px (Largeur) x 500px (Hauteur) avec une compression de moins de 400 kb
+
+- L'image doit être cadrée au centre de la prise de vue.

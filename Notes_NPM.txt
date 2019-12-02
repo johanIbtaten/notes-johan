@@ -1,15 +1,20 @@
-Version de node
-Version de npm
-Création du package.json avec entrée des paramètres
-Création du package.json avec paramètres par défault (plus rapide)
-Installation du package dans les dependencies
-Installation du package dans les devDependencies
-Mise à jour de tous les packages
-Mise à jour d'un package
+Versions
+	Version de node
+	Version de npm
+Création du package.json
+	Création du package.json avec entrée des paramètres
+	Création du package.json avec paramètres par défault (plus rapide)
+Installation d'un package
+	Installation du package dans les dependencies
+	Installation du package dans les devDependencies
+Mise à jour des packages
+	Mise à jour de tous les packages
+	Mise à jour d'un package
 Fixer les vulnérabilités
+Ajouter des commentaires dans package.json
 
 Versions
-=================================
+-------------------------------
 - Version de node
 node -v
 
@@ -18,7 +23,7 @@ npm -v
 
 
 Création du package.json
-=================================
+-------------------------------
 - Création du package.json avec entrée des paramètres
 npm init
 
@@ -29,7 +34,7 @@ npm init -y
 
 
 Installation d'un package
-=================================
+-------------------------------
 - Installation du package dans les dependencies
 npm install sax
 ou
@@ -48,7 +53,7 @@ npm install jest -D
 
 
 Mise à jour des packages
-=================================
+-------------------------------
 - Mise à jour de tous les packages
 npm upgrade
 
@@ -56,7 +61,25 @@ npm upgrade
 npm update jest
 
 
-Autres
-=================================
-- Fixer les vulnérabilités
+Fixer les vulnérabilités
+-------------------------------
 npm audit fix
+
+
+Ajouter des commentaires dans package.json
+-------------------------------
+- Les clés commentaire doivent être à la racine du JSON
+	EX:
+	{ 
+		"//": "this is the first line of a comment", 
+	  	"//": "this is the second line of the comment" 
+  	}
+
+  	EX:
+	{ 
+		"dependencies": { 
+			"//": "Ce commentaire est invalide car il n'est pas à la racine" 
+		}
+	}
+
+

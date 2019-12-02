@@ -64,6 +64,7 @@
     Hashtable / Hashmap  vs Array (Data Normalization)
     Pattern Observable / Observer
     .json()
+    Regression d'une application
     Les différents types de tests
     Les tests avec JEST
     Fonctions pures

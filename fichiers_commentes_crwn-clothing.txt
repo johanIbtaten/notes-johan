@@ -10,7 +10,10 @@ custom-button.component.jsx
 custom-button.styles.jsx
 
 cart-icon.component.jsx
+
 cart-dropdown.component.jsx
+cart-dropdown.styles.jsx
+cart-dropdown.test.js
 
 collections-overview.component.jsx
 collections-overview.container.jsx
@@ -40,3 +43,4 @@ firebase.utils.js
 
 app.js
 index.js
+react.js

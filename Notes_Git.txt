@@ -568,6 +568,7 @@ hint: its remote counterpart."
 	*.txt
 
 - Merger (fusionner) deux branches
+	// Se positionner sur la branche master
 	git merge BRANCH_A_MERGE
 	// Si conflit voir "- Merge manuel dans un fichier" au-dessus
 
@@ -589,6 +590,7 @@ hint: its remote counterpart."
 	// Stager les fichiers qui avaient un conflit
 	git rebase --continue
 	// Permet d'appliquer le rebase
+	
 	// Se positionner sur master
 	git merge BRANCH_A_REBASE
 	// Pour fusionner les deux branches
