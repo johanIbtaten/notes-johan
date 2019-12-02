@@ -21,6 +21,7 @@ Les selectors
 Composants de présentation et conteneurs
 (Redux Sagas) take(), takeEvery(), takeLatest()
 Gérer les erreurs dans les gestionnaires d’événements
+Différences entre SSR (Server-Side Rendering) et CSR (Client-Side Rendering)
 
 
 
@@ -1502,5 +1503,114 @@ Du coup même si ces gestionnaires lèvent une erreur, React saura tout de même
   }
 
 
-React.memo
+Méthodes pour bien binder this dans un gestionnaire dévènement
 -------------------------------
+1. Avec une arrow function.
+La méthode la plus pratique est d'utiliser une arrow function.
+En effet, les fonctions fléchées partagent le même this lexical que leur scope parent. 
+Du coup, le this que vous pourrez utiliser dans votre corps de fonction fléchée est celui du code parent
+  EX:
+  class MyComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+            title: 'I am Index page'
+        }
+    }
+
+    updateTitle() {
+        this.setState({title: 'I am updated page' })
+    }
+
+    render() {
+      return (
+            <BaseLayout>
+                <h1> {this.state.title} </h2>
+                {/*
+                On passe à onClick la référence d'un fonction fléchée, 
+                C'est ce gestionnaire qui va gérer son exécution au click.
+                À chaque click le gestionnaire appelle la fonction fléchée qui
+                elle-même exécute la méthode this.updateTitle()
+                Le this fait référence a son parent qui est la classe MyComponent
+                */}
+                <button onClick={() => this.updateTitle()}>Change title</button>
+            </BaseLayout>
+        )
+    }
+  }
+
+2. Avec bind()
+  EX:
+  class MyComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+            title: 'I am Index page'
+        }
+      // On lie le this à la classe MyComponent
+      // this.setState équivaut à MyComponent.setState
+      // dans la fonction updateTitle()
+      this.updateTitle = this.updateTitle.bind(this);
+    }
+
+    updateTitle() {
+        this.setState({title: 'I am updated page' })
+    }
+
+    render() {
+      return (
+            <BaseLayout>
+                <h1> {this.state.title} </h2>
+                {/*
+                On passe à onClick la référence de la fonction this.updateTitle, 
+                C'est ce gestionnaire qui va gérer son exécution au click.
+                */}
+                <button onClick={this.updateTitle}>Change title</button>
+            </BaseLayout>
+        )
+    }
+  }
+
+3. Avec une arrow function au niveau de la fonction appelée
+  EX:
+  class MyComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+            title: 'I am Index page'
+        }
+    }
+
+    // Le this de this.setState dans la fonction fléchée updateTitle 
+    // fait référence a son parent qui est la classe MyComponent
+    updateTitle = () => {
+        this.setState({title: 'I am updated page' })
+    }
+
+    render() {
+      return (
+            <BaseLayout>
+                <h1> {this.state.title} </h2>
+                {/*
+                On passe à onClick la référence de la fonction this.updateTitle, 
+                C'est ce gestionnaire qui va gérer son exécution au click.
+                */}
+                <button onClick={this.updateTitle}>Change title</button>
+            </BaseLayout>
+        )
+    }
+  }
+
+
+Différences entre SSR (Server-Side Rendering) et CSR (Client-Side Rendering)
+-------------------------------
+Voir : https://altalogy.com/blog/client-side-rendering-vs-server-side-rendering/
+
+1. If you want to build site which is mostly static (blog, portfolio, landing page), use Gatsby, 
+it’s not SSR, but it pre-renders (bon pour le SEO) the website into HTML at the build time
+
+2. If you want to build a web app with react, and you care about SEO, easier social media optimization 
+and faster render for user you should think about SSR and framework like next.js
+
+3. If you building a SPA (single page application), and you don’t want to configure everything 
+on the server side like: i18n, router e.t.c. you should use create-react-app

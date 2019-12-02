@@ -6,6 +6,7 @@
     Local storage et Session storage
     preventDefault
     stopPropagation
+    Passer une référence à un gestionnaire d'évènement
 
 
 Le DOM
@@ -294,4 +295,23 @@ stopPropagation
   document.getElementById("test").addEventListener("click", function( event ) {
     event.stopPropagation();
   }, false);
-  
+
+
+Passer une référence à un gestionnaire d'évènement
+-------------------------------
+1. Il faut passer une référence à un gestionnaire d'évènement et non exécuter la fonction
+  EX:
+  // Dans react
+
+  updateTitle() {
+      console.log('I am an updated title')
+  }
+
+  // Exécute la fonction updateTitle() une fois
+  // Si on clique sur le bouton rien ne se passe
+  <button onClick={this.updateTitle()}>Change title</button> 
+
+  // On passe la référence de la méthode updateTitle au gestionnaire
+  // Cette fois le click sur le bouton appelle bien la méthode
+  <button onClick={this.updateTitle}>Change title</button>
+    

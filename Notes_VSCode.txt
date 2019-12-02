@@ -3,6 +3,7 @@
 - Formater le code
 - Multiple curseurs en colonne
 - Dupliquer une ligne vers le haut ou vers le bas
+- Emmet : Wrap With Abbrevation 
 
 Racourcis clavier
 -------------------------------
@@ -27,3 +28,6 @@ Ctrl + K
 
 - Naviguer dans les fichiers
 Ctrl + P + Nom ou lettres qui composent le fichier à afficher
+
+- Emmet : Wrap With Abbrevation 
+Ctrl + Alt + B

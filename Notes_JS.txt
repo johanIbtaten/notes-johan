@@ -69,6 +69,7 @@
     Les tests avec JEST
     Fonctions pures
     Fonction à effet de bord (side effects)
+    Debugger
 
 
 
@@ -5694,3 +5695,18 @@ c'est-à-dire a une interaction observable avec le monde extérieur autre que re
 si elle appelle d'autres fonctions à effet de bord.
 
 2. Les effets de bord peuvent être des appels sur un réseau ou à une bdd ou une api.
+
+
+Debugger
+-------------------------------
+1. L'instruction debugger permet de faire appel à un outil de débogage (qui peut par exemple permettre de placer un point d'arrêt). 
+Si cette fonctionnalité de débogage n'est pas disponible, l'instruction n'aura aucun effet.
+
+2. Lors que le débogueur est lancé, l'exécution est interrompue au niveau de l'instruction debugger. 
+Cela agit comme un point d'arrêt dans le code du script.*
+    EX:
+    function codeProbablementBogue() {
+        debugger;
+        // exécuter des instructions qu'on veut 
+        // examiner, exécuter pas à pas etc.
+    }
