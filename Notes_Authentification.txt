@@ -1,0 +1,50 @@
+- Sécurisez l’accès à une API avec OAuth2
+- Authentification d’API via JWT et les Cookies
+
+Sécurisez l’accès à une API avec OAuth2
+-------------------------------
+- Voir https://www.nexworld.fr/securiser-api-oauth2/
+
+- Voir https://www.grafikart.fr/tutoriels/oauth2-php-google-1171
+
+1. Sécurité 
+Trouvez l’équilibre entre “mener la vie dure aux attaquants potentiels” et “faciliter la vie des utilisateurs légitimes” 
+(en d’autres termes, ne dégradez pas trop l’expérience utilisateur au nom de la sécurité) !
+
+Utilisez toujours HTTPS pour vos communications réseau. 
+
+Utilisez des protocoles éprouvés : API Key pour des cas très simples, OAuth2 
+et OpenID Connect pour les autres cas. 
+
+Ajouter des mécanismes supplémentaires en plus de HTTPS et OAuth2 ne sécurisera 
+pas plus ou mieux votre API, mais complexifiera la consommation des ressources pour les développeurs.
+
+
+2. OAuth2
+Ce protocole permet à un utilisateur de déléguer une partie de ses droits à une application ;
+
+Le client récupère un access token en utilisant un scénario parmi 4 possibles ;
+
+Le choix entre ces types de scénarios se fait en fonction du client visé (confidentiel, externe ou public) et de son architecture (Serveur à Serveur, SPA, SSR ou mobile).
+
+Ne pas confondre scopes et gestion de droits : 
+la gestion de droits concerne ce qu’a le droit de faire l’utilisateur
+les scopes indiquent ce que l’utilisateur autorise une application à faire en son nom
+
+
+3. OpenID Connect
+Ce protocole autorise une application cliente à récupérer de manière sécurisée 
+l’identité de l’utilisateur. C’est une extension d’OAuth2
+
+Le client récupère un access token et un ID Token en utilisant un scénario parmi 3 possibles ;
+
+Le choix entre ces types de scénarios se fait en fonction du client visé et du type de token dont il a besoin. 
+
+L’ID Token est sous la forme JWT et contient des claims qui sont des informations à propos de l’utilisateur et de la façon dont il a été identifié. 
+
+- Voir https://blog.octo.com/securiser-une-api-rest-tout-ce-quil-faut-savoir/
+
+
+Authentification d’API via JWT et les Cookies
+-------------------------------
+- Voir https://website.simplx.fr/blog/2016/09/27/authentification-api-via-jwt-et-cookies/

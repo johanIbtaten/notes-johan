@@ -1,0 +1,87 @@
+- @font-face
+
+@font-face
+-------------------------------
+- La règle @font-face permet de définir les polices d'écriture à utiliser 
+pour afficher le texte de pages web. Cette police peut être chargée depuis 
+un serveur distant ou depuis l'ordinateur de l'utilisateur. 
+Si la fonction local() est utilisée, elle indique à l'agent utilisateur 
+de prendre en compte une police présente sur le poste de l'utilisateur.
+
+- Les descripteurs.
+font-display
+Ce descripteur détermine la façon dont une fonte est affichée selon qu'elle a 
+été téléchargée et/ou si elle est prête à être utilisée.
+
+font-family
+Ce descripteur définit un nom qui sera utilisé pour désigner 
+cette police dans les différentes règles associées.
+
+font-stretch
+Une valeur font-stretch. Depuis Firefox 61 et pour les navigateurs récents, 
+il est possible d'utiliser deux valeurs afin d'indiquer l'intervalle pris en charge 
+par une fonte, par exemple : font-stretch: 50% 200%;.
+
+font-style
+Une valeur font-style. Depuis Firefox 61 et pour les navigateurs récents, il est possible 
+d'utiliser deux valeurs afin d'indiquer l'intervalle pris en charge par une fonte, par exemple : font-style: oblique 20deg 50deg;.
+
+font-variant
+Une valeur font-variant.
+
+font-weight
+Une valeur font-weight. Depuis Firefox 61 et pour les navigateurs récents, il est possible d'utiliser deux valeurs afin d'indiquer l'intervalle pris en charge par une fonte, par exemple : font-weight: 100 400;.
+
+font-feature-settings
+Ce descripteur permet d'avoir un contrôle avancé sur les fonctionnalités typographiques relatives aux fontes OpenType.
+
+font-variation-settings
+Ce descripteur permet d'avoir un contrôle de bas niveau sur les variations des polices OpenType et TrueType en indiquant les nom des axes et des fonctionnalités à faire varier.
+
+src
+Indique la ressource qui contient les données pour la police d'écriture. Cela peut être une URL vers un fichier distant ou le nom d'une police de caractères présente sur l'ordinateur de l'utilisateur.
+
+On peut fournir une indication de format au navigateur (afin que celui-ci sélectionne celui qui lui convient le mieux) sous la forme d'une fonction format() qui contient le type comme argument :
+
+src: url(ideal-sans-serif.woff) format("woff"),
+     url(basic-sans-serif.ttf) format("truetype");
+Les types utilisables sont : "woff", "woff2", "truetype", "opentype", "embedded-opentype" et "svg".
+
+unicode-range
+L'intervalle des points de code Unicode pour lesquels la règle  @font-face s'applique.
+
+Syntaxe formelle
+@font-face {
+  [ font-family: <family-name>; ] ||
+  [ src: <src>; ] ||
+  [ unicode-range: <unicode-range>; ] ||
+  [ font-variant: <font-variant>; ] ||
+  [ font-feature-settings: <font-feature-settings>; ] ||
+  [ font-variation-settings: <font-variation-settings>; ] ||
+  [ font-stretch: <font-stretch>; ] ||
+  [ font-weight: <font-weight>; ] ||
+  [ font-style: <font-style>; ]
+}
+
+EX:
+// Font distante (qui n'est pas installée sur l'ordinateur de l'utilisateur)
+@font-face {
+  font-family: "Bitstream Vera Serif Bold";
+  src: url("/static/styles/libs/font-awesome/fonts/fontawesome-webfont.fdf491ce5ff5.woff");
+}
+
+body {
+  font-family: "Bitstream Vera Serif Bold", serif;
+} 
+
+EX:
+// Font local et distante
+// Ici, l'agent utilisateur tente d'utiliser la police Helvetica Neue Bold ou HelveticaNeue-Bold 
+// si elle existe sur l'ordinateur de l'utilisateur. Sinon, il utilise la police distante MgOpenModernaBold.ttf.
+@font-face {
+  font-family: MaHelvetica;
+  src: local("Helvetica Neue Bold"),
+       local("HelveticaNeue-Bold"),
+       url(MgOpenModernaBold.ttf);
+  font-weight: bold;
+}

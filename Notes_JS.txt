@@ -44,6 +44,7 @@
         BIND()
     Méthodes sur les chaînes de caratères
         INCLUDES()
+        STARTSWITH()
     Méthodes sur JSON
         PARSE()
     Rest parameters
@@ -70,7 +71,7 @@
     Fonctions pures
     Fonction à effet de bord (side effects)
     Debugger
-
+    Assignation par défaut avec les opérateurs || et &&
 
 
 Variables
@@ -2861,6 +2862,40 @@ autre et renvoie true ou false selon le cas de figure. includes() est sensible �
     console.log(str.includes("Être", 1));    // false
     console.log(str.includes("ÊTRE"));       // false
     console.log(str.includes(""));           // true
+
+STARTSWITH()
+// str.startsWith(chaîneRecherchée);
+// str.startsWith(chaîneRecherchée, position);
+1. La méthode startsWith() renvoie un booléen indiquant si la chaine de caractères 
+commence par la chaine de caractères fournie en argument.
+
+2. Cette méthode permet de savoir si une chaine de caractères commence avec une autre chaine de caractères 
+(comme pour les autres méthodes fonctionnant avec les chaînes de caractères, cette méthode est sensible à la casse).
+
+    [chaîneRecherchée]
+        Les caractères à rechercher au début de la chaine de caractères.
+
+    [position] (Facultatif)
+        La position dans la chaîne à partir de laquelle commencera la recherche. La valeur par défaut de position est 0.
+       
+    Valeur de retour :
+        true si la chaîne de caractères commence avec la sous-chaîne en argument, false sinon.
+
+    Ex1:
+    const str1 = 'Saturday night plans';
+
+    console.log(str1.startsWith('Sat'));
+    // expected output: true
+
+    console.log(str1.startsWith('Sat', 3));
+    // expected output: false
+
+    Ex2:
+    var str = "Être, ou ne pas être : telle est la question.";
+
+    console.log(str.startsWith("Être"));         // true
+    console.log(str.startsWith("pas être"));     // false
+    console.log(str.startsWith("pas être", 12)); // true
 
 
 Méthodes sur JSON
@@ -5710,3 +5745,38 @@ Cela agit comme un point d'arrêt dans le code du script.*
         // exécuter des instructions qu'on veut 
         // examiner, exécuter pas à pas etc.
     }
+
+
+Assignation par défaut avec les opérateurs || et &&
+-------------------------------
+1. This is made to assign a default value.
+
+2. The boolean operators in JavaScript can return an operand, 
+and not always a boolean result as in other languages.
+
+3. The Logical OR operator (||) returns the value of its second operand, if the first one is falsy, 
+otherwise the value of the first operand is returned.
+    EX:
+    "foo" || "bar"; // returns "foo"
+    false || "bar"; // returns "bar"
+
+    EX:
+    // props.className n'existe pas donc est falsy, l'opérateur || retourne ''
+    // pour l'assigner à la variable className
+    const className = props.className || '';
+
+
+4. The Logical AND operator (&&)  Renvoie la première valeur si cette expression peut être convertie en false, sinon renvoie la seconde valeur.
+    EX:
+    "foo" && "bar"; // returns "bar"
+    false && "bar"; // returns false
+
+
+5. Si une valeur peut être convertie en true, on dit en anglais qu'elle est truthy. 
+Pour false on dit qu'elle est falsy.
+Parmi les expressions qui peuvent être converties en false, citons celles qui seront évaluées à :
+null,
+NaN,
+0,
+la chaîne vide ("" ou '' ou ``),
+undefined

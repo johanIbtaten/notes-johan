@@ -22,6 +22,8 @@ Composants de présentation et conteneurs
 (Redux Sagas) take(), takeEvery(), takeLatest()
 Gérer les erreurs dans les gestionnaires d’événements
 Différences entre SSR (Server-Side Rendering) et CSR (Client-Side Rendering)
+Rendu d'un array d'éléments HTML
+Passer des props à un composant
 
 
 
@@ -1614,3 +1616,151 @@ and faster render for user you should think about SSR and framework like next.js
 
 3. If you building a SPA (single page application), and you don’t want to configure everything 
 on the server side like: i18n, router e.t.c. you should use create-react-app
+
+
+Rendu d'un array d'éléments HTML
+-------------------------------
+1. EN JSX on peut rendre un tableau d'éléments HTML
+EX:
+render() {
+    let array = [<div>1</div>, <div>2</div>]
+    return (
+        <BaseLayout>
+            <h1>I am index page</h1
+            { array } // Rendra <div>1</div><div>2</div>
+        </BaseLayout>
+    )
+}
+
+
+Passer des props à un composant
+-------------------------------
+1. Passage de props standard
+  EX:
+  render() {
+      // strings don't have to be wrapped with {},
+      // but it's better to get used to wrapping everything
+      return (
+          <Movie
+              /* On passe un tableau */
+              actors={[
+                  ...
+              ]}
+              /* On passe un objet */
+              details={{
+                  director: "Director name",
+                  ...
+              }}
+              /* On passe un nombre */
+              duration={120}
+              /* On passe un booléen */
+              released={true}
+              /* On passe une string */
+              title={"Movie title"}
+              /* On passe une variable */
+              budget={budget}
+          />
+      )
+  }
+
+2. Passage de props booléen
+  EX:
+  render() {
+      // No need for "released={true}"!
+      return (
+          <Movie
+              released
+          />
+      )
+  }
+
+  EX:
+  render() {
+      // On ne passe rien du tout
+      // This will work the same way as if you passed "released={false}"!
+      return (
+          <Movie />
+      )
+  }
+
+  render() {
+      // You can directly calculate the value of a prop when passing it
+      return (
+          <Movie
+              released={value1===value2}
+          />
+      )
+  }
+
+  EX:
+  isFormValid() {
+      // Various checks, whether every form field is of correct format
+  }
+  render() {
+      // If the expression is too long, move it above the return statement or even to a separate function.
+      return (
+          <Form
+              disabled={!this.isFormValid()}
+              fields={this.state.fields}
+          />
+      )
+  }
+
+3. Passer une fonction
+  EX:
+  // Utiliser des arrow functions
+  handleChange = (event) => {
+      // do something here
+  }
+  render() {
+      return (
+          <div>
+              <input
+                  onChange={this.handleChange}
+              />
+          </div>
+      )
+  }
+
+  EX:
+  // Si on doit recevoir des arguments en plus de l'event
+  handleChange = (parameter1, parameter2) => (event) => {
+      // do something here
+  }
+  render() {
+      return (
+          <div>
+              <input
+                  onChange={this.handleChange(parameter1, parameter2)}
+              />
+          </div>
+      )
+  }
+
+4. Passer des props avec le spread operator
+  EX:
+  const movie = {
+      title: "Inception",
+      releaseDate: "16.07.2010",
+      genre: [
+          "Action", "Adventure", "Sci-Fi",
+      ],
+  };
+
+  // Sans le spread operator
+  render() {
+      return (
+          <Movie
+              title={movie.title}
+              releaseDate={movie.releaseDate}
+              genre={movie.genre}
+          />
+      );
+  }
+
+  // Avec le spread operator
+  render() {
+      return (
+          <Movie {...movie} />
+      );
+  }
