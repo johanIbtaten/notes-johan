@@ -1,0 +1,6 @@
+- Collapse all expanded sidebar folders
+
+Racourcis clavier
+-------------------------------
+- Collapse all expanded sidebar folders
+Alt + Left Click

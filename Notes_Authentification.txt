@@ -1,5 +1,7 @@
 - Sécurisez l’accès à une API avec OAuth2
 - Authentification d’API via JWT et les Cookies
+- Comprendre JWT
+- Sécuriser un endpoint avec express et node.js
 
 Sécurisez l’accès à une API avec OAuth2
 -------------------------------
@@ -48,3 +50,23 @@ L’ID Token est sous la forme JWT et contient des claims qui sont des informati
 Authentification d’API via JWT et les Cookies
 -------------------------------
 - Voir https://website.simplx.fr/blog/2016/09/27/authentification-api-via-jwt-et-cookies/
+
+Comprendre JWT
+-------------------------------
+- Voir (Grafikart - Découverte du JWT) https://www.youtube.com/watch?v=S-xBAo47W58 
+
+- Voir (Pensez Sécurité Web et Mobile - JSON Web Token) https://www.youtube.com/watch?v=T68gC3USjIo
+
+- voir https://aws.amazon.com/fr/premiumsupport/knowledge-center/decode-verify-cognito-json-token/
+
+- Voir (What Is JWT and Why Should You Use JWT) https://www.youtube.com/watch?v=7Q17ubqLfaM
+
+
+Cryptographie Asymétrique
+-------------------------------
+- Voir (Cryptographie Asymétrique) https://www.youtube.com/watch?v=MuNyEoU5tSo
+
+
+Sécuriser un endpoint avec express et node.js
+-------------------------------
+- Voir (Node.js and Express Tutorial: Building and Securing RESTful APIs) https://auth0.com/blog/node-js-and-express-tutorial-building-and-securing-restful-apis/
