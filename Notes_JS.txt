@@ -15,7 +15,7 @@
     Littéraux de gabarits (template strings en anglais)
     Les différents types de fonctions
     Les expressions de fonctions
-    Les fonctions flechées (arrow function en anglais)
+    Les fonctions fléchées (arrow function en anglais)
     IIFE (Expression de fonction invoquée immédiatement)
     L'instruction Return
     Différence entre argument et paramètre
@@ -1178,7 +1178,7 @@ Les expressions de fonctions
     // coucou monde
 
 
-Les fonctions flechées (arrow function en anglais)
+Les fonctions fléchées (arrow function en anglais)
 -------------------------------
     // Avant ES6
     const add = function(x, y) {

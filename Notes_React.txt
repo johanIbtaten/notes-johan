@@ -24,6 +24,7 @@ Gérer les erreurs dans les gestionnaires d’événements
 Différences entre SSR (Server-Side Rendering) et CSR (Client-Side Rendering)
 Rendu d'un array d'éléments HTML
 Passer des props à un composant
+Props de rendu
 
 
 
@@ -1764,3 +1765,105 @@ Passer des props à un composant
           <Movie {...movie} />
       );
   }
+
+
+Props de rendu
+-------------------------------
+1. Un composant avec une prop de rendu prend une fonction qui renvoie un élément React 
+et l’appelle au lieu d’implémenter sa propre logique de rendu.
+
+  EX:
+  <DataProvider render={data => (
+    <h1>Bonjour {data.target}</h1>
+  )}/>
+
+2. Une prop de rendu est une prop de type fonction qu’un composant utilise pour savoir quoi afficher.
+Il suffit d’afficher un <Composant> avec une prop render qui lui dit quoi afficher avec les données qu'il possède.
+
+  EX:
+  // On affiche ce composant MouseTracker sur la page d'accueil par exemple
+  class MouseTracker extends React.Component {
+    render() {
+      return (
+        <div>
+          <h1>Déplacez votre souris sur l’écran !</h1>
+          {/*
+          Ici le composant Mouse utilise la props de rendu pour passer au composant Cat qu'il va afficher
+          la valeur de son attribut mousePosition qui est un objet de structure {x: positionCurseurEnX, y: positionCurseurEnY}
+          Le composant Cat récupère l'objet mousePosition à partir de l'argument de la fonction passée à la props render
+          et le passe ensuite dans une props de composant mousePosition pour pouvoir y accéder dans son code.
+          */}
+          <Mouse render={mousePosition => (
+            <Cat mousePosition={mousePosition} />
+          )}/>
+        </div>
+      );
+    }
+  }
+
+  class Mouse extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleMouseMove = this.handleMouseMove.bind(this);
+      this.state = { x: 0, y: 0 };
+    }
+
+    handleMouseMove(event) {
+      this.setState({
+        x: event.clientX,
+        y: event.clientY
+      });
+    }
+
+    render() {
+      return (
+        <div style={{ height: '100%' }} onMouseMove={this.handleMouseMove}>
+
+          {/*
+            Au lieu de fournir une représentation statique de ce qu’affiche <Mouse>,
+            utilisez la prop `render` pour déterminer dynamiquement quoi afficher.
+          */}
+          {/*
+            Dès que la position du curseur de la souris bouge, on met à jour le state
+            avec les positions x et y
+            this.props.render(this.state) permet de passer un objet avec plein d'attributs qui
+            pourront être utilisés par le composant ou le JSX qui seront appelés par la props
+            render de Mouse
+          */}
+          {this.props.render(this.state)}
+        </div>
+      );
+    }
+  }
+
+  class Cat extends React.Component {
+    render() {
+
+      // On récupère la props mousePosition fourni par la props de rendu du composant Mouse
+      const mousePosition = this.props.mousePosition;
+      return (
+        <img src="/cat.jpg" style={{ position: 'absolute', left: mousePosition.x, top: mousePosition.y }} />
+      );
+    }
+  }  
+
+3. N’importe quelle props utilisée par un composant pour savoir quoi renvoyer est techniquement une « prop de rendu ».
+C'est le cas de la props children.
+
+  EX:
+  <Mouse children={mouse => (
+    <p>La position de la souris est {mouse.x}, {mouse.y}</p>
+  )}/>
+
+  // La propriété children n’a en fait pas besoin d’être nommée dans la liste des « attributs » de votre élément JSX. 
+  // Au lieu de ça, vous pouvez l’utiliser directement dans l’élément !
+
+  <Mouse>
+    {mouse => (
+      <p>La position de la souris est {mouse.x}, {mouse.y}</p>
+    )}
+  </Mouse>
+
+
+
+  

@@ -11,9 +11,10 @@ components\form\PortInput.js
 
 components\portfolios\PortfolioCreateForm.js
 
-
 helpers\utils.js
 
+server\controllers\portfolio.js
+server\routes\portfolio.js
 server\services\auth.js
 server\index.js
 
@@ -23,6 +24,8 @@ pages\_app.js
 pages\index.js
 pages\secret.js
 pages\portfolioNew.js
+pages\portfolios.js
+
 
 
 
