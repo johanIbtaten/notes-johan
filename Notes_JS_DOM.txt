@@ -1,12 +1,13 @@
-    Le DOM
-    Les interfaces et les objets
-    Hiérarchie simplifiée des interfaces DOM
-    Types de données importants
-    Récupérer un noeud (un élément) du DOM
-    Local storage et Session storage
-    preventDefault
-    stopPropagation
-    Passer une référence à un gestionnaire d'évènement
+Le DOM
+Les interfaces et les objets
+Hiérarchie simplifiée des interfaces DOM
+Types de données importants
+Récupérer un noeud (un élément) du DOM
+Local storage et Session storage
+preventDefault
+stopPropagation
+Passer une référence à un gestionnaire d'évènement
+La propagation des évènements
 
 
 Le DOM
@@ -289,7 +290,8 @@ preventDefault
 
 stopPropagation
 -------------------------------
-1. Cette méthode permet d'arrêter la propagation de l'événement dans l'arbre DOM après le nœud sur lequel il se trouve.
+1. Cette méthode permet d'arrêter la propagation de l'événement dans l'arbre DOM après le nœud sur lequel il se trouve. Les parents de ce noeud ne
+reçoivent pas l'événement.
 
   EX:
   document.getElementById("test").addEventListener("click", function( event ) {
@@ -314,4 +316,64 @@ Passer une référence à un gestionnaire d'évènement
   // On passe la référence de la méthode updateTitle au gestionnaire
   // Cette fois le click sur le bouton appelle bien la méthode
   <button onClick={this.updateTitle}>Change title</button>
+
+
+La propagation des évènements
+-------------------------------
+1. Les phases de capture (Capture phase) et de bouillonnement (Bubbling phase).
+
+Lorsqu’un évènement se déclenche, celui-ci va en fait naviguer à travers le DOM et passer à travers 
+les différents gestionnaires d’évènement disposés dans le document. On dit également que l’évènement se « propage » dans le DOM.
+
+Cette propagation va se faire selon différentes phases qu’on appelle phase de capture et phase de bouillonnement.
+
+Ici, vous devez bien comprendre qu’un évènement (représenté en JavaScript par un objet) va toujours 
+suivre le même chemin en JavaScript : il va toujours se propager en partant de l’ancêtre le plus lointain par rapport à la cible de l’évènement jusqu’à la cible de l’évènement puis faire le chemin inverse.
+
+Par exemple, lorsqu’un utilisateur clique sur le paragraphe de notre exemple précédent, 
+ce paragraphe est la cible de l’évènement.
+
+L’évènement click va se propager en partant de l’ancêtre le plus lointain du paragraphe, 
+c’est-à-dire en partant de l’élément html puis en traversant les ancêtres de 
+l’élément p un à un (body puis div) jusqu’à arriver à cet élément p.
+
+Une fois arrivé à l’élément p, l’objet évènement va faire le chemin inverse et remonter dans 
+l’arborescence du DOM de cet élément p jusqu’à l’ancêtre le plus lointain, c’est-à-dire 
+traverser l’élément div, puis l’élément body, puis finalement l’élément html.
+
+Cette première phase de descente dans l’arbre du DOM est ce qu’on appelle la phase de 
+capture. La deuxième phase de remontée est appelée phase de bouillonnement.
+
+Ici, une chose devrait vous interpeller : si la phase de capture se passe avant la 
+phase de bouillonnement, l’évènement devrait atteindre le gestionnaire d’évènement 
+du div avant celui du paragraphe et donc celui-ci devrait se déclencher en premier 
+alors pourquoi est-ce le contraire qui s’est passé dans l’exemple précédent ?
+
+Cela est dû au fait que les gestionnaires d’évènements sont par défaut configurés 
+pour ne s’exécuter (ou pour ne « répondre ») que dans la phase de bouillonnement et pour ignorer la phase de capture.
+
+Vous pourriez alors vous poser la question suivante : pourquoi avoir implémenté 
+deux phases différentes si tous les évènements utilisent par défaut la phase de bouillonnement ?
+
+Comme souvent, la réponse est la suivante : les raisons sont historiques. En effet, 
+vous devez bien comprendre que chaque langage de programmation porte avec lui un bagage historique. 
+Ce bagage historique provient de deux grands facteurs : des choix faits précédemment 
+dans la structure du langage et sur lesquels les créateurs sont revenus aujourd’hui 
+(le mot clef var abandonné au profit de let par exemple) et la résolution des anciens 
+problèmes de compatibilité entre les navigateurs (en effet, le temps n’est pas si loin 
+où chaque navigateur majeur implémentait une même fonctionnalité différemment.
+
+Dans le cas des phases de capture et de bouillonnement, on doit cela au fait qu’à l’époque 
+certains navigateurs utilisaient la phase de capture et d’autres utilisaient la phase de bouillonnement. 
+Quand le W3C a décidé d’essayer de normaliser le comportement et de parvenir à un consensus, 
+ils en sont arrivés à ce système qui inclue les deux.
+
+2. Choisir la phase du gestionnaire d’évènement.
+
+Pour choisir dans quelle phase un gestionnaire d’évènement doit se déclencher, 
+nous allons pouvoir passer un troisième argument booléen à la méthode addEventListener().
+
+Par défaut, la valeur de cet argument est false ce qui indique que le gestionnaire 
+d’évènement doit ignorer la phase de capture. Pour lui demander de réagir à la phase de capture, 
+on va donc devoir lui passer la valeur true.
     

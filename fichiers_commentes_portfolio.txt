@@ -9,6 +9,8 @@ components\hoc\withAuth.js
 components\form\PortDate.js
 components\form\PortInput.js
 
+components\portfolios\PortfolioCard.js
+components\portfolios\PortfolioCardDetail.js
 components\portfolios\PortfolioCreateForm.js
 
 helpers\utils.js
@@ -23,8 +25,12 @@ services\auth0.js
 pages\_app.js
 pages\index.js
 pages\secret.js
-pages\portfolioNew.js
 pages\portfolios.js
+pages\portfolioNew.js
+pages\portfolioEdit.js
+
+styles\_index.scss
+
 
 
 
