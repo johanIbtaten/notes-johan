@@ -1,6 +1,9 @@
-- @font-face
+- @font-face Propriété
+- object-fit Propriété
+- object-position Propriété
+- Superposer deux div avec flexbox
 
-@font-face
+@font-face Propriété
 -------------------------------
 - La règle @font-face permet de définir les polices d'écriture à utiliser 
 pour afficher le texte de pages web. Cette police peut être chargée depuis 
@@ -85,3 +88,121 @@ EX:
        url(MgOpenModernaBold.ttf);
   font-weight: bold;
 }
+
+
+object-fit Propriété
+-------------------------------
+1. La propriété CSS object-fit définit la façon dont le contenu d'un élément remplacé (<img> ou <video> par exemple) 
+doit s'adapter à son conteneur en utilisant sa largeur et sa hauteur.
+
+2. Selon la valeur utilisée pour object-fit, l'élément peut être rogné, mis à l'échelle ou étiré, 
+afin de remplir la boîte qui le contient.
+
+/* Valeurs avec un mot-clé */
+object-fit: fill;
+object-fit: contain;
+object-fit: cover;
+object-fit: none;
+object-fit: scale-down;
+
+/* Valeurs globales */
+object-fit: inherit;
+object-fit: initial;
+object-fit: unset;
+
+Valeurs : 
+  [contain]
+  Le contenu remplacé est dimensionné pour maintenir ses proportions tout en étant ajusté à la boîte de contenu : 
+  sa taille réelle est résolue en utilisant la largeur et la hauteur de l'élément comme contraintes de contenant.
+
+  [cover]
+  Le contenu remplacé est dimensionné pour maintenir son ratio d'affichage tout en remplissant toute la boîte de contenu. 
+  La taille réelle est calculée pour couvrir la zone décrite par la hauteur et la largeur de l'élément. 
+  Si les ratios de l'objet et de la boîte ne correspondent pas, le contenu remplacé sera rogné.
+
+  [fill]
+  Le contenu remplacé est dimensionné pour remplir la boîte de contenu. La taille réelle de l'objet est déterminée 
+  grâce à la hauteur et à la largeur de l'élément. Il est donc étiré afin de remplir la boîte.
+
+  [none]
+  Le contenu remplacé n'est pas redimensionné à l'intérieur de l'élément.
+
+  [scale-down]
+  Le contenu est dimensionné comme si none ou contain étaient spécifiés, 
+  on prend celui qui aboutirait à une taille réelle plus petite.
+
+3. Il est possible de modifier l'alignement du contenu de l'élément remplacé 
+au sein de la boîte de l'élément grâce à la propriété object-position.
+
+
+object-position Propriété
+-------------------------------
+1. La propriété object-position détermine l'alignement d'un élément remplacé au sein de sa boîte. 
+Les zones de la boîtes qui ne sont pas recouvertes par le contenu de l'élément remplacé montreront l'arrière-plan de l'élément.
+
+/* Valeurs de positionnement */
+/* Type <position>           */
+object-position: center top;
+object-position: 100px 50px;
+
+/* Valeurs globales */
+object-position: inherit;
+object-position: initial;
+object-position: unset;
+
+Valeurs : 
+  [<position>]
+  Une valeur de type <position>, c'est-à-dire une à quatre valeurs permettant de définir une position 
+  en deux dimensions par rapport aux limites de la boîte dans laquelle est placé l'élément. 
+  On peut donner des décalages absolus ou relatifs. On notera que la position peut être définie en dehors de la boîte de l'élément.
+
+  EX:
+  object-position: 50% 50%;
+  object-position: right top;
+  object-position: left bottom;
+  object-position: 250px 125px;
+
+
+Superposer deux div avec flexbox
+-------------------------------
+  EX :
+  /* Every rule not marked by "required" is optional and used only to decorate the example */
+  .block {
+    margin: 10px 50px;
+    display: flex; /* required */
+    flex-flow: row nowrap; /* required */
+  }
+  .block .background,
+  .block .foreground {
+    box-sizing: border-box; /* required */
+    width: 100%; /* required */
+    flex: none; /* required */
+  }
+  .block .background {
+    background: #9ff;
+    color: #fff;
+    padding: 15px;
+    font-size: 30px;
+  }
+  .block .foreground {
+    padding: 15px;
+    border: solid 1px;
+    margin-left: -100%; /* required */
+  }
+  .block .foreground .outside {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+  }
+
+  <div class="block">
+    <div class="background">
+        Background
+    </div>
+    <div class="foreground">
+        <div>
+            <div class="outside">Outside</div> <!-- The "outside" div is also optional -->
+            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio incidunt perspiciatis sapiente aspernatur repellat delectus atque quae optio nam? Pariatur explicabo laboriosam dolores temporibus molestiae error ipsa sunt molestias doloremque odio nemo iure similique quae exercitationem, adipisci, ullam dicta esse numquam beatae qui velit asperiores. Dolore, quo illum necessitatibus tempora earum nihil cumque corporis aut error eius voluptatibus quia, pariatur.</div>
+        </div>
+    </div>
+  </div>

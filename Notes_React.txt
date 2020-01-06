@@ -25,6 +25,9 @@ Différences entre SSR (Server-Side Rendering) et CSR (Client-Side Rendering)
 Rendu d'un array d'éléments HTML
 Passer des props à un composant
 Props de rendu
+React.Children.only(children) Méthode
+cloneElement() Méthode
+
 
 
 
@@ -1865,5 +1868,75 @@ C'est le cas de la props children.
   </Mouse>
 
 
+React.Children.only(children) Méthode 
+-------------------------------
+1. La méthode Children.only vérifie que children n’a qu’un seul enfant (un élément React) et le renvoie. 
+Si ce n’est pas le cas elle lèvera une erreur.
+
+  EX:
+  import React, { Children } from 'react';
+
+  const child = Children.only(children);
+
+
+cloneElement() Méthode
+-------------------------------
+1. The React.cloneElement() function returns a copy of a specified element. 
+Additional props and children can be passed on in the function. 
+You would use this function when a parent component wants to add or modify the prop(s) of its children.
+
+  EX:
+  import React, { Children } from 'react';
+  import { Link } from '../routes';
+
+  const ActiveLink = ({children, ...props}) => {
+
+    const child = Children.only(children);
+    let className = child.props.className || "";
+
+    return <Link {...props}>{React.cloneElement(child, {className})}</Link>;
+  }
+  export default ActiveLink;
+
+  EX:
+  import React from 'react';
+  export default class App extends React.Component {
+    // rendering the parent and child component
+    render() {
+      return (
+        <ParentComp>
+          <MyButton/>
+          <br></br>
+          <MyButton/>
+        </ParentComp>
+      )
+    }
+  }
+  // The parent component
+  class ParentComp extends React.Component {
+    render() {
+      // The new prop to the added.
+      let newProp = 'red';
+        // Looping over the parent's entire children,
+        // cloning each child, adding a new prop.
+      return (
+        <div>
+          {React.Children.map(this.props.children,
+            child => {
+              return React.cloneElement(child,
+              {newProp}, null);
+          })}
+        </div>
+      )
+    }
+  }
+  // The child component
+  class MyButton extends React.Component {
+    render() {
+      return <button style =
+      {{ color: this.props.newProp }}>
+      Hello World!</button>
+    }
+  }
 
   

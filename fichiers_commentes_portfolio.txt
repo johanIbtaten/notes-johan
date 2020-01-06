@@ -13,6 +13,8 @@ components\portfolios\PortfolioCard.js
 components\portfolios\PortfolioCardDetail.js
 components\portfolios\PortfolioCreateForm.js
 
+components\ActiveLink.js
+
 helpers\utils.js
 
 server\controllers\portfolio.js

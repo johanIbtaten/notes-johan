@@ -8,6 +8,7 @@ preventDefault
 stopPropagation
 Passer une référence à un gestionnaire d'évènement
 La propagation des évènements
+window.setInterval Fonction
 
 
 Le DOM
@@ -376,4 +377,68 @@ nous allons pouvoir passer un troisième argument booléen à la méthode addEve
 Par défaut, la valeur de cet argument est false ce qui indique que le gestionnaire 
 d’évènement doit ignorer la phase de capture. Pour lui demander de réagir à la phase de capture, 
 on va donc devoir lui passer la valeur true.
+
+
+window.setInterval Fonction
+-------------------------------
+1. Appelle une fonction de manière répétée, avec un certain délai fixé entre chaque appel.
+
+intervalID = window.setInterval(fonction,delai[,param1,param2, ...]);
+intervalID = window.setInterval(code,delai);
+
+  [intervalID] 
+  est un ID unique d'intervalle qui peut être passé à window.clearInterval().
+
+  [fonction] 
+  est la fonction qui doit être appelée de manière répétée.
+
+  [code] 
+  dans la syntaxe alternative, est une chaîne représentant le code à exécuter de manière répétée.
+
+  [delai] 
+  est le nombre de millisecondes (millièmes de seconde) que setInterval() doit attendre avant chaque appel de fonction. 
+  Si delai est inférieur à 10, la valeur utilisée est ramenée à 10.
+
+  Notez que le passage de paramètres supplémentaires à la fonction dans la première syntaxe ne fonctionne pas dans Internet Explorer.
     
+EX:
+var intervalID = window.setInterval(animation, 500);
+
+EX:
+// L'exemple qui suit continuera à appeler la fonction flashtext() toutes les secondes, 
+// jusqu'à ce que intervalID soit réinitialisé en cliquant sur le bouton Stop.
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>setInterval/clearInterval example</title>
+
+    <script>
+      var intervalID;
+
+      function changeCouleur() {
+        intervalID = setInterval(flashText, 1000);
+      }
+
+      function flashText() {
+        var elem = document.getElementById("ma_boite");
+
+        if (elem.style.color == 'red') {
+          elem.style.color = 'blue';
+        } else {
+          elem.style.color = 'red';
+        }
+      }
+
+      function stopTextColor() {
+        clearInterval(intervalID);
+      }
+    </script>
+  </head>
+
+  <body onload="changeCouleur();">
+    <div id="ma_boite">
+      <p>Salut tout le monde</p>
+    </div>
+    <button onclick="stopTextColor();">Stop</button>
+  </body>
+</html>
