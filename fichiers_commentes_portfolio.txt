@@ -33,6 +33,8 @@ pages\portfolioEdit.js
 
 styles\_index.scss
 
+fontawesome.js
+
 
 
 

@@ -5,6 +5,7 @@
 - object-fit Propriété
 - object-position Propriété
 - Superposer deux div avec flexbox
+- primary, secondary, tertiary, ...
 
 grid css
 -------------------------------
@@ -338,3 +339,17 @@ Superposer deux div avec flexbox
         </div>
     </div>
   </div>
+
+
+primary, secondary, tertiary, ...
+-------------------------------
+$primary 
+$secondary
+$tertiary
+$quaternary
+$quinary
+$senary
+$septenary
+$octonary
+$nonary
+$denary
