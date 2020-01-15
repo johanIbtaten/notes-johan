@@ -45,6 +45,7 @@
     Méthodes sur les chaînes de caratères
         INCLUDES()
         STARTSWITH()
+        SPLIT()
     Méthodes sur JSON
         PARSE()
     Rest parameters
@@ -2910,6 +2911,7 @@ autre et renvoie true ou false selon le cas de figure. includes() est sensible �
     Valeur de retour :
         true si la chaîne de caractères contient la sous-chaîne recherchée, false sinon.
 
+
     Ex1:
     // includes() est sensible à la casse
     'Baleine bleue'.includes('baleine'); // false
@@ -2957,6 +2959,167 @@ commence par la chaine de caractères fournie en argument.
     console.log(str.startsWith("pas être"));     // false
     console.log(str.startsWith("pas être", 12)); // true
 
+SPLIT()
+// str.split([séparateur[, qtéMax]])
+1. La méthode split() permet de diviser une chaîne de caractères à partir 
+d'un séparateur pour fournir un tableau de sous-chaînes.
+
+2. Lorsqu'il est trouvé, le séparateur est supprimé de la chaîne et les 
+sous-chaînes sont retournées dans un tableau. Si le séparateur est omis, 
+le tableau contiendra un élément correspondant à la chaîne courante. 
+Si le séparateur est une chaîne vide, la chaîne courante est convertie en 
+un tableau composé des caractères de la chaîne. Si le séparateur est 
+uniquement présent au début et/ou à la fin de la chaîne, le tableau 
+contiendra une chaîne vide comme premier et/ou dernier élément (si on 
+utilise cette méthode sur une chaîne qui ne contient que le séparateur, 
+le tableau obtenu aura deux éléments qui seront chacun une chaîne vide).
+
+Si le séparateur est une expression rationnelle qui contient des parenthèses 
+groupantes, à chaque fois que le séparateur correspond, les résultats 
+(incluant tout résultat indéfini) des groupes iront dans le tableau retourné. 
+Cependant, tous les navigateurs ne supportent pas cette possibilité.
+
+La méthode split() ne modifie pas le tableau courant, elle renvoie un nouveau tableau.
+
+Lorsque le séparateur fourni est un tableau, le tableau est automatiquement
+ converti en une chaîne de caractères et c'est cette chaîne qui est utilisée comme séparateur.
+
+3. Quand la chaîne est vide, split() retourne un tableau contenant une chaîne vide, 
+plutôt qu'un tableau vide. Si la chaîne et le séparateur sont tous les deux des chaînes vides, 
+un tableau vide sera renvoyé.
+
+    [séparateur] (Facultatif)
+        Paramètre optionnel qui définit le ou les caractères à utiliser
+        pour scinder la chaîne. Le séparateur est considéré comme une
+        chaîne ou une expression rationnelle. Si le séparateur est omis
+        ou qu'il n'apparaît pas dans la chaîne, le tableau retourné contiendra
+        un unique élément contenant la chaîne entière. Si le séparateur est 
+        une chaîne vide, la chaîne str sera convertie en un tableau dont 
+        les éléments seront les caractères de la chaîne. Si le séparateur 
+        contient un ou plusieurs caractères, la chaîne de caractères 
+        entière doit être trouvée pour effectuer une césure.
+
+    [qtéMax] (Facultatif)
+        Paramètre optionnel. Un entier définissant la limite sur le nombre 
+        de sous-chaînes à retourner. La méthode split scindera toujours 
+        la chaîne à partir du séparateur, mais le tableau retourné 
+        contiendra au plus qtéMax sous-chaînes.
+       
+    Valeur de retour :
+        Un tableau (Array) qui contient les fragments de la chaîne appelante, 
+        découpée en fonction du séparateur indiqué.
+
+    /////////////////////////// EX:
+    const str = 'The quick brown fox jumps over the lazy dog.';
+
+    const words = str.split(' ');
+    console.log(words[3]);
+    // expected output: "fox"
+
+    const chars = str.split('');
+    console.log(chars[8]);
+    // expected output: "k"
+
+    const strCopy = str.split();
+    console.log(strCopy);
+    // expected output: Array ["The quick brown fox jumps over the lazy dog."]
+
+    /////////////////////////// EX:
+    function splitString(stringToSplit, separator) {
+      var arrayOfStrings = stringToSplit.split(separator);
+
+      console.log('La chaine d\'origine est : "' + stringToSplit + '"');
+      console.log('Le délimiteur est : "' + separator + '"');
+      console.log("Le tableau comporte " + arrayOfStrings.length + " elements : ");
+
+      for (var i=0; i < arrayOfStrings.length; i++)
+        print(arrayOfStrings[i] + " / ");
+    }
+
+    var tempestString = "Oh brave new world that has such people in it.";
+    var monthString = "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec";
+
+    var espace = " ";
+    var virgule = ",";
+
+    splitString(tempestString, espace);
+    splitString(tempestString);
+    splitString(monthString, virgule);
+
+    // Sortie console
+    La chaine d'origine est : "Oh brave new world that has such people in it."
+    Le délimiteur est : " "
+    Le tableau comporte 10 elements : Oh / brave / new / world / that / has / such / people / in / it. /
+
+    La chaine d'origine est : "Oh brave new world that has such people in it."
+    Le délimiteur est : "undefined"
+    Le tableau comporte 1 elements : Oh brave new world that has such people in it. /
+
+    La chaine d'origine est : "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
+    Le délimiteur est : ","
+    Le tableau comporte 12 elements : Jan / Feb / Mar / Apr / May / Jun / Jul / Aug / Sep / Oct / Nov / Dec /
+
+    /////////////////////////// EX:
+    // Supprimer les espaces d'une chaîne
+    // Dans l'exemple suivant, split recherche zéro ou plusieurs espaces suivis d'un point-virgule, 
+    // lui-même suivi par zéro ou plus espaces. Lorsque ce « motif » est trouvé, 
+    // cela supprime celui-ci de la chaîne. nameList est le tableau retourné du résultat de split.
+
+    var names = "Harry Trump ;Fred Barney; Helen Rigby ; Bill Abel ;Chris Hand ";
+
+    console.log(names);
+
+    var re = /\s*(;|$)\s*/;
+    var nameList = names.split(re);
+
+    console.log(nameList);
+
+    // Sortie console
+    Harry Trump ;Fred Barney; Helen Rigby ; Bill Abel ;Chris Hand
+    ["Harry Trump","Fred Barney","Helen Rigby","Bill Abel","Chris Hand"]
+
+
+    /////////////////////////// EX:
+    // Retourner un nombre limité de sous-chaînes
+
+    var myString = "Hello World. How are you doing?";
+    var splits = myString.split(" ", 3);
+
+    console.log(splits);
+
+    // ["Hello", "World.", "How"]
+
+    /////////////////////////// EX:
+    // Si le paramètre séparateur est une regex qui contient des parenthèses de capture, 
+    // les résultats seront retournés dans le tableau.
+
+    var myString = "Hello 1 word. Sentence number 2.";
+    var splits = myString.split(/(\d)/); /* Ce motif correspond à un chiffre et est équivalent à [0-9] */
+
+    console.log(splits);
+
+    // ["Hello ", "1", " word. Sentence number ", "2", "."]
+
+    /////////////////////////// EX:
+    // Découper une chaîne avec un tableau comme séparateur
+
+    var maChaine = "Ceci|est|un|test";
+    var morceaux = maChaine.split(['|']);
+
+    console.log(morceaux); // ["Ceci", "est", "un", "test"]
+
+    var maChaine2 = "ca,bc,a,bca,bca,bc";
+    var morceaux2 = maChaine2.split(["a", "b"]);
+
+    console.log(morceaux2); // ["c", "c,", "c", "c", "c"]
+
+    /////////////////////////// EX:
+    // Inverser une chaîne en utilisant split()
+
+    var str = 'asdfghjkl';
+    var strReverse = str.split('').reverse().join(''); // 'lkjhgfdsa'
+    // split renvoie un tableau sur lequel on peut appliquer reverse
+    // enfin on utilise join pour assembler le tout.
 
 Méthodes sur JSON
 -------------------------------

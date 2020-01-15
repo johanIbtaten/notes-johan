@@ -2,6 +2,7 @@ Browsersync watch files VSCode
 -------------------------------
 *.html|assets/css/*.css
 
+ ///////////////////////////////////////
 
 Cmder watch files
 -------------------------------
