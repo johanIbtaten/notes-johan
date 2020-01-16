@@ -1,0 +1,43 @@
+- Eclaircir ou assombrir une couleur
+
+Eclaircir ou assombrir une couleur avec lighten() et darken()
+-------------------------------
+Voir https://alistapart.com/article/mixing-color-for-the-web-with-sass/
+
+1. Pour éclaircir
+
+	EX:
+  .element {
+    color: lighten($toolbox, 20%); // Eclaircit la couleur de 20%
+  }
+
+  //ou
+
+  .element {
+    color: lighten(#000000, 80%); // Eclaircit la couleur de 20%
+  }
+
+  //ou
+
+  .element {
+    color: scale-color(#000000, $lightness: 50%); // Eclaircit la couleur de 50%
+  }
+  
+	
+2. Pour assombrir
+
+  EX:
+  .element {
+    color: darken($toolbox, 20%); // Assombrit la couleur de 20%
+  }
+
+  //ou
+
+  .element {
+    color: darken(#FFFFFF, 80%); // Assombrit la couleur de 20%
+  }
+
+  .element {
+    color: scale-color(#FFFFFF, $lightness: -50%); // Assombrit la couleur de 50%
+  }
+	  
