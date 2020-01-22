@@ -27,6 +27,8 @@ Passer des props à un composant
 Props de rendu
 React.Children.only(children) Méthode
 cloneElement() Méthode
+Différence entre un state et une variable de classe
+Affichage conditionnel
 
 
 
@@ -1939,4 +1941,168 @@ You would use this function when a parent component wants to add or modify the p
     }
   }
 
-  
+
+Différence entre un state et une variable de classe
+-------------------------------
+1. The simple answer to your question is that by using state you call the the setState() 
+which automatically calls render() automatically. Which cannot be obtained by class variables
+You use the state variables :
+- When you want to change the component when that variable is changed.
+- When you don't want to automatically call render() you use the class variables
+
+EX:
+// Avec variable de classe
+export default class Test extends Component {
+  constructor() {
+    this.active = false;
+  }
+
+  render() {
+    const active = this.props.name === 'Dan';
+    return (
+      <div>
+        {this.active ? 'Active' : 'No Active'}
+      </div>
+    );
+  }
+}
+
+// Avec state
+export default class Test extends Component {
+  constructor() {
+    this.state = { active: false };
+  }
+
+  render() {
+    if(this.props.name === 'Dan') {
+      this.setState({active: true});
+    }
+    return (
+      <div>
+        {this.active? 'Active' : 'No Active'}
+      </div>
+    );
+  }
+}
+
+
+Affichage conditionnel
+-------------------------------
+Voir https://blog.logrocket.com/conditional-rendering-in-react-c6b0e5af381e/
+Voir https://fr.reactjs.org/docs/conditional-rendering.html
+
+  EX:
+  // Avec des variables
+  render() {
+    const isLoggedIn = this.state.isLoggedIn;
+    let button;
+
+    if (isLoggedIn) {
+      button = <LogoutButton onClick={this.handleLogoutClick} />;
+    } else {
+      button = <LoginButton onClick={this.handleLoginClick} />;
+    }
+
+    return (
+      <div>
+        <Greeting isLoggedIn={isLoggedIn} />
+        {button}
+      </div>
+    );
+  }
+
+  EX:
+  // Avec l'opérateur &&
+  function Mailbox(props) {
+    const unreadMessages = props.unreadMessages;
+    return (
+      <div>
+        <h1>Bonjour !</h1>
+
+        {unreadMessages.length > 0 &&
+          <h2>
+            Vous avez {unreadMessages.length} message(s) non-lu(s).
+          </h2>
+        }
+
+      </div>
+    );
+  }
+
+  const messages = ['React', 'Re: React', 'Re:Re: React'];
+  ReactDOM.render(
+    <Mailbox unreadMessages={messages} />,
+    document.getElementById('root')
+  );
+
+EX:
+// Avec l'opérateur ternaire
+render() {
+  const isLoggedIn = this.state.isLoggedIn;
+  return (
+    <div>
+      L’utilisateur <b>{isLoggedIn ? 'est actuellement' : 'n’est pas'}</b> connecté.
+    </div>
+  );
+}
+
+// ou
+
+render() {
+  const isLoggedIn = this.state.isLoggedIn;
+  return (
+    <div>
+      {isLoggedIn ? (
+        <LogoutButton onClick={this.handleLogoutClick} />
+      ) : (
+        <LoginButton onClick={this.handleLoginClick} />
+      )}
+    </div>
+  );
+}
+
+EX:
+// Empêcher l’affichage d’un composant.
+// Pour ce faire, il suffit de renvoyer null au lieu de son affichage habituel.
+function WarningBanner(props) {
+  if (!props.warn) {
+    return null;
+  }
+
+  return (
+    <div className="warning">
+      Attention !
+    </div>
+  );
+}
+
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {showWarning: true};
+    this.handleToggleClick = this.handleToggleClick.bind(this);
+  }
+
+  handleToggleClick() {
+    this.setState(state => ({
+      showWarning: !state.showWarning
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <WarningBanner warn={this.state.showWarning} />
+        <button onClick={this.handleToggleClick}>
+          {this.state.showWarning ? 'Masquer' : 'Afficher'}
+        </button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Page />,
+  document.getElementById('root')
+);
+
