@@ -3,14 +3,15 @@
 - Formater le code
 - Multiple curseurs en colonne
 - Dupliquer une ligne vers le haut ou vers le bas
-- Emmet : Wrap With Abbrevation 
+- Emmet : Wrap With Abbrevation
+- JSDoc commentaires
 
 Racourcis clavier
 -------------------------------
 - To select all occurrences of current selection
 Ctrl + Shift + L
 
-- Annule la sélection précédente (fonctionne avec ctrl+D)
+- Annule la sélection précédente (quand on fait avec ctrl+D)
 Ctrl + U
 
 - Formater le code
@@ -31,3 +32,6 @@ Ctrl + P + Nom ou lettres qui composent le fichier à afficher
 
 - Emmet : Wrap With Abbrevation 
 Ctrl + Alt + B
+
+- JSDoc commentaires
+Quickly create JSDoc comments for functions by typing /** before the function declaration, and select the JSDoc comment snippet suggestion.

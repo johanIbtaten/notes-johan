@@ -1,4 +1,5 @@
 actions\index.js
+actions\memory.js
 
 components\layouts\BaseLayout.js
 
@@ -34,6 +35,8 @@ pages\portfolioEdit.js
 styles\_index.scss
 
 fontawesome.js
+
+
 
 
 

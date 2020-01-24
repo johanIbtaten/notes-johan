@@ -73,6 +73,8 @@
     Fonction à effet de bord (side effects)
     Debugger
     Assignation par défaut avec les opérateurs || et &&
+    JSDoc
+    HTMLElement.dataset et les attributs data-*
 
 
 Variables
@@ -6003,3 +6005,176 @@ NaN,
 0,
 la chaîne vide ("" ou '' ou ``),
 undefined
+
+
+JSDoc
+-------------------------------
+voir https://gomakethings.com/whats-the-best-way-to-document-javascript/
+voir https://jsdoc.app/
+voir https://devdocs.io/jsdoc/
+
+1. JSDoc est un langage de balisage utilisé pour documenter les codes sources Javascript. 
+En utilisant des commentaires qui contiennent des informations pour JSDoc, les développeurs 
+peuvent créer leur documentation de leurs interface de programmation (ou désigné par API en anglais) 
+du code qu'ils créent. Ensuite, ces commentaires seront traités par différents outils (tel que JSDoc pour Node.js), 
+pour produire leur documentation accessible par différents formats, tel que l'HTML ou 
+le Rich Text Format (RTF, ou littéralement « format de texte enrichi »).
+
+2. En tant que développeur vous écrivez du code qui doit être utilisé par d’autres et avoir une documentation limpide, 
+qui se lit facilement. L’outil standart en Javascript pour générer de la documentation est JSDoc.
+JSDoc permet de produire une documentation HTML avec la syntaxe de commentaire /** */
+
+
+    ////////////////////////////////////// EX:
+    /**
+     * Crée une instance de Cercle
+     * 
+     * @constructor
+     * @this {Cercle}
+     * @param {number} r Le rayon désiré du cercle.
+     */
+     
+    function Cercle(r) {
+        /** @private */ this.rayon = r;
+        /** @private */ this.circonference = 2 * Math.PI * r;
+    };
+
+    /**
+     * Crée un nouveau cercle à partir du diamètre
+     * 
+     * @param {number} d Le diamètre désiré du cercle
+     * @return {Cercle} Le nouvel objet Cercle
+     */
+
+    Cercle.aPartirDeDiametre = function (d) {
+        return new Cercle(d / 2);
+    };
+
+    /**
+     * Calcule la circonférence du Cercle.
+     * 
+     * @deprecated
+     * @this {Cercle}
+     * @return {number} La circonférence du cercle
+     */
+
+    Cercle.prototype.calculerCirconference = function() {
+        return 2 * Math.PI * this.rayon;
+    };
+
+    /**
+     * Retourne la circonférence du Cercle.
+     * 
+     * @this {Cercle}
+     * @return {number} La circonférence du Cercle.
+     */
+    Cercle.prototype.getCirconference = function() {
+        return this.circonference;
+    }
+
+    /**
+     * Crée un texte représentant le Cercle.
+     * 
+     * @override
+     * @this {Cercle}
+     * @return {string} Une représentation lisible du Cercle.
+     */
+    Cercle.prototype.toString = function() {
+        return "Un objet Cercle avec un rayon de " + this.rayon + ".";
+    };
+
+    ////////////////////////////////////// EX:
+    /**
+     * Toggle visibility of a content tab
+     * @param  {String} selector Selector for the element
+     * @param  {Node}   toggle   The element that triggered the tab
+     */
+    var toggleVisibility = function (selector, toggle) {
+
+        // If there's no selector, bail
+        if (!selector) return;
+
+        // Get the tab to show
+        var elem = document.querySelector(selector);
+        if (!elem) return;
+
+        // Show the element
+        elem.classList.add('active');
+
+        // If a toggle element was provided, add an .active class for styling
+        if (toggle) {
+            toggle.classList.add('active');
+        }
+
+        // Bring the newly visible element into focus
+        elem.focus()
+
+        // If elem.focus() didn't work, add tabindex="-1" and try again
+        // (elements that aren't focusable by default need a tabindex)
+        if (document.activeElement.matches(selector)) return;
+        elem.setAttribute('tabindex', '-1');
+        elem.focus();
+    };
+
+
+HTMLElement.dataset et les attributs data-*
+-------------------------------
+1. HTML5 permet d'associer des données directement dans un élément HTML à l'aide des attributs data-*.
+HTML5 permet d'écrire librement tout attribut débutant par data- 
+La page sera valide aux yeux du navigateur, en ayant pris la précaution d'utiliser le doctype HTML5 : <!DOCTYPE html>
+
+2. On peut ainsi personnaliser la famille d'attributs débutant par data- en y concaténant une chaine de texte, 
+à notre convenance (ici kiwi). Seules consignes : au moins un caractère et aucune majuscule. 
+Il est bien sûr autorisé de cumuler plusieurs attributs data- sur un même élément.$*
+
+    ////////////////////////////////////// EX:
+    <element data-kiwi="info_associée"> ... </element>
+
+3. L'intérêt principal est de simplifier le stockage des données dans le document directement dans un élément. 
+Par exemple, dans une galerie d'images on peut stocker : le nom de l'auteur, le lieu... dans l'image elle-même, 
+puis afficher ces informations au survol.
+
+4. Les APIs destinées à manipuler les attributs data en JavaScript font partie de la spécification HTML5. 
+La propriété dataset doit permettre d'interagir avec les données. Chaque attribut data devient lui-même 
+membre de dataset (en omettant le préfixe data-).
+
+    ////////////////////////////////////// EX:
+    <img src="mamoto.jpg" alt="Une moto rouge" id="moto"
+      data-auteur="Simon" data-lieu="Strasbourg"
+      data-materiel="EOS" data-gps="48.582967,7.74828">
+
+    <script>
+    var monelement = document.getElementById('moto');
+
+    // Lecture d'une valeur
+    var auteur = monelement.dataset.auteur;
+
+    // Modification d'une valeur
+    monelement.dataset.gps = '49.04777,7.440491';
+
+    // Suppression
+    monelement.dataset.gps = null;
+    </script>
+
+5. L'API dataset n'est pas implémentée de façon universelle mais il est aisé de concevoir 
+des alternatives en JavaScript. L'accès aux attributs, quels qu'ils soient, est déjà prévu, 
+donc il suffit de s'adresser spécifiquement à ceux débutant par data- avec les fonctions natives 
+getAttribute et setAttribute qui fonctionnent sur la majorité des navigateurs.
+
+    ////////////////////////////////////// EX:
+    <img src="mamoto.jpg" alt="Une moto rouge" id="moto"
+      data-auteur="Simon" data-lieu="Strasbourg"
+      data-materiel="EOS" data-gps="48.582967,7.74828">
+
+    <script>
+    var monelement = document.getElementById('moto');
+
+    // Lecture d'une valeur
+    var lieu = monelement.getAttribute('data-lieu');
+
+    // Modification d'une valeur
+    monelement.setAttribute('data-materiel') = 'iOS';
+
+    // Suppression
+    monelement.removeAttribute('data-materiel');
+    </script>
