@@ -5,6 +5,7 @@
 - Dupliquer une ligne vers le haut ou vers le bas
 - Emmet : Wrap With Abbrevation
 - JSDoc commentaires
+- Chercher un dossier ou un fichier dans l'arborescence d'un dossier
 
 Racourcis clavier
 -------------------------------
@@ -35,3 +36,7 @@ Ctrl + Alt + B
 
 - JSDoc commentaires
 Quickly create JSDoc comments for functions by typing /** before the function declaration, and select the JSDoc comment snippet suggestion.
+
+- Chercher un dossier ou un fichier dans l'arborescence d'un dossier
+Se placer sur le dossier et taper les lettres du fichier ou dossier que l'on cherche
+l'arborescence se placera sur le premier dossier trouvé et les lettres cherchées se mettront en surbrillance 
