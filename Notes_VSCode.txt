@@ -6,6 +6,12 @@
 - Emmet : Wrap With Abbrevation
 - JSDoc commentaires
 - Chercher un dossier ou un fichier dans l'arborescence d'un dossier
+- Increment/Decrement CSS/SCSS/LESS number values
+- Afficher la command palette
+- Chercher un fichier
+- Naviguer dans les onglets des fichiers ouverts
+- Caractères spéciaux
+- Html entities
 
 Racourcis clavier
 -------------------------------
@@ -39,4 +45,48 @@ Quickly create JSDoc comments for functions by typing /** before the function de
 
 - Chercher un dossier ou un fichier dans l'arborescence d'un dossier
 Se placer sur le dossier et taper les lettres du fichier ou dossier que l'on cherche
-l'arborescence se placera sur le premier dossier trouvé et les lettres cherchées se mettront en surbrillance 
+l'arborescence se placera sur le premier dossier trouvé et les lettres cherchées se mettront en surbrillance
+
+- Increment/Decrement CSS/SCSS/LESS number values
+Increment by 1
+Ctrl + numPad 8
+
+Decrement by 1
+Ctrl + numPad 2
+
+---------------
+Increment by 10
+Ctrl + numPad 9
+
+Decrement by 10
+Ctrl + numPad 3
+
+---------------
+Increment by 0.1
+Ctrl + numPad 7
+
+Decrement by 0.1
+Ctrl + numPad 1
+
+- Afficher la command palette
+Ctrl + Shift + P
+
+- Chercher un fichier
+Ctrl P
+
+- Naviguer dans les onglets des fichiers ouverts
+Ctrl + Tab
+
+- Caractères spéciaux
+É 
+Alt + 144
+
+À
+Alt + 183
+
+- Html entities
+Espace insécable
+&nbsp;
+
+Tiret insécable
+&#8209;

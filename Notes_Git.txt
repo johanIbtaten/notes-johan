@@ -26,6 +26,7 @@ Github
 
 Git
 =================================
+- Ecrire un bon message de commit (Conventional-changelog)
 - Lexique
 - Git Workflow
 - Initialiser un dépôt Git local
@@ -184,6 +185,112 @@ Github
 =================================
 Git
 =================================
+- Ecrire un bon message de commit (Conventional-changelog)
+	1. Il est essentiel de garder en tête que le message de commit doit répondre aux questions “Quoi ?” et “Pourquoi ?”, 
+	mais surtout pas à la question “Comment ?”. En effet, la réponse au “Comment ?” est déjà donnée par le diff du code, 
+	le spécifier dans le message n’apporte rien de plus.
+
+	2. Le Conventional-Changelog est une manière d’écrire ses commits dans les projets. 
+	Il existe plusieurs “flavours” 🍦, je vais vous détailler la version Angular qui est celle que j’utilise au jour le jour.
+
+		<type>(<scope>): <subject>
+
+		<body>
+
+		<footer>
+
+	2.1 Revert
+	If the commit reverts a previous commit, it should begin with revert: , followed by the header of the reverted commit. In the body it should say: This reverts commit <hash>., where the hash is the SHA of the commit being reverted.
+
+		EX:
+		revert: feat(pencil): add 'graphiteWidth' option
+
+		This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
+
+	3. <type> Le type permet de représenter de manière succinte le type d’action que vous avez fait sur le projet :
+
+		feat: Ajout d’une fonctionnalité
+		fix: Correction
+		perf: Amélioration des performances
+		docs: Ajout de documentation
+		style: Linting du code
+		refactor: Modification du code, mutualisation et autres modifs afin d’améliorer le projet
+		test: Ajout de tests unitaires, intégration, end-to-end
+		chore: Tâche ménagère, comme mettre à jour les dépendances, reconfigurer la CI…
+
+		On ne peut mettre qu’un seul type par commit, donc finis les commits qui contiennent une feature et un fix en même temps…
+
+	4. <scope> Ici, pas de liste imposée, juste le titre de l’élément sur lequel une modification a été faite. 
+	Nous avons tendance à définir clairement les scopes du projet à l’avance afin que tout le monde commit avec les mêmes scopes.
+
+		Pour exemple, sur une application orientée “e-commerce”, on pourrait avoir les scopes suivants :
+
+		homepage
+		search
+		my-account
+		product-details
+		order
+		admin
+		Parfois, ce scope peut être omis… car il n’y en a pas forcément ou vous avez toucher à l’application de manière globale. 
+		Dans ce cas, laissez vide 😅
+
+		Et par contre, comme pour le type, il ne peux y avoir qu’un seul scope. Donc si vous pensez avoir deux scopes… 
+		faites deux commit différents 💪
+
+	5. <subject> Le sujet doit contenir une description courte du changement effectué dans le commit.
+	La ligne de sujet doit rester courte (si possible moins de 50 caractères, pour que la sortie de git log --oneline 
+	tienne dans un terminal de 80 colonnes).
+
+		Quelques conseils pour formatter le message :
+
+		Utiliser l’impératif
+		Utiliser le présent
+		Pas de 1er lettre en majuscule
+		Pas de point ‘.’ à la fin du sujet
+
+		Lorsque vous écrivez un sujet de commit, une excellente astuce donnée par Chris Beams consiste à vérifier que 
+		le sujet du commit peut compléter la phrase “If applied, this commit will subject content here”. 
+		Ainsi, on distingue très rapidement les bons des mauvais sujets de commit, comme le montre l’exemple ci-dessous.
+
+		// Good
+		If applied, this commit will : reorganize imports into user service
+		If applied, this commit will : release version 1.3.2
+		If applied, this commit will : fix order duplication issue
+
+		// Bad
+		If applied, this commit will : new awesome feature on cart
+		If applied, this commit will : fixed order duplication issue
+		If applied, this commit will : various fixes on user cart
+
+	6. <body> En sautant une ligne, on peut commencer à écrire une description plus longue, mais cette fois on va tenter de répondre plutôt à la question “Pourquoi ?”. Cette partie peut être très importante puisqu’elle va permettre à un développeur qui revient sur ce commit longtemps après sa création de savoir pourquoi il a été introduit. Body doit décrire la motivation des changements par rapport au commit précédent.
+	
+		Les listes à puces peuvent être utilisées avec - ou * (comme en Markdown).
+		Chaque ligne du corps de message doit idéalement faire 72 caractères au maximum. Encore une fois cela permet 
+		ensuite de faciliter la lecture sur les outils type git log.
+
+		EX:
+		fix(ngClass): do not break on invalid values
+
+		Previously, when an `ngClass` expression evaluated to something that was
+		not a string, array or object (and was truthy), an error would be thrown
+		while trying to call `.split()` on a non-string value. This error was
+		not very helpful for the user to identify the root cause of the problem.
+
+		This commit fixes it by ensuring such values are converted to string.
+
+		Fixes #16697
+
+		Closes #16699
+
+	7. <footer> Cette dernière partie permet de placer les références vers toutes les issues, User stories & co. 
+	On s’en sert généralement pour lier (Linked to) ou clôturer (Closes) les issues directement depuis git. Autre élément qui peut être ajouté dans ce footer est la notion de Breaking Change. Il suffit d’ajouter BREAKING CHANGE: suivi du détail de ce fameux breaking change.
+
+
+
+
+
+
+
 - Lexique
 	Repository or Repo or Git repository (Dépôt) : 
 		c'est un entrepôt virtuel de votre projet. Il vous permet d'enregistrer 
