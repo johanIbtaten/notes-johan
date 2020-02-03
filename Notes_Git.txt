@@ -202,7 +202,7 @@ Git
 	2.1 Revert
 	If the commit reverts a previous commit, it should begin with revert: , followed by the header of the reverted commit. In the body it should say: This reverts commit <hash>., where the hash is the SHA of the commit being reverted.
 
-		EX:
+		////////////////////////////////////// EX:
 		revert: feat(pencil): add 'graphiteWidth' option
 
 		This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
@@ -268,7 +268,7 @@ Git
 		Chaque ligne du corps de message doit idéalement faire 72 caractères au maximum. Encore une fois cela permet 
 		ensuite de faciliter la lecture sur les outils type git log.
 
-		EX:
+		////////////////////////////////////// EX:
 		fix(ngClass): do not break on invalid values
 
 		Previously, when an `ngClass` expression evaluated to something that was
@@ -284,11 +284,6 @@ Git
 
 	7. <footer> Cette dernière partie permet de placer les références vers toutes les issues, User stories & co. 
 	On s’en sert généralement pour lier (Linked to) ou clôturer (Closes) les issues directement depuis git. Autre élément qui peut être ajouté dans ce footer est la notion de Breaking Change. Il suffit d’ajouter BREAKING CHANGE: suivi du détail de ce fameux breaking change.
-
-
-
-
-
 
 
 - Lexique
