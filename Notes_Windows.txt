@@ -1,0 +1,14 @@
+- Copier la liste des noms de fichier contenus dans un dossier
+- Désactiver le regroupement par dates dans l'explorateur
+
+Copier la liste des noms de fichier contenus dans un dossier
+-------------------------------
+// Testé Windows 10
+Shift + Right Click
+Sélectionner 'Ouvrir la fenêtre PowerShell ici'
+dir > dirlist.txt (dans la console)
+
+
+Désactiver le regroupement par dates dans l'explorateur
+-------------------------------
+Right Click dans le dossier, Regrouper par > aucun
