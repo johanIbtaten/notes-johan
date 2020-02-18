@@ -15,4 +15,4 @@ Uncaught TypeError: Cannot read property of undefined In JavaScript
 MongoDB errors
 -------------------------------
 Impossible de se connecter à la bdd
-- Penser à désactiver un proxy (type PBlock ou autre)
+- Penser à désactiver un proxy (type PBlock ou autre) et redémarrer le serveur

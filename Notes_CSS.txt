@@ -1,20 +1,19 @@
-- grid css
+- Grid css
 	- auto-fill, auto-fit, minmax et repeat
 	- grid-column et grid-row
-  - Grid breakpoints
+- Flex css
+- Boostrap 4 grid system breakpoints
 - @font-face Propriété
 - object-fit Propriété
 - object-position Propriété
 - Superposer deux div avec flexbox
 - primary, secondary, tertiary, ...
-
-// Grid breakpoints
-//
-// Define the minimum dimensions at which your layout will change,
-// adapting to different screen sizes, for use in media queries.
+- Viewport
+- Les tailles relatives vw, vh, vmin, vmax
+- Animations CSS
 
 
-grid css
+Grid css
 -------------------------------
 Voir https://developer.mozilla.org/fr/docs/Apprendre/CSS/CSS_layout/Grids
 
@@ -142,7 +141,37 @@ Voir https://developer.mozilla.org/fr/docs/Apprendre/CSS/CSS_layout/Grids
     <footer>Contactez moi@monsite.com</footer>
   </div>
 
-3. Grid breakpoints
+
+Flex css
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Flexible_Box_Layout
+
+1. Centrer des éléments dans un conteneur
+  ////////////////////////////////// EX:
+  /* Centrer horizontalement et verticalement les éléments dans le conteneur */
+  /* Le CSS */
+  .box {
+    display: flex;
+    align-items: center; /* Centre verticalement dans le conteneur .box */
+    justify-content: center; /* Centre horizontalement dans le conteneur .box */
+  }
+
+  .box div {
+    width: 100px;
+    height: 100px;
+  }
+
+  /* Le HTML */
+  <div class="box">
+    <div></div>
+  </div>      
+
+
+
+Boostrap 4 grid system breakpoints
+-------------------------------
+1.Define the minimum dimensions at which your layout will change,
+adapting to different screen sizes, for use in media queries.
 
 // xs <576px
 // sm ≥576px
@@ -376,3 +405,136 @@ $septenary
 $octonary
 $nonary
 $denary
+
+
+Viewport
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/CSS/Concepts_viewport
+
+1. Une zone d'affichage (aussi appelée viewport en anglais) représente la zone actuellement visible sur l'appareil. 
+Pour un navigateur web, la zone d'affichage correspond généralement à la fenêtre du navigateur sans les 
+éléments d'interface du navigateur (barre de menu, etc.). Bref, sur le Web, la zone d'affichage 
+correspond la plupart du temps à la région à l'intérieur de la fenêtre dans laquelle vous consultez un site ou une application.
+
+2. Dans le contexte du Web, on parle de deux zones d'affichage : la zone d'affichage pour la disposition (layout viewport) 
+et la zone d'affichage visuelle (visual viewport). La zone d'affichage visuelle est la partie de la page web qui 
+est actuellement visible dans le navigateur et qui peut changer. Lorsqu'un utilisateur zoome en pinçant, provoque 
+l'ouverture d'un clavier tactile ou lorsqu'une barre d'adresse s'affiche, la zone d'affichage visuelle se réduit 
+mais la zone d'affichage pour la disposition reste inchangée.
+
+
+Les tailles relatives vw, vh, vmin, vmax
+-------------------------------
+Voir https://www.youtube.com/watch?v=TbXAaXMqoIQ
+
+vh = taille relative à la hauteur du viewport
+1vh = 1% de la hauteur du viewport
+
+vw = taille relative à la largeur du viewport
+1vh = 1% de la largeur du viewport
+
+vmin = taille relative à la plus petite des deux (hauteur ou largeur du viewport)
+1vmin = 1% de la hauteur ou de la largeur du viewport
+
+vmax = taille relative à la plus grande des deux (hauteur ou largeur du viewport)
+1vmax = 1% de la hauteur ou de la largeur du viewport
+
+  ////////////////////////////////// EX:
+  /* Centrer et redimensionner un titre dans une barre de navigation*/
+  nav {
+    width: 100%;
+    height: 20vh /* 20% de la hauteur du viewport;
+    line-height: 20vh; /* Permet le centrage vertical */
+    font-size: 15 vmin;
+    text-align: center;
+  }
+
+
+Animations CSS
+-------------------------------
+  ////////////////////////////////// EX:
+  @-webkit-keyframes levitate {
+    0% {
+      -webkit-transform: translate(0);
+      transform: translate(0)
+    }
+    50% {
+      -webkit-transform: translateY(10px);
+      transform: translateY(10px)
+    }
+    to {
+      -webkit-transform: translate(0);
+      transform: translate(0)
+    }
+  }
+  @keyframes levitate {
+    0% {
+      -webkit-transform: translate(0);
+      transform: translate(0)
+    }
+    50% {
+      -webkit-transform: translateY(10px);
+      transform: translateY(10px)
+    }
+    to {
+      -webkit-transform: translate(0);
+      transform: translate(0)
+    }
+  }
+  .levitate {
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: levitate;
+    animation-name: levitate;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out
+  }
+
+  ////////////////////////////////// EX:
+  @-webkit-keyframes shadow-scale {
+    0% {
+      -webkit-transform: scaleX(1);
+      transform: scaleX(1);
+      opacity: 0.8;
+    }
+    50% {
+      -webkit-transform: scaleX(1.2);
+      transform: scaleX(1.2);
+      opacity: 1
+    }
+    to {
+      -webkit-transform: scaleX(1);
+      transform: scaleX(1);
+      opacity: 0.8;
+    }
+  }
+  @keyframes shadow-scale {
+    0% {
+      -webkit-transform: scaleX(1);
+      transform: scaleX(1);
+      opacity: 0.8;
+    }
+    50% {
+      -webkit-transform: scaleX(1.2);
+      transform: scaleX(1.2);
+      opacity: 1
+    }
+    to {
+      -webkit-transform: scaleX(1);
+      transform: scaleX(1);
+      opacity: 0.8;
+    }
+  }
+  .shadow-scale {
+    transform-origin: center; /* Permet de choisir le point d'origine de la transformation */
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: shadow-scale;
+    animation-name: shadow-scale;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out
+  }
