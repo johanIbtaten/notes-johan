@@ -5,9 +5,13 @@ Pousser son application vers heroku
 Voir les applications présentent sur le compte
 Voir les buildpacks
 Supprimer un buildpack
+Pousser une autre branche locale sur heroku
 
 Créer un application
 -------------------------------
+Voir https://devcenter.heroku.com/articles/git
+Voir https://gist.github.com/amratab/f0402023194be56c7569fea08e249631
+
 1. Créer un application en europe avec une buildpack create-react-app
   ////////////////////////////// EX:
   // D'abord se placer dans le dossier de l'application que l'on veut pousser
@@ -48,6 +52,13 @@ Supprimer un buildpack
 heroku buildpacks:remove mars/create-react-app
 
 
-Forcer le psh
+Forcer le push
 -------------------------------
 git push heroku master --force
+// ou
+git push heroku master -f
+
+
+Pousser une autre branche locale sur heroku
+-------------------------------
+git push heroku autreBranche:master -f
