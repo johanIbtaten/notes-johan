@@ -76,6 +76,7 @@ hint: its remote counterpart."
 - Créer une branche sur le repo distant lors d'un push d'une nouvelle branche
 - Commiter seulement certaines modifications d'un même fichier
 - Lister les fichiers modifiés
+- Combiner des commits brouillons d'une branche de dev en un seul commit avant de le merger sur la branche master
 
 =================================
 Terminal Windows
@@ -729,6 +730,19 @@ hint: its remote counterpart."
 
 - Lister les fichiers modifiés
 	git ls-files --modified
+
+- Combiner des commits brouillons d'une branche de dev en un seul commit avant de le merger sur la branche master
+	Voir https://github.com/rotati/wiki/wiki/Git:-Combine-all-messy-commits-into-one-commit-before-merging-to-Master-branch
+	// Créer une nouvelle branche à partir de master
+	git checkout -b mergedev
+
+	// Merger la branche dev sur la branche mergedev
+	git merge --squash dev
+	// Faire le commit
+
+	// Merger la branche mergedev sur master
+	git checkout master
+	git merge mergedev 
 
 
  
