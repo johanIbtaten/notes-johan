@@ -75,6 +75,7 @@
     Assignation par défaut avec les opérateurs || et &&
     JSDoc
     HTMLElement.dataset et les attributs data-*
+    Paradigme de programmation définition
 
 
 Variables
@@ -6178,3 +6179,15 @@ getAttribute et setAttribute qui fonctionnent sur la majorité des navigateurs.
     // Suppression
     monelement.removeAttribute('data-materiel');
     </script>
+
+
+Paradigme de programmation définition
+-------------------------------
+1. Paradigme de programmation
+C'est une manière de concevoir la programmtion et de résoudre les différents problèmes, une philosophie de programmation.
+
+    ////////////////////////////////////// EX:
+    Programmation impérative
+    Programmation fonctionnelle
+    Programmation orientée objet
+
