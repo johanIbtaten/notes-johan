@@ -42,6 +42,8 @@ Git
 - Voir la différence entre un fichier modifié unstagé et la dernière version stagé ou commité
 - Ecrire le message du commit
 - Modifier le message du dernier commit
+- Modifier le message d'un ancien commit
+- Changer l'éditeur associé à git rebase interactif
 - Ajouter un fichier stagé au dernier commit
 - Se positionner sur un commit donné
 - Revenir à votre branche principale et au commit le plus récent
@@ -426,7 +428,32 @@ Git
 - Modifier le message du dernier commit
 	git commit --amend -m "Votre nouveau message"
 	// Le SHA-1 du commit est modifié.
-	Utiliser cette avant de pousser le commit sinon ne pas l'utiliser
+	Utiliser cette commande avant de pousser le commit sinon ne pas l'utiliser
+
+- Modifier le message d'un ancien commit
+	Voir https://linuxize.com/post/change-git-commit-message/
+
+	// Si on veux modifier par exemple le 4ème et 5ème commit en partant 
+	// on choisit 5 du dernier commit
+	git rebase -i HEAD~5
+
+	// Un éditeur s'ouvre.
+	// On écrit reword sur les commit que dont on veux réécrire le message
+	// On ferme l'éditeur
+	reword 43f8707f9 fix: update dependency json5 to ^2.1.1
+	reword cea1fb88a fix: update dependency verdaccio to ^4.3.3
+	pick aa540c364 fix: update dependency webpack-dev-server to ^3.8.2
+	pick c5e078656 chore: update dependency flow-bin to ^0.109.0
+	pick 11ce0ab34 fix: Fix spelling.
+
+	// Les commits choisis s'ouvrent ensuite dans l'éditeur
+	// On change le message on sauve et on ferme
+	fix: update dependency json5 to ^2.1.1
+
+- Changer l'éditeur associé à git rebase interactif
+	Voir https://www.kevinkuszyk.com/2016/03/08/git-tips-2-change-editor-for-interactive-git-rebase/ 
+	// Exemple avec Sublime Text 3 sur Windows
+	git config --global core.editor "'C:\Program Files\Sublime Text 3\subl.exe' -n -w"
 
 - Ajouter un fichier stagé au dernier commit
  	git commit --amend
