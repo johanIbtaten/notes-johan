@@ -55,6 +55,7 @@
     Les générateurs function*
     Héritage et chaîne de prototype
     Les différentes façons de créer des objets et les impacts sur la chaîne de prototype
+    Le mot clé static dans une classe javascript
     Comparer des objets
     Utiliser this
     Promise, Async et Await
@@ -4428,7 +4429,24 @@ Les différentes façons de créer des objets et les impacts sur la chaîne de p
       }
     }
     var carre = new Carre(2);
-    
+
+
+Le mot clé static dans une classe javascript
+-------------------------------
+1. C'est une méthode de classe et non une méthode d'instance. L'instance ne peut pas l'appeler.
+
+2. On a pas besoin d'instancier la classe pour appeler cette méthode
+
+	///////////////////////////////////////EX:
+	class ClassWithStaticMethod {
+	  static staticMethod() {
+	    return 'static method has been called.';
+	  }
+	}
+
+	console.log(ClassWithStaticMethod.staticMethod());
+	// expected output: "static method has been called."
+
 
 Comparer des objets
 -------------------------------

@@ -1,0 +1,6 @@
+Limitations Vue.js
+
+Limitations Vue.js
+-------------------------------
+1. On ne peux pas rajouter de propriétés à l'objet data de l'objet Vue à la volée
+2. On ne peut pas accéder à un élément de tableau qui se trouve dans une propriété de data directement par son index

@@ -256,7 +256,7 @@ pour créer une persistance des données même si on ferme le navigateur.
   )
 
   // On récupère la chaine de caractère stockée dans le localStorage
-  const myRetrievedString = JSONwindow.localStorage.setItem('myItem') // "{'name':'Johan'}"
+  const myRetrievedString = JSONwindow.localStorage.getItem('myItem') // "{'name':'Johan'}"
 
   // On récupère notre objet JS à partir de la chaine de caractère stockée
   const myRetrievedObject = JSON.parse(myRetrievedString) 

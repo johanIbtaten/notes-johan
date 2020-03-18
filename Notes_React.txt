@@ -30,7 +30,7 @@ React.Children.only(children) Méthode
 cloneElement() Méthode
 Différence entre un state et une variable de classe
 Affichage conditionnel
-
+Parent, Child and props
 
 
 
@@ -2134,4 +2134,11 @@ ReactDOM.render(
   <Page />,
   document.getElementById('root')
 );
+
+
+Parent, Child and props
+-------------------------------
+1. Children do not rerender if the props of the parent change, but if its STATE changes.
+2. Le parent ne peut pas changer le state de l'enfant une fois qu'il a été initialisé.
+
 
