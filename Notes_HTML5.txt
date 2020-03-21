@@ -1,3 +1,10 @@
+DOCTYPE HTML5
+Placeholder images
+<figure></figure> et <figcaption></figcaption>
+<picture></picture>
+<nav></nav>
+Emojis et symboles HTML
+
 =================================
 DOCTYPE HTML5
 =================================
@@ -154,3 +161,8 @@ https://loremflickr.com/320/240?lock=30976
 	    </section>
 	  <a href="#">Services</a>
 	</nav>
+
+
+Emojis et symboles HTML
+-------------------------------
+Voir https://html-css-js.com/html/character-codes/
