@@ -1,0 +1,7 @@
+Afficher le dossier dist dans le dossier du projet
+
+
+Afficher le dossier dist dans le dossier du projet
+-------------------------------
+run webpack dans le package.json au lieu de webpack-dev-server
+
