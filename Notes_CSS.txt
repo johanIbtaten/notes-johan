@@ -1,7 +1,7 @@
-- Grid css
+- Grid CSS
 	- auto-fill, auto-fit, minmax et repeat
 	- grid-column et grid-row
-- Flex css
+- Flex CSS
 - Boostrap 4 grid system breakpoints
 - @font-face Propriété
 - object-fit Propriété
@@ -11,9 +11,13 @@
 - Viewport
 - Les tailles relatives vw, vh, vmin, vmax
 - Animations CSS
+- Variables CSS
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/CSS/Using_CSS_custom_properties
 
 
-Grid css
+
+Grid CSS
 -------------------------------
 Voir https://developer.mozilla.org/fr/docs/Apprendre/CSS/CSS_layout/Grids
 
@@ -142,7 +146,7 @@ Voir https://developer.mozilla.org/fr/docs/Apprendre/CSS/CSS_layout/Grids
   </div>
 
 
-Flex css
+Flex CSS
 -------------------------------
 Voir https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Flexible_Box_Layout
 
