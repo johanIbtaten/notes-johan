@@ -77,7 +77,8 @@
     JSDoc
     HTMLElement.dataset et les attributs data-*
     Paradigme de programmation définition
-    Convertir timestamp to date
+    Les closures
+    Debounce et Trottle
 
 
 Variables
@@ -5320,6 +5321,7 @@ Si on souhaite appeller une page différente de la page en cours, il faudra que 
 Les modules JavaScript import / export
 -------------------------------
 Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Modules
+Voir https://medium.com/@etherealm/named-export-vs-default-export-in-es6-affb483a0910
 
 
 Memoization
@@ -6211,8 +6213,101 @@ C'est une manière de concevoir la programmtion et de résoudre les différents 
     Programmation orientée objet
 
 
-Convertir timestamp to date
+Les closures
 -------------------------------
-    ////////////////////////////////////// EX:
-    var date = new Date(timestamp*1000);
+Voir https://openclassrooms.com/fr/courses/1916641-dynamisez-vos-sites-web-avec-javascript/2633501-les-closures
 
+
+
+Debounce et Trottle
+-------------------------------
+1. La fonction debounce permet de déclencher l'appel à une fonction 
+après un certain délai (un peu comme la fonction setTimeout()) 
+mais permet en plus de réinitialiser le timer si on demande 
+une nouvelle exécution dans un intervalle de temps plus 
+court que le délai. Par exemple, on peut écouter la frappe 
+d'un utilisateur dans un champ texte, mais ne pas vouloir 
+appeler notre callback seulement si l'utilisateur marque 
+une pause suffisamment longue.
+
+    ////////////////////////////////////// EX:
+    search.addEventListener('keyup', function(e){
+        // le code ici sera appelé à chaque pression de touche
+    })
+
+    search.addEventListener('keyup', debounce(function(e){
+        // Le code ici sera exécuté au bout de 350 ms 
+        // mais si l'utilisateur tape une nouvelle fois dans cet intervalle de temps, le timer sera réinitialisé
+    }, 350))
+
+    // On appelle le callback en utilisant la méthode apply pour 
+    // "transférer" le contexte et les paramètres à notre callback,
+    // ici le paramètre e.
+    function debounce(callback, delay){
+        var timer;
+        return function(){
+            var args = arguments;
+            var context = this;
+            clearTimeout(timer);
+            timer = setTimeout(function(){
+                callback.apply(context, args);
+            }, delay)
+        }
+    }
+
+2. La fonction throttle permet d'éviter des appels consécutifs en
+ introduisant un délai. Elle servira surtout lorsque l'on écoutera 
+ des évènements pouvant se produire un très grand nombre de fois 
+ dans un intervalle de temps très court (scroll, resize, mouseMove...).
+
+window.addEventListener('scroll', function(e){
+    // le code ici sera appelé à chaque fois que l'utilisateur 
+    // bouge la scrollbar
+})
+
+Le problème de cet évènement c'est qu'il peut se lancer plusieurs 
+centaines de fois pendant un simple mouvement de scrollbar. 
+Si notre code est un peu lourd, cela peut entrainer des lags 
+et rendre le scroll peu fluide.
+
+    ////////////////////////////////////// EX:
+    window.addEventListener('scroll', throttle(function(e){
+        // Le code ici ne pourra être exécuté que toutes les 50 ms (20 appels max par secondes)
+    }, 50))
+
+    // Ici on utilise en partie le code de notre fonction debounce(), 
+    // mais on introduit en plus un appel tous les XXX ms en 
+    // comparant le temps actuel (en ms) avec le temps du dernier appel. 
+    // La partie prise du debounce nous permet de gérer 
+    // le dernier appel à notre callback.
+    function throttle(callback, delay) {
+        var last;
+        var timer;
+        return function () {
+            var context = this;
+            var now = +new Date();
+            var args = arguments;
+            if (last && now < last + delay) {
+                // le délai n'est pas écoulé on reset le timer
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    last = now;
+                    callback.apply(context, args);
+                }, delay);
+            } else {
+                last = now;
+                callback.apply(context, args);
+            }
+        };
+    }
+
+3. Il est important de noter que l'on retrouve des implémentations de throttle et debounce dans de nombreuses librairies Javascripts comme Underscorejs et Lodash.
+
+    ////////////////////////////////////// EX:
+    window.addEventListener('scroll', _.throttle(function(e){
+
+    }, 40));
+
+    search.addEventListener('keyup', _.debounce(function(e){
+
+    }, 400));

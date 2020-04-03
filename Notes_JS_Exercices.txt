@@ -1,3 +1,63 @@
+Convertir timestamp to date
+Trouver le jour de la semaine en français à partir d'une date
+Mettre la première lettre d'une chaîne de caractère en majuscule
+Trouvez le plus grand ou plus petit nombre dans un tableau
+Trouvez l'index de la plus grande ou plus petite valeur dans un tableau
+Comparer deux dates sans prendre en compte le temps
+
+
+Créer une méthode truncate sur une String
+printReverse
+isUniform
+Afficher une collection de films
+sum
+maxValue
+randomize array
+
+
+
+Convertir timestamp to date
+-------------------------------
+var date = new Date(timestamp*1000);
+
+
+Trouver le jour de la semaine en français à partir d'une date
+-------------------------------
+let jourActuel = date.toLocaleDateString('fr-FR', options);
+
+
+Mettre la première lettre d'une chaîne de caractère en majuscule
+-------------------------------
+let jourActuel = 'lundi'
+jourActuel = jourActuel.charAt(0).toUpperCase() + jourActuel.slice(1);
+
+
+Trouvez le plus grand ou plus petit nombre dans un tableau
+-------------------------------
+Math.max(...numbers)
+Math.min(...numbers)
+
+
+Trouvez l'index de la plus grande ou plus petite valeur dans un tableau
+-------------------------------
+const maxValueIndex = tab.reduce((greatest, current, index) => {
+                        return current > tab[greatest] ? index : greatest 
+                      }, 0);
+const minValueIndex = tab.reduce((lowest, current, index) => {
+                        return current < tab[lowest] ? index : lowest 
+                      }, 0);
+
+
+Comparer deux dates sans prendre en compte le temps
+-------------------------------
+if(date.setHours(0,0,0,0) >= dateToday.setHours(0,0,0,0))
+
+
+
+
+
+
+
 Créer une méthode truncate sur une String
 -------------------------------
 String.prototype.truncate = function(charNumber) {

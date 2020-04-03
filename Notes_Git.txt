@@ -49,6 +49,7 @@ Git
 - Revenir à votre branche principale et au commit le plus récent
 - Gérer les tags
 - Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
+- Annuler un commit et garder les modifications qui ont été stagés
 - Annuler les changements d'un fichier qui n'ont pas été encore stagé
 - Annuler toutes les changements que je n'ai pas encore commités
 - Annuler les changements d'un fichier qui a déjà été stagé mais pas commité
@@ -459,7 +460,7 @@ Git
  	git commit --amend
  	// Les fichiers stagés sont ajouter au dernier commit
  	Le SHA-1 est modifié.
- 	Utiliser cette avant de pousser le commit sinon ne pas l'utiliser
+ 	Utiliser cette commande avant de pousser le commit sinon ne pas l'utiliser
 
 - Se positionner sur un commit donné
 	git checkout SHADuCommit
@@ -484,6 +485,12 @@ Git
 
 - Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
 	git revert SHADuCommit
+
+- Annuler un commit et garder les modifications qui ont été stagés
+	//Pour annuler un ajout de fichier, un simple retour en arrière en gardant les modifications suffit
+	git reset --soft HEAD^
+	//Si l'on juge que les 3 dernières versions n'étaient pas bonnes et que l'on souhaite tout annuler
+	git resert --hard HEAD~3
 
 - Annuler les changements d'un fichier qui n'ont pas été encore stagé
 	git reset -- style.css	
