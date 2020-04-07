@@ -217,7 +217,7 @@ Git
 		fix: Correction
 		perf: Amélioration des performances
 		docs: Ajout de documentation
-		style: Linting du code
+		style: Linting du code (Formatage du code, identation, espaces, etc.)
 		refactor: Modification du code, mutualisation et autres modifs afin d’améliorer le projet
 		test: Ajout de tests unitaires, intégration, end-to-end
 		chore: Tâche ménagère, comme mettre à jour les dépendances, reconfigurer la CI…

@@ -7,8 +7,9 @@ Local storage et Session storage
 preventDefault
 stopPropagation
 Passer une référence à un gestionnaire d'évènement
-La propagation des évènements
+La propagation des évènements (Capture et Bubbling)
 window.setInterval Fonction
+Les événements
 
 
 Le DOM
@@ -319,7 +320,7 @@ Passer une référence à un gestionnaire d'évènement
   <button onClick={this.updateTitle}>Change title</button>
 
 
-La propagation des évènements
+La propagation des évènements (Capture et Bubbling)
 -------------------------------
 1. Les phases de capture (Capture phase) et de bouillonnement (Bubbling phase).
 
@@ -377,6 +378,46 @@ nous allons pouvoir passer un troisième argument booléen à la méthode addEve
 Par défaut, la valeur de cet argument est false ce qui indique que le gestionnaire 
 d’évènement doit ignorer la phase de capture. Pour lui demander de réagir à la phase de capture, 
 on va donc devoir lui passer la valeur true.
+
+  ////////////////////////////////////// EX:
+  <div id="parentCapt1">
+      <span id="enfantCapt2">
+        Cliquez-moi pour la phase de capture. 
+        Les listeners sur les parents vont réagir à l'événement 
+        avant les listeners sur les enfants.
+      </span>
+  </div>
+
+  <div id="parentBoul1">
+      <span id="enfantBoul2">
+        Cliquez-moi pour la phase de bouillonnement. 
+        Les listeners sur les enfants vont réagir à l'événement 
+        avant les listeners sur les parents.
+      </span>
+  </div>
+
+  <script>
+      var parentCapt1 = document.getElementById('parentCapt1'),
+          enfantCapt2 = document.getElementById('enfantCapt2'),
+          parentBoul1 = document.getElementById('parentBoul1'),
+          enfantBoul2 = document.getElementById('enfantBoul2');
+    
+      parentCapt1.addEventListener('click', function() {
+          alert("L'événement du div vient de se déclencher.");
+      }, true);
+    
+      enfantCapt2.addEventListener('click', function() {
+          alert("L'événement du span vient de se déclencher.");
+      }, true);
+    
+      parentBoul1.addEventListener('click', function() {
+          alert("L'événement du div vient de se déclencher.");
+      }, false);
+    
+      enfantBoul2.addEventListener('click', function() {
+          alert("L'événement du span vient de se déclencher.");
+      }, false);
+  </script>
 
 
 window.setInterval Fonction
@@ -442,3 +483,57 @@ EX:
     <button onclick="stopTextColor();">Stop</button>
   </body>
 </html>
+
+
+Les événements
+-------------------------------
+Voir https://www.xul.fr/ecmascript/event.php
+
+x.addEventListener('click', fonction, false)
+
+// On peut associer plusieurs fonctions à un évènement et un même élément.
+// Il faut noter que l'ordre de déclenchement peut être aléatoire.
+x.addEventListener('click', fonction1, false);
+x.addEventListener('click', fonction2, false);
+
+1er paramètre
+  Le nom d'un évènement est une DOMString
+  L'argument DOMString est une chaîne qui reprend le nom d'un évènement standard. Les évènements reconnus pour la souris sont:
+  click
+  mousedown
+  mouseup
+  mouseover
+  mousemove
+  mouseout
+  Pour le clavier (DOM 3):
+  keydown
+  keypress (toutes les touches ne sont pas reconnues)
+  keyup
+  DOM 3 reconnaît d'autres types d'évènements.
+
+Second paramètre
+  Une fonction qui un EventListener
+  Le "listener" (écouteur) peut être une fonction définie par l'utilisateur ou un objet implémentant l'interface EventListener.
+  Pour passer des paramètres à la fonction, on utilise une fonction anonyme.
+
+Troisième paramètre
+  Une valeur booléenne: mode capture ou non
+  Elle concerne la capture des évènements du type donné. On mettra false si on n'en ne le veut pas.
+  Par défaut c'est false la phase de Capture est désactivée et la phase de Bubbling est activée. Si c'est true la phase Capture est activée.
+  Si la valeur est vraie, tous les évènements du type spécifié ici seront passés d'abord à l'EventListener ici avant d'être passés aux autres EventTarget des balises qu'il contient. En clair la propagation se fera des balises conteneurs d'abord puis les balises qu'elles contiennent ensuite. Par défaut c'est l'inverse.
+
+1. Attacher directement l'évènement à un élément
+Les évènements sont toujours remontés dans ce cas, on ne peut choisir le mode de propagation.
+  ////////////////////////////////////// EX:
+  var x = documentGetElementById("mabalise");
+  x.onclick = function(evt) { ... }
+  // ou
+  function clickHandler(evt) { ... };
+  x.onclick = clickHandler;
+
+2. Attaché un écouteur d'événement à un élément
+  ////////////////////////////////////// EX:
+  var element = document.getElementById('clickme');
+  element.addEventListener('click', function() {
+      alert("Vous m'avez cliqué !");
+  });

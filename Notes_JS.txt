@@ -21,6 +21,9 @@
     Différence entre argument et paramètre
     Objet Map
     Objet Set
+    Map vs Object
+    Set vs Array
+    Convertir un Objet en Map et inversement et sérialiser
     Object Property Value Shorthand
     Noms de propriétés calculés (Computed Properties)
     Boucles
@@ -6311,3 +6314,83 @@ et rendre le scroll peu fluide.
     search.addEventListener('keyup', _.debounce(function(e){
 
     }, 400));
+
+
+Map vs Object
+-------------------------------
+Voir (Mode navigation privée) https://medium.com/front-end-weekly/es6-map-vs-object-what-and-when-b80621932373
+Voir https://medium.com/javascript-in-plain-english/es6-object-vs-map-for-storing-key-value-pairs-9b06a7efece9
+Voir https://dmitripavlutin.com/maps-vs-plain-objects-javascript/
+
+1. Map devrait être utiliser pour stocker des paires clé-valeur si il
+n'y a pas de besoin de sérialisation des données dans l'envoi d'un 
+objet JSON dans une requête http par exemple avec JSON.stringify(). 
+Avec Map on peut utiliser des clés qui ne sont pas obligatoirement 
+des chaînes de caractères, une Map est itérable avec un ForEach par
+exemple et possède des méthodes comme has() et size() 
+qui facilitent la vie.
+
+2. Un objet devrait être utilisé pour representer quelquechose et quand
+on souhaite utiliser des propriétés avec des logiques différentes,
+comme des attributs et des méthodes.
+
+
+Set vs Array
+-------------------------------
+Voir (Mode navigation privée) https://medium.com/front-end-weekly/es6-set-vs-array-what-and-when-efc055655e1a
+
+1. Set devrait être utiliser pour garantir qu'il n'y pas de doublons 
+dans les données stockées.
+
+
+Convertir un Objet en Map et inversement et sérialiser
+-------------------------------
+1. Convertir Map en object et sérialiser en JSON
+    ////////////////////////////////////// EX:
+    // Pour traiter les Map imbriquées, on définit une fonction récursive.
+    function mapToObjectRec(m) {
+        let lo = {}
+        for(let[k,v] of m) {
+            if(v instanceof Map) {
+                lo[k] = mapToObjectRec(v)
+            }
+            else {
+                lo[k] = v
+            }
+        }
+        return lo
+    }
+
+    var o2 = mapToObjectRec(m)
+    console.log(JSON.stringify(mapToObject(o2, m), null, ' '))
+    // { "a": "one", "b": "two", "c": "three", "d": { "e": "four" } }
+
+2. Convertir un objet sérialisé en JSON en Map
+    ////////////////////////////////////// EX:
+    var data = fs.readFileSync(fname,'UTF-8')
+    let o3 = JSON.parse(data)
+
+    // On aura l'objet suivant:
+
+    {
+      "a": "one",
+      "b": "two",
+      "c": "three",
+      "d": { "e": "four"}
+    }   
+
+    function objectToMap(o) {
+        let m = new Map()
+        for(let k of Object.keys(o)) {
+            if(o[k] instanceof Object) {
+                m.set(k, objectToMap(o[k]))   
+            }
+            else {
+                m.set(k, o[k])
+            }    
+        }
+        return m
+    }
+
+    var m2 = objectToMap(o3)
+    console.log(m2.get("d").get("e")) // four
