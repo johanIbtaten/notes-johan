@@ -1,6 +1,52 @@
 Limitations Vue.js
+Vue CLI
 
 Limitations Vue.js
 -------------------------------
 1. On ne peux pas rajouter de propriétés à l'objet data de l'objet Vue à la volée
 2. On ne peut pas accéder à un élément de tableau qui se trouve dans une propriété de data directement par son index
+
+
+Vue CLI
+-------------------------------
+1. Command Line Interface (CLI)
+
+2. Vue CLI fournit un système complet pour le développement rapide en Vue.js. Cela signifie qu'il fait beaucoup de travail fastidieux pour nous et nous fournit des fonctionnalités précieuses dès le départ.
+
+3. Il nous permet de sélectionner les bibliothèques que notre projet utilisera, puis il les connecte automatiquement au projet.
+
+4. Il configure Webpack Lorsque nous construisons notre application avec Webpack, tous nos fichiers JavaScript, notre CSS et nos dépendances sont correctement regroupés, minifiés et optimisés.
+
+5. Il nous permet d'écrire notre HTML, CSS et JavaScript comme nous le souhaitons. Nous pouvons utiliser des composants .vue à fichier unique, TypeScript, SCSS, Pug, les dernières versions d'ECMAScript, etc.
+
+6. Il permet le remplacement à chaud du module (HMR). Ainsi, lorsque vous enregistrez votre projet, les modifications apparaissent instantanément dans le navigateur. Cette configuration est basée sur webpack-dev-server.
+
+Installation
+	npm install -g @vue/cli
+	# OR
+	yarn global add @vue/cli
+
+Check vue version
+	vue --version
+
+Global upgrading Vue CLI package
+	npm update -g @vue/cli
+	# OR
+	yarn global upgrade --latest @vue/cli
+
+To upgrade one or more @vue/cli related packages (including packages starting with @vue/cli-plugin-) inside your project
+	# inside the project directory
+	vue upgrade
+
+Create a new project
+	vue create hello-world
+
+Lancer le projet
+	npm run serve
+	# OR
+	yarn serve
+
+Built le projet
+ 	npm run build
+	# OR
+	yarn build

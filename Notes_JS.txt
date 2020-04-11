@@ -82,6 +82,35 @@
     Paradigme de programmation définition
     Les closures
     Debounce et Trottle
+    Primitive vs Reference
+    -------------------------------
+    Voir https://www.youtube.com/watch?v=9ooYYRLdg_g
+    
+    1. Primitives
+    - String
+    - Number
+    - Boolean
+    - Undefined
+    - Null
+    - Symbol (ES6)
+
+    Les primitives se placent dans l'emplacement mémoire nommé la STACK.
+    Les unes au-dessus des autres.
+
+
+    2. Références
+    - Object
+    - Array (qui est aussi un Object)
+
+    Les références sont des adresses correspondant à un emplacement mémoire
+    dans le HEAP où sont stockés les objets et tableaux. Les references
+    sont contenus dans des variables pointeurs contenus dans la STACK.
+    Plusieurs pointeurs différents peuvent contenir la même référence
+    comme lorsque l'on copie un tableau dans une autre variable, les
+    deux variables contiennent la même réference et pointent vers le 
+    même tableau en mémoire.
+
+
 
 
 Variables
@@ -753,6 +782,8 @@ Opérateur void
 
 L'opérateur this
 -------------------------------
+Voir https://www.youtube.com/watch?v=NV9sHLX-jZU
+
 1. this est un opérateur qui permet de retourner une valeur en fonction de son contexte. Deux éléments peuvent influer dessus :
 - Le contexte dans lequel this est appelé : global, fonction, fonction fléchée, méthode d'un objet…
 - Le mode utilisé : strict ou non-strict.
@@ -2624,6 +2655,9 @@ L'ordre du tableau renvoyé par cette méthode ne dépend pas de la façon dont 
 
 Méthodes sur les fonctions
 -------------------------------
+Voir https://www.youtube.com/watch?v=c0mLRpw-9rI
+Voir https://www.youtube.com/watch?v=AYVYxezrMWA
+
 CALL()
 //fun.call(thisArg, arg1, arg2, ...)
 1. La méthode call() réalise un appel à une fonction avec une valeur this donnée et des arguments fournis individuellement.

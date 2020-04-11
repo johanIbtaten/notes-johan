@@ -74,6 +74,7 @@ hint: its remote counterpart."
 - Merger (fusionner) deux branches
 - Annuler une tentative de merge lors d'un conflit
 - Faire un rebase lors d'un git pull
+- Fusionner deux branches avec git rebase
 - Copier un commit sur une autre branche
 - Effacer les fichiers qui ne sont pas stagés
 - Créer une branche sur le repo distant lors d'un push d'une nouvelle branche

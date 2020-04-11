@@ -12,8 +12,7 @@
 - Les tailles relatives vw, vh, vmin, vmax
 - Animations CSS
 - Variables CSS
--------------------------------
-Voir https://developer.mozilla.org/fr/docs/Web/CSS/Using_CSS_custom_properties
+- Remove the blue background of button on mobile click
 
 
 
@@ -541,4 +540,15 @@ Animations CSS
     animation-name: shadow-scale;
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out
+  }
+
+
+Remove the blue background of button on mobile click
+-------------------------------
+  input,
+  textarea,
+  button,
+  select,
+  a {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
