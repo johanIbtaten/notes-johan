@@ -16,6 +16,7 @@
     Les différents types de fonctions
     Les expressions de fonctions
     Les fonctions fléchées (arrow function en anglais)
+    Raccourci ES6 pour écrire la méthode d'un objet
     IIFE (Expression de fonction invoquée immédiatement)
     L'instruction Return
     Différence entre argument et paramètre
@@ -83,33 +84,6 @@
     Les closures
     Debounce et Trottle
     Primitive vs Reference
-    -------------------------------
-    Voir https://www.youtube.com/watch?v=9ooYYRLdg_g
-    
-    1. Primitives
-    - String
-    - Number
-    - Boolean
-    - Undefined
-    - Null
-    - Symbol (ES6)
-
-    Les primitives se placent dans l'emplacement mémoire nommé la STACK.
-    Les unes au-dessus des autres.
-
-
-    2. Références
-    - Object
-    - Array (qui est aussi un Object)
-
-    Les références sont des adresses correspondant à un emplacement mémoire
-    dans le HEAP où sont stockés les objets et tableaux. Les references
-    sont contenus dans des variables pointeurs contenus dans la STACK.
-    Plusieurs pointeurs différents peuvent contenir la même référence
-    comme lorsque l'on copie un tableau dans une autre variable, les
-    deux variables contiennent la même réference et pointent vers le 
-    même tableau en mémoire.
-
 
 
 
@@ -1364,6 +1338,27 @@ Les fonctions fléchées (arrow function en anglais)
     // [6, 0, 18]
     var double = arr.map(v => v * 2);       
     // [10, 12, 26, 0, 2, 36, 46]
+
+
+Raccourci ES6 pour écrire la méthode d'un objet
+-------------------------------
+    ////////////////////////////////////// EX:
+    // Sans ES6
+    var chopper = {
+        owner: 'Zed',
+        getOwner: function() {
+            return this.owner;
+        }
+    };
+
+    // Avec ES6
+
+    var chopper = {
+        owner: 'Zed',
+        getOwner() {
+            return this.owner;
+        }
+    };
 
 
 IIFE (Expression de fonction invoquée immédiatement)
@@ -6428,3 +6423,32 @@ Convertir un Objet en Map et inversement et sérialiser
 
     var m2 = objectToMap(o3)
     console.log(m2.get("d").get("e")) // four
+
+
+    Primitive vs Reference
+    -------------------------------
+    Voir https://www.youtube.com/watch?v=9ooYYRLdg_g
+    
+    1. Primitives
+    - String
+    - Number
+    - Boolean
+    - Undefined
+    - Null
+    - Symbol (ES6)
+
+    Les primitives se placent dans l'emplacement mémoire nommé la STACK.
+    Les unes au-dessus des autres.
+
+
+    2. Références
+    - Object
+    - Array (qui est aussi un Object)
+
+    Les références sont des adresses correspondant à un emplacement mémoire
+    dans le HEAP où sont stockés les objets et tableaux. Les references
+    sont contenus dans des variables pointeurs contenus dans la STACK.
+    Plusieurs pointeurs différents peuvent contenir la même référence
+    comme lorsque l'on copie un tableau dans une autre variable, les
+    deux variables contiennent la même réference et pointent vers le 
+    même tableau en mémoire.

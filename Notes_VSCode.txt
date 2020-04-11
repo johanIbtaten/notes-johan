@@ -12,8 +12,9 @@
 - Naviguer dans les onglets des fichiers ouverts
 - Caractères spéciaux
 - Html entities
-- Activer ou désactiver ESLint
+- Chercher et accéder rapidement à un fichier
 
+- Activer ou désactiver ESLint
 
 Racourcis clavier
 -------------------------------
@@ -100,6 +101,9 @@ Espace insécable
 
 Tiret insécable
 &#8209;
+
+- Chercher et accéder rapidement à un fichier
+Ctrl + P
 
 
 Activer ou désactiver ESLint
