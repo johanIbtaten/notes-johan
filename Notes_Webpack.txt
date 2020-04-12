@@ -1,6 +1,6 @@
 Afficher le dossier dist dans le dossier du projet
 ESLint Command Line Interface
-
+require et require.context
 
 
 Afficher le dossier dist dans le dossier du projet
@@ -11,4 +11,9 @@ run webpack dans le package.json au lieu de webpack-dev-server
 ESLint Command Line Interface
 -------------------------------
 Voir https://eslint.org/docs/user-guide/command-line-interface
+
+
+require et require.context
+-------------------------------
+Voir https://github.com/webpack/docs/wiki/context
 
