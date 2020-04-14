@@ -4584,6 +4584,8 @@ Promise, Async et Await
     }, function (req) { })
 
 3. Les promesses
+Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Utiliser_les_promesses
+
 Comme son nom l'indique vous pouvez voir ça comme la promesse que vous allez recevoir une valeur. 
 Comme toute promesse, elle peut être tenue, la valeur est arrivée et on peut s'en servir, ou ne pas l'être, 
 dans ce cas une erreur arrive et on peut réagir en conséquence.
@@ -4794,6 +4796,17 @@ En fait then() attend simplement que la fonction resolve ou reject soit appelé 
     });
 
     promise.then(alert); // shows "done!" after 1 second
+
+    EX:
+    function axiosTest() {
+      return axios.get(url).then(response => {
+        // returning the data here allows the caller to get it through another .then(...)
+        return response.data
+      })
+    }
+    axiosTest().then(data => {
+      response.json({ message: 'Request received!', data })
+    })
 
 Chaînage des promesses avec then()
 La méthode then() renvoie un objet Promise, ce qui permet d'enchaîner les opération.

@@ -1,5 +1,9 @@
 Limitations Vue.js
 Vue CLI
+v-model modificateurs
+getters, accès par propriété et accès par méthode
+
+
 
 Limitations Vue.js
 -------------------------------
@@ -50,3 +54,77 @@ Built le projet
  	npm run build
 	# OR
 	yarn build
+
+
+v-model modificateurs
+-------------------------------
+Voir https://fr.vuejs.org/v2/guide/forms.html#vmodel-ime-tip
+
+1. lazy
+Par défaut, v-model synchronise le champ avec les données après chaque évènement input (à l’exception de l’exécution d’une méthode de saisie comme mentionné plus haut). Vous pouvez ajouter le modificateur lazy pour synchroniser après les évènements change à la place :
+
+	////////////////////////////////////// EX:
+	<!-- synchronisé après le "change" au lieu du "input" -->
+	<input v-model.lazy="msg">
+
+2. number
+Si vous voulez que la saisie utilisateur soit automatiquement convertie en nombre, vous pouvez ajouter le modificateur number à vos champs gérés par v-model :
+
+	////////////////////////////////////// EX:
+	<input v-model.number="age" type="number">
+
+C’est souvent utile, parce que même avec type="number", la valeur des éléments de saisie HTML retourne toujours une chaine de caractères. Si la valeur ne peut pas être transformée avec parseFloat(), alors la valeur originale est retournée.
+
+3. trim
+Si vous voulez que les espaces superflus des saisies utilisateur soient automatiquement retirés, vous pouvez ajouter le modificateur trim à vos champs gérés par v-model :
+
+	////////////////////////////////////// EX:
+	<input v-model.trim="msg">
+
+
+getters, accès par propriété et accès par méthode
+-------------------------------
+1. Accès par propriété
+Les getters seront exposés sur l'objet store.getters et vous accèderez aux valeurs comme des propriétés :
+	////////////////////////////////////// EX:
+	store.getters.doneTodos // -> [{ id: 1, text: '...', done: true }]
+
+Les getters recevront également les autres getters en second argument :
+	////////////////////////////////////// EX:
+		getters: {
+		  // ...
+		  doneTodosCount: (state, getters) => {
+		    return getters.doneTodos.length
+		  }
+		}
+		store.getters.doneTodosCount // -> 1
+
+Nous pouvons maintenant facilement les utiliser dans n'importe quel composant :
+	////////////////////////////////////// EX:
+	computed: {
+	  doneTodosCount () {
+	    return this.$store.getters.doneTodosCount
+	  }
+	}
+
+Notez que les getters accédés par propriétés sont mis en cache par le système de réactivité de Vue.
+
+2. Accès par méthode
+Vous pouvez aussi passer des arguments aux accesseurs en retournant une fonction. Cela est particulièrement utile 
+quand vous souhaitez interroger un tableau dans le store :
+
+	////////////////////////////////////// EX:
+	getters: {
+	  // ...
+	  getTodoById: (state) => (id) => {
+	    return state.todos.find(todo => todo.id === id)
+	  }
+	}
+
+Nous pouvons maintenant utiliser ce getter dans un composant :	
+	////////////////////////////////////// EX:
+	// On passe l'argument qui a pour valeur 2 à la fonction retourné par le getter
+	store.getters.getTodoById(2) // -> { id: 2, text: '...', done: false }
+
+Notez que les accesseur accédés par méthodes vont être exécuté chaque fois qu'il seront appelés. 
+Le résultat ne sera donc pas mis en cache.

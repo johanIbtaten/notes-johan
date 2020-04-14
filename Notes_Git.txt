@@ -478,11 +478,20 @@ Git
 	// Se placer d'abord sur le commit voulu avec git checkout SHADuCommit 
 	et ensuite créer le tag v1.4
 
-	git tag  v1.4 -m "my version 1.4"
+	git tag -a v1.4 -m "my version 1.4"
 	// Ajoute un tag avec un message descriptif
+
+	git tag -a v1.2 9fceb02
+	// Ajouter un tag sur commit spécifique, 9fceb02 est le hash du commit
 
 	git tag --delete v1.4
 	// Supprime le tag v1.4
+
+	git push --tags origin
+	// Push tous les tags vers origin
+
+	git push origin sometag
+	// Push un tag spécifique vers origin
 
 - Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
 	git revert SHADuCommit
