@@ -1946,6 +1946,24 @@ La fonction devient une expression de fonction qui est immédiatement exécutée
     }();
     console.log(myFunction); //affiche undefined
 
+    /////////////////////////////////// EX:
+    var x = (function IIFE(){
+        return 42;
+    })();
+    x; // 42
+
+3. Because an IIFE is just a function, and functions create variable
+scope, using an IIFE in this fashion is often used to declare variables
+that won’t affect the surrounding code outside the IIFE
+    
+    /////////////////////////////////// EX:
+    var a = 42;
+    (function IIFE(){
+        var a = 10;
+        console.log( a ); // 10
+    })();
+    console.log( a ); // 42
+
 
 L'instruction Return
 -------------------------------
