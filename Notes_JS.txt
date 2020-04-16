@@ -1,16 +1,26 @@
+    Statement et expressions définition
+    Opérateurs
+    Opérateur typeOf
     Variables
     Le hoisting ou remontée des variables
     Évaluation de variables
     Les bouléens
     var, let, const
+    Contexte d'exécution ou (Scope en anglais)
     Affectation par décomposition (Destructuring en anglais)
     Types de données
+    Convertion entre les types
+    Auto-Boxing
     Les opérateurs d'égalité
+    Les opérateurs relationnels (< > <= >=)
     Différence entre undefined et null
+    valueOf()
     Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
     Opérateur void
     L'opérateur this
     La « remontée » des déclarations de fonction
+    Conditions if elseif else, switch et ternaire
+    Boucles while() do..while() et for()
     Définition d'un littéral
     Littéraux de gabarits (template strings en anglais)
     Les différents types de fonctions
@@ -20,6 +30,7 @@
     IIFE (Expression de fonction invoquée immédiatement)
     L'instruction Return
     Différence entre argument et paramètre
+    Les objets
     Objet Map
     Objet Set
     Map vs Object
@@ -27,7 +38,7 @@
     Convertir un Objet en Map et inversement et sérialiser
     Object Property Value Shorthand
     Noms de propriétés calculés (Computed Properties)
-    Boucles
+    Boucles for..of et for..in
     Fonctions sur les tableaux
         FOREACH()
         CONSOLE.TABLE()
@@ -50,6 +61,8 @@
         INCLUDES()
         STARTSWITH()
         SPLIT()
+    Méthodes sur les nombres
+        TOFIXED()
     Méthodes sur JSON
         PARSE()
     Rest parameters
@@ -84,7 +97,154 @@
     Les closures
     Debounce et Trottle
     Primitive vs Reference
+    Prompt
+    
 
+
+Statement et expressions définition
+-------------------------------
+1. A statement est une instruction de programmation
+    ////////////////////////////////////// EX:
+    a = b * 2;
+
+2. Un statement est composé d'une ou plusieurs expressions
+
+3. Une expression fait référence à un variable ou une valeur ou à un jeu
+de variables ou à des valeurs combinées avec des opérateurs
+    ////////////////////////////////////// EX:
+    2 // is a literal value expression.
+    b // is a variable expression, which means to retrieve its current value.
+    b * 2 // is an arithmetic expression, which means to do the multiplication.
+    a = b * 2 // is an assignment expression, which means to assign the result of the b * 2 expression to the variable a*
+    alert(a) // is a call expression statement
+
+
+Opérateurs
+-------------------------------
+1. Assignment
+=, as in a = 2.
+
+2. Math
++ (addition), - (subtraction), * (multiplication), and / (division),
+as in a * 3.
+
+3. Compound assignment
++=, -=, *=, and /= are compound operators that combine a math
+operation with assignment, as in a += 2 (same as a = a + 2).
+
+4. Increment/decrement
+++ (increment), -- (decrement), as in a++ (similar to a = a +
+1).
+
+5. Object property access
+. as in console.log().
+Objects are values that hold other values at specific named locations
+called properties. obj.a means an object value called obj
+with a property of the name a. Properties can alternatively be
+accessed as obj["a"].
+
+5. Equality
+== (loose-equals), === (strict-equals), != (loose not-equals), !==
+(strict not-equals), as in a == b.
+
+6. Comparison
+< (less than), > (greater than), <= (less than or loose-equals), >=
+(greater than or loose-equals), as in a <= b.
+
+7.Logical
+&& (and), || (or), as in a || b that selects either a or b.
+These operators are used to express compound conditionals, 
+like if either a or b is true.
+
+
+Opérateur typeOf
+-------------------------------
+- L'opérateur typeof renvoie une chaîne qui indique le type de son opérande.
+
+typeof operande
+
+- operande est une expression qui représente la valeur dont on souhaite obtenir le type.
+
+- Résultats possibles de l'opérateur typeof
+Undefined                                               "undefined"
+Null                                                    "object" (see below)
+Boolean                                                 "boolean"
+Number                                                  "number"
+BigInt (new in ECMAScript 2020)                         "bigint"
+String                                                  "string"
+Symbol (new in ECMAScript 2015)                         "symbol"
+Function object (implements [[Call]] in ECMA-262 terms) "function"
+Any other object                                        "object"
+
+    ////////////////////////////////////// EX:
+    // Pour les nombres
+    typeof 37 === 'number';
+    typeof 3.14 === 'number';
+    typeof(42) === 'number';
+    typeof Math.LN2 === 'number';
+    typeof Infinity === 'number';
+    typeof NaN === 'number'; // Bien que littéralement ce soit "Not-A-Number"…
+    typeof Number('1') === 'number'; // Number essaie de convertir l'argument en nombre
+
+    // Grand entier
+    typeof 42n === 'bigint';
+
+    // Les chaînes de caractères
+    typeof "" === 'string';
+    typeof "bla" === 'string';
+    typeof "1" === 'string'; // on a ici un nombre écrit sous forme d'une chaîne
+    typeof (typeof 1) === 'string'; // typeof renvoie toujours une chaîne
+    typeof String(1) === 'string'; // String convertit n'importe quelle valeur en chaîne
+
+
+    // Les booléens
+    typeof true === 'boolean';
+    typeof false === 'boolean';
+    typeof Boolean(1) === 'boolean'; // Boolean convertit n'importe quelle valeur en son équivalent logique
+    typeof !!(1) === 'boolean'; // deux appels à l'opérateur ! (le NON logique) sont équivalents à Boolean()
+
+
+    // Les symboles
+    typeof Symbol() === 'symbol'
+    typeof Symbol('foo') === 'symbol'
+    typeof Symbol.iterator === 'symbol'
+
+
+    // Indéfini
+    typeof undefined === 'undefined';
+    typeof blabla === 'undefined'; // pour une variable indéfinie
+
+
+    // Les objets
+    typeof {a:1} === 'object';
+
+    // Utiliser la méthode Array.isArray ou Object.prototype.toString.call
+    // afin de différencier les objets des tableaux
+    typeof [1, 2, 4] === 'object';
+
+    typeof new Date() === 'object';
+    typeof /regex/ === 'object'; // Voir la section sur les expressions rationnelles
+
+    // Les expressions suivantes sont source de confusion
+    // à ne pas utiliser sous cette forme
+    typeof new Boolean(true) === 'object'; 
+    typeof new Number(1) === 'object'; 
+    typeof new String("abc") === 'object';
+
+
+    // Les fonctions
+    typeof function(){} === 'function';
+    typeof class C {} === 'function';
+    typeof Math.sin === 'function';
+
+    ////////////////////////////////////// EX:
+    function foo() {
+        return 42;
+    }
+    foo.bar = "hello world";
+    typeof foo; // "function"
+    typeof foo(); // "number"
+    typeof foo.bar; // "string"
 
 
 Variables
@@ -96,6 +256,19 @@ Variables
 3. Javascript est sensible à la casse (aux majuscules et minuscules).
 
 4. On peut aussi utiliser la plupart lettres Unicode ou ISO 8859-1 (comme å et ü, pour plus de détails, au sein des identifiants).
+
+    ////////////////////////////////////// EX:
+    let a; // on déclare une variable
+    a = b * 2; // On assigne une valeur à la variable a;
+
+    ////////////////////////////////////// EX:
+    // on crée quatre variables avec une même instruction
+    var monObj = new Object(),
+        str = "myString",
+        rand = Math.random(),
+        obj = new Object();
+
+
 
 
 Le hoisting ou remontée des variables
@@ -291,6 +464,55 @@ const : Scope dans les fonctions
         On peut ajouter ou supprimer les éléments d'un tableau dans une const
         On ne peut pas changer la structure d'un objet littéral dans une const
         On peut changer les valeurs d'un objet littéral dans un const
+
+
+Contexte d'exécution ou (Scope en anglais)
+-------------------------------
+- Le contexte d'exécution courant. Le contexte dans lequel les valeurs et expressions sont "visibles," 
+ou peuvent être référencées. Si une variable ou autre expression n'est pas "dans la portée actuelle", 
+alors son utilisation ne sera pas possible. Les portées peuvent aussi être empilées hiérarchiquement de 
+manière à ce que les portées enfants puissent accéder aux portées parentes, mais pas l'inverse.
+
+- A function serves as a closure in JavaScript, and thus creates a scope, so that (for example) 
+a variable defined exclusively within the function cannot be accessed from outside the function 
+or within other functions. For instance, the following is invalid:
+    ////////////////////////////////////// EX:
+    function exampleFunction() {
+        var x = "declared inside function";  // x can only be used in exampleFunction
+        console.log("Inside function");
+        console.log(x);
+    }
+    console.log(x);  // Causes error
+
+    ////////////////////////////////////// EX:
+    // The following code is valid due to the variable being declared outside the function, making it global
+    var x = "declared outside function";
+    exampleFunction();
+    function exampleFunction() {
+        console.log("Inside function");
+        console.log(x);
+    }
+    console.log("Outside function");
+    console.log(x);
+
+    ////////////////////////////////////// EX:
+    function foo() {
+        var a = 1;
+
+        function bar() {
+            var b = 2;
+
+            function baz() {
+                var c = 3;
+                console.log( a, b, c ); // 1 2 3
+            }
+            baz();
+            console.log( a, b ); // 1 2
+        }
+        bar();
+        console.log( a ); // 1
+    }
+    foo();
 
 
 Affectation par décomposition (Destructuring en anglais)
@@ -555,7 +777,7 @@ Variables — var x
 Text (strings) — var a = "init"
 Operations — var b = 1 + 2 + 3
 True or false statements (boolean) — var c = true
-Constant numbers — const PI = 3.14
+Constant numbers — const PI = 3.14 — const TAX_RATE = 0.08; // 8% sales tax
 Objects — var name = {firstName:"John", lastName:"Doe"}
 Undefined — var a; console.log(a); retourne undefined
 Null  — var a = null
@@ -567,10 +789,146 @@ Number pour la primitive number ;
 Boolean pour la primitive boolean ;
 Symbol pour la primitive symbol
 
+string
+number
+boolean
+null and undefined
+object
+symbol (new to ES6)
+
+    ////////////////////////////////////// EX:
+    var a;
+    typeof a; // "undefined"
+
+    a = "hello world";
+    typeof a; // "string"
+
+    a = 42;
+    typeof a; // "number"
+
+    a = true;
+    typeof a; // "boolean"
+
+    a = null;
+    typeof a; // "object"--weird, bug
+
+    a = undefined;
+    typeof a; // "undefined"
+
+    a = { b: "c" };
+    typeof a; // "object"
+
+
+Convertion entre les types
+-------------------------------
+- Javascript peut faire des conversions explicites mais aussi implicites
+
+- Conversions implicites. 
+JavaScript tentera de convertir automatiquement les variables en types plus appropriés lors de leur utilisation. 
+Il est généralement conseillé de faire des conversions explicitement (voir d'autres exemples), 
+mais il est toujours utile de savoir quelles sont les conversions implicites.
+    ////////////////////////////////////// EX:
+    "1" + 5 === "15" // 5 got converted to string.
+    1 + "5" === "15" // 1 got converted to string.
+    1 - "5" === -4 // "5" got converted to a number.
+    alert({}) // alerts "[object Object]", {} got converted to string.
+    !0 === true // 0 got converted to boolean
+    if ("hello") {} // runs, "hello" got converted to boolean.
+    new Array(3) === ",,"; // Return true. The array is converted to string - Array.toString();
+
+    ////////////////////////////////////// EX:
+    !"0" === false // "0" got converted to true, then reversed.
+    !"false" === false // "false" converted to true, then reversed.
+
+    ////////////////////////////////////// EX:
+    var a = "42";
+    var b = a * 1; // "42" implicitly coerced to 42 here
+    a; // "42"
+    b; // 42--the number!
+
+- Conversion explicite d'une string en number
+    ////////////////////////////////////// EX:
+    var a = "42";
+    var b = Number( a );
+    console.log( a ); // "42"
+    console.log( b ); // 42
+
+- Conversion explicite d'un number en string
+    ////////////////////////////////////// EX:
+    var a = 42;
+    var b = String( a );
+    console.log( a ); // 42
+    console.log( b ); // "42"
+
+    ////////////////////////////////////// EX:
+    var amount = 99.99;
+    amount = amount * 2;
+    console.log( amount ); // 199.98
+    // convert `amount` to a string, and
+    // add "$" on the beginning
+    amount = "$" + String( amount );
+    console.log( amount ); // "$199.98"
+
+
+Auto-Boxing
+-------------------------------
+- Par définition, une variable primitive est une valeur brute dans la mémoire, elle n’a pas de prototype, pas de méthode … bref juste une valeur.
+Pourtant ceci fonctionne: "toto".toUpperCase() // TOTO
+Comment peut-on accéder à cette méthode “toUpperCase" si ma variable ne contient rien de plus qu’une chaîne de caractères ?
+Cela signifie t’il que ces “soit-disant primitives” sont en réalité des Objets ?
+On pourrait y croire, oui … mais non.
+Pour bien comprendre, il faut savoir que les primitives string, number, boolean peuvent être initialisées de trois manières différentes:
+Littérale
+Constructeur
+new + Constructeur
+    ////////////////////////////////////// EX:
+    // Littérale
+    const name = "Alex"
+    const age = 27
+    const isTrue = true
+
+    // Constructeur
+    const name = String("Alex")
+    const age = Number(27)
+    const isTrue = Boolean(true)
+
+    // new + Constructeur
+    const name = new String("Alex")
+    const age = new Number(27)
+    const isTrue = new Boolean(true)
+
+La manière littérale et celle par constructeur reviennent exactement à la même chose.
+    
+    "ma chaine" === String("ma chaine") // true
+
+Ce n’est pas le cas pour la création avec l’opérateur “new”.
+    
+    "ma chaine" === new String("ma chaine") // false
+
+    Il en résulte un Object. Un objet de type String dans notre exemple.
+    L’objet créé contient un prototype String avec toutes les méthodes qui lui sont propres
+
+Cela étant précisé, comment avez-vous accès aux prototypes d’une variable primitive créée sans l’opérateur “new” ?
+Et bien ça, c’est dû à la magie de l’Auto-boxing dans JavaScript.
+Ce principe existe dans d’autres langages comme C++ ou Java entre autres.
+Lorsqu’on tente d’accéder à une méthode sur une primitive, JavaScript effectue automatiquement la conversion entre 
+la primitive et la version Objet de cette primitive. 
+La chaîne est temporairement transformée en un Objet le temps du traitement, puis ce dernier est détruit.
+    ////////////////////////////////////// EX:
+    const str = "toto"
+    str.toUpperCase()
+
+Au moment d’exécuter “str.toUpperCase()”, JavaScript va caster “str” en new String(str).
+Ensuite, on cherche dans la chaîne de prototypes la méthode upperCase.
+Si elle est trouvée, elle est exécutée, et on supprime l’Objet temporaire.
+Tout n’est pas objet en JavaScript, il y a bien des primitives.
+Une phrase plus correcte pourrait être “Tout est traité comme un Objet en JavaScript”, 
+car en effet grâce à l’Auto-Boxing, même les primitives peuvent être traitées comme des Objets.
+
 
 Les opérateurs d'égalité
 -------------------------------
-/// Égalité simple (==) ///
+/// Égalité simple (==) /// (loose equality en anglais)
 1. L'opérateur d'égalité simple convertit les deux opérandes s'ils ne sont pas du même type, 
 ensuite la comparaison stricte est appliquée. Si les deux opérandes sont des objets, le moteur JavaScript 
 comparera les références internes pour voir si elles réfèrent au même objet en mémoire.
@@ -612,7 +970,19 @@ ils seront comparés comme deux objets (voir ci-avant) et l'égalité ne sera v�
     // converti, la fonction de conversion renvoie bien la chaîne 'toto'
     a == 'toto'
 
-/// Égalité stricte (===) ///
+5. Arrays are by default coerced to strings by simply
+joining all the values with commas (,) in between. You might think
+that two arrays with the same contents would be == equal, but
+they’re not:
+//////////////////////////////// EX:
+var a = [1,2,3];
+var b = [1,2,3];
+var c = "1,2,3";
+a == c; // true car [1,2,3] est implicitement converti en string "1,2,3" en appelant la méthode toString() du tableau
+b == c; // true car [1,2,3] est implicitement converti en string "1,2,3" en appelant la méthode toString() du tableau
+a == b; // false car les références des deux objets tableau sont différentes
+
+/// Égalité stricte (===) /// (strict equality en anglais)
 1. L'opérateur d'égalité stricte renvoie true si les opérandes sont strictement égaux (voir ci-avant), aucune conversion de type n'est effectuée.
 
     Ex1:
@@ -620,6 +990,26 @@ ils seront comparés comme deux objets (voir ci-avant) et l'égalité ne sera v�
     3 === '3' // false
     var objet1 = {'clé': 'valeur'}, objet2 = {'clé', 'valeur'};
     objet1 === objet2; // false
+
+
+Les opérateurs relationnels (< > <= >=)
+-------------------------------
+1. Pour les comparaisons relationnelles (ex. : <=), les opérandes sont tout d'abord converties en valeurs, 
+puis en valeurs du même type, enfin la comparaison est effectuée.
+
+2. Chacun de ces opérateurs invoquera la fonction valueOf() des opérandes qui sont des objets avant d'effectuer la comparaison.
+
+    //////////////////////////////// EX:
+    var a = 42;
+    var b = "foo";
+    a < b; // false
+    a > b; // false
+    a == b; // false
+
+    // How can all three of those comparisons be false? Because the
+    // b value is being coerced to the “invalid number value” NaN in the <
+    // and > comparisons, and the specification says that NaN is neither
+    // greater than nor less than any other value.
 
 
 Différence entre undefined et null
@@ -712,6 +1102,40 @@ typeof renvoie une chaîne qui indique le type de l'opérande (Quantité, donné
     !null;                 // true
     isNaN(1 + null);       // false
     isNaN(1 + undefined);  // true
+
+
+valueOf()
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/valueOf
+- La méthode valueOf() renvoie la valeur primitive d'un objet donné.
+    ////////////////////////////////////// EX:
+    function MyNumberType(n) {
+      this.number = n;
+    }
+
+    MyNumberType.prototype.valueOf = function() {
+      return this.number;
+    };
+
+    const object1 = new MyNumberType(4);
+
+    console.log(object1 + 3);
+    // expected output: 7
+
+- JavaScript appelle la méthode valueOf pour convertir un objet en une valeur primitive. Il est rarement nécessaire d'appeler soi-même la méthode valueOf ; JavaScript l'invoque automatiquement lorsqu'il rencontre un objet alors qu'il attend une valeur primitive.
+
+Par défaut, la méthode valueOf est héritée par tout objet descendant d'Object. Tous les objets globaux natifs redéfinissent cette méthode pour renvoyer une valeur appropriée. Si un objet n'a pas de valeur primitive, valueOf renvoie l'objet lui-même, ce qui sera affiché comme :
+
+[object Object]
+
+valueOf peut être utilisée afin de convertir un objet prédéfini en une valeur primitive. Si un objet est défini dans un script, il est possible de surcharger Object.prototype.valueOf pour appeler une méthode personnalisée au lieu de la méthode par défaut d'Object.
+
+    ////////////////////////////////////// EX:
+    // Supposons qu'on ait un type d'objet monTypeDeNombre
+    // En utilisant ce code, chaque fois qu'un objet de type monTypeDeNombre sera utilisé dans un contexte où il doit être représenté comme une valeur primitive, JavaScript appellera automatiquement la fonction qui y est définie.
+    monTypeDeNombre.prototype.valueOf = function(){ return valeurPrimitive;};
+    // C'est habituellement JavaScript qui invoquera la méthode valueOf, mais il est aussi possible de l'appeler soi-même
+    monNombre.valueOf()
 
 
 Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
@@ -915,6 +1339,135 @@ la déclaration de la variable et laisser l'affectation à son emplacement initi
 
 3. Il faut donc bien faire la distinction entre expression et déclaration de fonction, 
 car l'interpréteur va les traiter de manière différente l'une de l'autre.
+
+
+Conditions if elseif else, switch et ternaire
+-------------------------------
+1. if elseif else
+    ////////////////////////////////////// EX:
+    if (a == 2) {
+        // do something
+    }
+    else if (a == 10) {
+        // do another thing
+    }
+    else if (a == 42) {
+        // do yet another thing
+    }
+    else {
+        // fallback to here
+    }
+
+2. switch
+    ////////////////////////////////////// EX:
+    switch (a) {
+        case 2:
+            // do something
+            break;
+        case 10:
+            // do another thing
+            break;
+        case 42:
+            // do yet another thing
+            break;
+        default:
+            // fallback to here
+    }
+
+3. ternaire    
+    ////////////////////////////////////// EX:
+    var a = 42;
+    var b = (a > 41) ? "hello" : "world";
+    // similar to:
+    // if (a > 41) {
+    // b = "hello";
+    // }
+    // else {
+    // b = "world";
+    // }
+
+
+Boucles while() do..while() et for()
+-------------------------------
+1. Boucle while()
+La condition est testé avant la première itération.
+
+    ////////////////////////////////////// EX:
+    while (numOfCustomers > 0) {
+        console.log( "How may I help you?" );
+        // help the customer...
+        numOfCustomers = numOfCustomers - 1;
+    }
+
+    ////////////////////////////////////// EX:
+    var i = 0;
+    // a `while..true` loop would run forever, right?
+    while (true) {
+        // keep the loop going?
+        if (i <= 9) {
+            console.log( i );
+            i = i + 1;
+        }
+        // time to stop the loop!
+        else {
+            break; // Le statement (l'instruction en FR) break permet de sortir de la boucle
+        }
+        // 0 1 2 3 4 5 6 7 8 9
+    }
+
+2. Boucle do..while()
+La condition est testé après la première itération.
+    ////////////////////////////////////// EX:
+    do {
+        console.log( "How may I help you?" );
+        // help the customer...
+        numOfCustomers = numOfCustomers - 1;
+    } while (numOfCustomers > 0);
+
+3. Boucle for()
+L'instruction for crée une boucle composée de trois expressions optionnelles séparées par des points-virgules 
+et encadrées entre des parenthèses qui sont suivies par une instruction (généralement une instruction de bloc) à exécuter dans la boucle.
+Expression d'initialisation (let i=0)
+Expression de condition (i <= 9) évaluée avant chaque itération de la boucle
+Expression de mise à jour (i++) évaluée à la fin de chaque itération
+    ////////////////////////////////////// EX:
+    for (let i = 0; i < 9; i++) {
+        console.log( i );
+    }
+    // 0 1 2 3 4 5 6 7 8 9
+
+    ////////////////////////////////////// EX:
+    var i = 0;
+    for (; i < 9; i++) {
+        console.log(i);
+        // d'autres instructions
+    }
+
+    ////////////////////////////////////// EX:
+    for (var i = 0;; i++) {
+       console.log(i);
+       if (i > 3) break; // break pour sortir de la boucle
+       // d'autres instructions
+    }
+    var i = 0;
+
+    ////////////////////////////////////// EX:
+    for (;;) {
+      if (i > 3) break;
+      console.log(i);
+      i++;
+    }
+
+    ////////////////////////////////////// EX:
+    // Utiliser for avec une instruction vide
+    function showOffsetPos (sId) {
+      var nLeft = 0, nTop = 0;
+
+      for (var oItNode = document.getElementById(sId); oItNode; nLeft += oItNode.offsetLeft, nTop += oItNode.offsetTop, oItNode = oItNode.offsetParent);
+
+      console.log("Décalage de position : \"" + sId + "\" element:\n left: " + nLeft + "px;\n top: " + nTop + "px;");
+    }
+
 
 Définition d'un littéral
 -------------------------------
@@ -1450,6 +2003,52 @@ Différence entre argument et paramètre
 Un paramètre est dans la fonction appelée.
 
 
+Les objets
+-------------------------------
+- Un objet JavaScript possède donc plusieurs propriétés qui lui sont associées. 
+Une propriété peut être vue comme une variable attachée à l'objet. Les propriétés d'un objet sont des 
+variables tout ce qu'il y a de plus classiques, exception faite qu'elle sont attachées à des objets. 
+Les propriétés d'un objet représentent ses caractéristiques et on peut y accéder avec une notation utilisant le point « . »
+On peut aussi définir ou accéder à des propriétés JavaScript en utilisant une notation avec les crochets.
+    ////////////////////////////////////// EX:
+    var obj = {
+        a: "hello world",
+        b: 42,
+        c: true
+    };
+
+    obj.a; // "hello world"
+    obj.b; // 42
+    obj.c; // true
+
+    obj["a"]; // "hello world"
+    obj["b"]; // 42
+    obj["c"]; // true
+
+
+- Les noms des propriétés pour les objets JavaScript peuvent être des chaînes de caractères ou des symboles.
+On notera que les valeurs utilisées entre les crochets sont automatiquement converties en chaînes de caractères 
+grâce à la méthode toString() sauf si ces valeurs sont des symboles.
+    ////////////////////////////////////// EX:
+    // on crée quatre variables avec une même instruction
+    var monObj = new Object(),
+        str = "myString",
+        rand = Math.random(),
+        obj = new Object();
+
+    monObj.type              = "Syntaxe point";
+    monObj["date created"]   = "Chaîne avec un espace";
+    monObj[str]              = "Une valeur qui est une chaîne";
+    monObj[rand]             = "Nombre aléatoire";
+    monObj[obj]              = "Objet";
+    monObj[""]               = "Une chaîne vide";
+
+    console.log(monObj);
+
+    // Lorsqu'on ajoute la clé obj sur monObj, le moteur JavaScript appelle la méthode obj.toString() 
+    // et utilise la chaîne de caractères renvoyée par cette méthode comme nom pour la propriété.
+
+
 Objet Map
 -------------------------------
 1. L'objet Map représente un dictionnaire, autrement dit une carte de clés/valeurs. 
@@ -1787,7 +2386,7 @@ Noms de propriétés calculés (Computed Properties)
 	};
 
 
-Boucles
+Boucles for..of et for..in
 -------------------------------
 FOR...OF (ES6)
 for (variable of iterable)
@@ -3158,6 +3757,59 @@ un tableau vide sera renvoyé.
     var strReverse = str.split('').reverse().join(''); // 'lkjhgfdsa'
     // split renvoie un tableau sur lequel on peut appliquer reverse
     // enfin on utilise join pour assembler le tout.
+
+
+Méthodes sur les nombres
+-------------------------------
+TOFIXED()
+// numObj.toFixed([nbChiffres])
+1. toFixed() renvoie une chaîne de caractères représentant objetNumber sans notation exponentielle et qui possède exactement nbChiffres après la virgule. 
+Le nombre est arrondi si nécessaire et la partie après la virgule est complétée par des zéros si nécessaire pour obtenir la longueur souhaitée.
+
+    [nbChiffres]
+        Le nombre de chiffres qu'on souhaite avoir après le séparateur décimal. Cette valeur peut être comprise, au sens large, entre 0 et 20. 
+        Les différentes implémentations peuvent éventuellement supporter des valeurs en dehors de cet intervalle. 
+        Si l'argument n'est pas utilisé, la valeur par défaut sera 0.
+       
+    Valeur de retour :
+        Une chaîne de caractères qui représente le nombre avec nbChiffres après la virgule.
+
+    Exceptions:
+        RangeError
+            Cette exception est renvoyée si nbChiffres est trop grand ou trop petit. Les valeurs comprises, au sens large, entre 0 et 100, 
+            n'entraîneront pas de RangeError. Les différentes implémentations peuvent ou non supporter des valeurs plus petites et/ou plus grandes.
+        TypeError
+            Cette exception est renvoyée si cette méthode est invoquée depuis un objet qui n'est pas de type numérique.
+
+        /////////////////////////////////// EX:
+        function financial(x) {
+          return Number.parseFloat(x).toFixed(2);
+        }
+
+        console.log(financial(123.456));
+        // expected output: "123.46"
+
+        console.log(financial(0.004));
+        // expected output: "0.00"
+
+        console.log(financial('1.23e+5'));
+        // expected output: "123000.00"
+
+        /////////////////////////////////// EX:
+        var numObj = 12345.6789;
+
+        numObj.toFixed();       // Renvoie '12346' : arrondi, aucune partie fractionnaire
+        numObj.toFixed(1);      // Renvoie '12345.7' : arrondi ici aussi
+        numObj.toFixed(6);      // Renvoie '12345.678900' : des zéros sont ajoutés
+        (1.23e+20).toFixed(2);  // Renvoie '123000000000000000000.00'
+        (1.23e-10).toFixed(2);  // Renvoie '0.00'
+        2.34.toFixed(1);        // Renvoie '2.3'
+        -2.34.toFixed(1);       // Renvoie -2.3 (en raison de la précédence des opérateurs, 
+                                // les littéraux de nombres négatifs ne renvoient pas de chaînes)
+        2.35.toFixed(1);        // Renvoie '2.4' (arrondi supérieur)
+        2.55.toFixed(1);        // Renvoie '2.5' (cf. l'avertissement ci-avant)
+        (-2.34).toFixed(1);     // Renvoie '-2.3'
+
 
 Méthodes sur JSON
 -------------------------------
@@ -6465,3 +7117,12 @@ Convertir un Objet en Map et inversement et sérialiser
     comme lorsque l'on copie un tableau dans une autre variable, les
     deux variables contiennent la même réference et pointent vers le 
     même tableau en mémoire.
+
+
+
+Prompt
+-------------------------------
+1. Ouvre une fenêtre avec un champ qui permet d'entrer une valeur
+    ////////////////////////////////////// EX:
+    let age = prompt( "Please tell me your age:" );
+    console.log(age);

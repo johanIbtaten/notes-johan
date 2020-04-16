@@ -1,7 +1,11 @@
 Limitations Vue.js
 Vue CLI
 v-model modificateurs
-getters, accès par propriété et accès par méthode
+Getters, accès par propriété et accès par méthode
+Form validation, client-side and server-side
+-------------------------------
+Voir https://vueschool.io/lessons/vuejs-form-validation-diy?friend=vuejs
+Voir https://vuejs.org/v2/cookbook/form-validation.html#Another-Example-of-Custom-Validation
 
 
 

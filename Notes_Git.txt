@@ -471,6 +471,14 @@ Git
 	git checkout master
 
 - Gérer les tags
+	Voir https://stackoverflow.com/questions/21459540/add-new-commit-to-the-existing-git-tag
+
+	Voir https://stackoverflow.com/questions/25755061/how-do-i-create-tag-with-certain-commits-and-push-it-to-origin
+
+	Voir https://git-scm.com/book/fr/v2/Les-bases-de-Git-%C3%89tiquetage
+
+	Voir https://dev.to/neshaz/a-tutorial-for-tagging-releases-in-git-147e
+
 	git tag
 	// Liste les tags
 
