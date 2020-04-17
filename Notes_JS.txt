@@ -95,6 +95,7 @@
     HTMLElement.dataset et les attributs data-*
     Paradigme de programmation définition
     Les closures
+    Module pattern
     Debounce et Trottle
     Primitive vs Reference
     Prompt
@@ -466,6 +467,60 @@ const : Scope dans les fonctions
         On peut ajouter ou supprimer les éléments d'un tableau dans une const
         On ne peut pas changer la structure d'un objet littéral dans une const
         On peut changer les valeurs d'un objet littéral dans un const
+
+
+Hoisting let and const variables :
+
+Soit le code :
+
+console.log(a);
+let a = 3;
+// ReferenceError: a is not defined
+
+So are let and const variables not hoisted?
+
+The answer is a bit more complicated than that. All declarations (function, var, let, const and class) are hoisted in JavaScript, while the var declarations are initialized with undefined, but let and const declarations remain uninitialized.
+
+They will only get initialized when their lexical binding (assignment) is evaluated during runtime by the JavaScript engine. This means you can’t access the variable before the engine evaluates its value at the place it was declared in the source code. This is what we call “Temporal Dead Zone”, A time span between variable creation and its initialization where they can’t be accessed.
+
+If the JavaScript engine still can’t find the value of let or const variables at the line where they were declared, it will assign them the value of undefined or return an error (in case of const).
+
+
+Soit le code :
+
+let a;
+console.log(a); // outputs undefined
+a = 5;
+
+Here during the compile phase, the JavaScript engine encounters the variable a and stores it in the lexical environment, but because it’s a let variable, the engine does not initialize it with any value. So during the compile phase, the lexical environment will look like this:
+lexicalEnvironment = {
+  a: <uninitialized>
+}
+
+And undefined will be logged to the console and after that 5 will be assigned to it and the lexical environment will be updated to contain the value of a to 5 from undefined.
+
+
+soit le code :
+
+function foo () {
+  console.log(a);
+}
+let a = 20;
+foo();  // This is perfectly valid
+
+We can reference the let and const variables in the code (eg. function body ) even before they are declared, as long as that code is not executed before the variable declaration.
+
+
+Soit le code :
+
+function foo() {
+ console.log(a); // ReferenceError: a is not defined
+}
+foo(); // This is not valid
+let a = 20;
+
+this will generate a reference error.
+
 
 
 Contexte d'exécution ou (Scope en anglais)
@@ -1438,6 +1493,7 @@ et encadrées entre des parenthèses qui sont suivies par une instruction (gén�
 Expression d'initialisation (let i=0)
 Expression de condition (i <= 9) évaluée avant chaque itération de la boucle
 Expression de mise à jour (i++) évaluée à la fin de chaque itération
+
     ////////////////////////////////////// EX:
     for (let i = 0; i < 9; i++) {
         console.log( i );
@@ -1475,6 +1531,13 @@ Expression de mise à jour (i++) évaluée à la fin de chaque itération
 
       console.log("Décalage de position : \"" + sId + "\" element:\n left: " + nLeft + "px;\n top: " + nTop + "px;");
     }
+
+Il faut utiliser let pour la variable i plutôt que var car let est block scopé, comme ça i reste inaccessible en dehors de la boucle.
+    ////////////////////////////////////// EX:
+    for (let i=0; i<10; i++) {
+    console.log( i );
+    }
+    console.log( i ); // ReferenceError
 
 
 Définition d'un littéral
@@ -7177,6 +7240,275 @@ Et voilà une fonction avec une variable statique nommée myVar ! Cela pourra vo
     1: Script {f: ƒ}
     2: Global {parent: global, opener: null, top: global, length: 0, frames: Window, …}
 
+----
+
+Soit le code : 
+
+for (var i=1; i<=5; i++) {
+    setTimeout( function timer(){
+        console.log( i );
+    }, i*1000 );
+}
+
+If you run this code, you get 6 printed out five times, at the
+one-second intervals.
+First, let’s explain where 6 comes from. The terminating condition of
+the loop is when i is not <=5. The first time that’s the case is when i is
+6. So, the output is reflecting the final value of the i after the loop
+terminates.
+
+Each iteration of the
+loop “captures” its own copy of i, at the time of the iteration. But, the
+way scope works, all five of those functions, though they are defined
+separately in each loop iteration, are closed over the same shared global
+scope, which has, in fact, only one i in it.
+Put that way, of course all functions share a reference to the same i.
+Something about the loop structure tends to confuse us into thinking
+there’s something else more sophisticated at work. There is not. There’s
+no difference than if each of the five timeout callbacks were just declared
+one right after the other, with no loop at all.
+
+
+Soit le code :
+
+for (let i=1; i<=5; i++) {
+    setTimeout( function timer(){
+        console.log( i );
+    }, i*1000 );
+}
+
+Utiliser let règle le problème. There’s a special behavior defined for let declarations used in the head of a for loop. This behavior says that the variable will be declared not just once for
+the loop, but each iteration. And, it will, helpfully, be initialized at
+each subsequent iteration with the value from the end of the previous iteration.
+Block scoping and closure working hand-in-hand.
+
+
+Module pattern
+-------------------------------
+There are two requirements for the module
+pattern to be exercised:
+
+    1. There must be an outer enclosing function, and it must be invoked
+    at least once (each time creates a new module instance).
+
+    2. The enclosing function must return back at least one inner function,
+    so that this inner function has closure over the private scope,
+    and can access and/or modify that private state.
+    An object with a function property on it alone is not really a module.
+    An object that is returned from a function invocation that only has
+    data properties on it and no closured functions is not really a module,
+    in the observable sense.
+
+Soit le code :
+
+function foo() {
+    var something = "cool";
+    var another = [1, 2, 3];
+    function doSomething() {
+        console.log( something );
+    }
+    function doAnother() {
+        console.log( another.join( " ! " ) );
+    }
+}
+
+As this code stands right now, there’s no observable closure going on.
+We simply have some private data variables something and another,
+and a couple of inner functions doSomething() and doAnother(),
+which both have lexical scope over the inner scope of foo() (are closures).
+
+
+soit le code :
+
+function CoolModule() {
+    var something = "cool";
+    var another = [1, 2, 3];
+
+    function doSomething() {
+        console.log( something );
+    }
+    function doAnother() {
+        console.log( another.join( " ! " ) );
+    }
+    return {
+        doSomething: doSomething,
+        doAnother: doAnother
+    };
+}
+var foo = CoolModule();
+foo.doSomething(); // cool
+foo.doAnother(); // 1 ! 2 ! 3
+
+
+This is the pattern in JavaScript we call module. The most common
+way of implementing the module pattern.
+First, CoolModule() is just a function, but it has to be invoked for there
+to be a module instance created. Without the execution of the outer
+function, the creation of the inner scope and the closures would not
+occur.
+
+Second, the CoolModule() function returns an object, denoted by the
+object-literal syntax { key: value, … }. The object we return has
+references on it to our inner functions, but not to our inner data variables.
+We keep those hidden and private. It’s appropriate to think of
+this object return value as essentially a public API for our module.
+
+This object return value is ultimately assigned to the outer variable
+foo, and then we can access those property methods on the API, like
+foo.doSomething().
+
+It is not required that we return an actual object (literal) from
+our module. We could just return back an inner function directly.
+jQuery is actually a good example of this. The jQuery
+and $ identifiers are the public API for the jQuery module, but
+they are, themselves, just functions (which can themselves have
+properties, since all functions are objects).
+
+The previous code snippet shows a standalone module creator called
+CoolModule(), which can be invoked any number of times, each time
+creating a new module instance.
+
+
+Soit le code :
+
+var foo = (function CoolModule() {
+    var something = "cool";
+    var another = [1, 2, 3];
+
+    function doSomething() {
+        console.log( something );
+    }
+
+    function doAnother() {
+        console.log( another.join( " ! " ) );
+    }
+    return {
+        doSomething: doSomething,
+        doAnother: doAnother
+    };
+})();
+foo.doSomething(); // cool
+foo.doAnother(); // 1 ! 2 ! 3
+
+Here, we turned our module function into an IIFE (see Chapter 3),
+and we immediately invoked it and assigned its return value directly
+to our single module instance identifier foo.
+
+
+Soit le code :
+
+function CoolModule(id) {
+    function identify() {
+        console.log( id );
+    }
+    return {
+        identify: identify
+    };
+}
+var foo1 = CoolModule( "foo 1" );
+var foo2 = CoolModule( "foo 2" );
+foo1.identify(); // "foo 1"
+foo2.identify(); // "foo 2"
+
+Modules are just functions, so they can receive parameters.
+
+
+soit le code :
+
+var foo = (function CoolModule(id) {
+    function change() {
+        // modifying the public API
+        publicAPI.identify = identify2;
+    }
+    function identify1() {
+        console.log( id );
+    }
+    function identify2() {
+        console.log( id.toUpperCase() );
+    }
+    var publicAPI = {
+        change: change,
+        identify: identify1
+    };
+return publicAPI;
+})( "foo module" );
+
+foo.identify(); // foo module
+foo.change();
+foo.identify(); // FOO MODULE
+
+By retaining an inner reference to the public API object inside your
+module instance, you can modify that module instance from the inside,
+including adding and removing methods and properties, and
+changing their values.
+Various module dependency loaders/managers essentially wrap up
+this pattern of module definition into a friendly API.
+
+----
+
+Soit le code :
+
+var MyModules = (function Manager() {
+    var modules = {};
+
+    function define(name, deps, impl) {
+        for (var i=0; i<deps.length; i++) {
+            deps[i] = modules[deps[i]];
+        }
+        modules[name] = impl.apply( impl, deps );
+    }
+    function get(name) {
+        return modules[name];
+    }
+    return {
+        define: define,
+        get: get
+    };
+})();
+
+The key part of this code is modules[name] = impl.apply(impl,
+deps). This is invoking the definition wrapper function for a module
+(passing in any dependencies), and storing the return value, the module’s
+API, into an internal list of modules tracked by name.
+
+
+Soit le code :
+
+MyModules.define( "bar", [], function(){
+    function hello(who) {
+        return "Let me introduce: " + who;
+    }
+    return {
+        hello: hello
+    };
+});
+
+MyModules.define( "foo", ["bar"], function(bar){
+    var hungry = "hippo";
+        function awesome() {
+        console.log( bar.hello( hungry ).toUpperCase() );
+    }
+    return {
+        awesome: awesome
+    };
+});
+
+var bar = MyModules.get("bar");
+var foo = MyModules.get("foo");
+console.log(bar.hello("hippo")); // Let me introduce: hippo
+foo.awesome(); // LET ME INTRODUCE: HIPPO
+
+Both the "foo" and "bar" modules are defined with a function that
+returns a public API. "foo" even receives the instance of "bar" as a
+dependency parameter, and can use it accordingly.
+Spend some time examining these code snippets to fully understand
+the power of closures put to use for our own good purposes. The key
+take-away is that there’s not really any particular “magic” to module
+managers. They fulfill both characteristics of the module pattern I listed
+above: invoking a function definition wrapper, and keeping its
+return value as the API for that module.
+In other words, modules are just modules, even if you put a friendly
+wrapper tool on top of them.
 
 
 Debounce et Trottle
