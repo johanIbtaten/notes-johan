@@ -571,6 +571,8 @@ or within other functions. For instance, the following is invalid:
     }
     foo();
 
+- Contexte global et le contexte local
+Nous disposons de deux contextes ou environnements de portée différents en JavaScript : le contexte global et le contexte local. Le contexte global désigne tout le code d’un script qui n’est pas contenu dans une fonction tandis que le contexte local désigne lui le code propre à une fonction.
 
 Affectation par décomposition (Destructuring en anglais)
 -------------------------------
@@ -1447,10 +1449,6 @@ Conditions if elseif else, switch et ternaire
 Boucles while() do..while() et for()
 -------------------------------
 JavaScript ne crée pas d'espace fonctionnel spécifique pour une boucle. Toute variable déclarée au sein d'une boucle est déclarée dans l'espace fonctionnel parent à la boucle.
-
-Cependant, il est possible de contourner cette réécriture.
-
-Actuellement, notre variable currentI est déclarée dans l'espace global de notre code.
 
 1. Boucle while()
 La condition est testé avant la première itération.
@@ -7003,12 +7001,23 @@ Les closures
 -------------------------------
 Voir https://openclassrooms.com/fr/courses/1916641-dynamisez-vos-sites-web-avec-javascript/2633501-les-closures
 
+Voir https://www.pierre-giraud.com/javascript-apprendre-coder-cours/closure/
+
+On appelle closure (ou « fermeture » en français) une fonction interne qui va pouvoir continuer d’accéder à des variables définies dans la fonction externe à laquelle elle appartient même après que cette fonction externe ait été exécutée.
+
+C’est là tout l’intérêt et la magie des closures : si une fonction interne parvient à exister plus longtemps que la fonction parente dans laquelle elle a été définie, alors les variables de cette fonction parente vont continuer d’exister au travers de la fonction interne qui sert de référence à celles-ci.
+
+Lorsqu’une fonction interne est disponible en dehors d’une fonction parente, on parle alors de closure ou de « fermeture » en français.
+
+Une variable qui se trouve dans la fonction externe de la closure est protégée de l’extérieur et ne peut être modifiée qu’à partir de la fonction interne. Ensuite, on va pouvoir réutiliser la fonction externe pour créer autant de closure que l’on le souhaite et qui vont agir indépendamment les uns des autres.
+
 Qu'est-ce qu'une closure ? 
 En JavaScript, il s'agit d'une fonction ayant pour but de capter des données susceptibles de changer au cours du temps, de les enregistrer dans son espace fonctionnel et de les fournir en cas de besoin.
 
 Une variable peut posséder plusieurs références. Elle ne sera jamais supprimée tant qu'elle possèdera encore une référence active.
 Les closures ont été inventées dans le but de répondre à plusieurs problématiques concernant la gestion de données.
 Une closure peut être écrite de plusieurs manières différentes, à vous de choisir celle qui convient le mieux à votre code.
+
 
 1. Soit le code :
 
@@ -7151,6 +7160,32 @@ for (var i = 0; i < divsLen; i++) {
         }, 200 * i);
     })(i);
 }
+
+//// Autre façon de l'écrire ////
+
+// On déclare une fonction qui crée une closure
+function maker(b) {
+
+    // Si l'argument b est une primitive l'argument est passé par
+    // valeur à b, donc b est une nouvelle variable qui possède la valeur
+    // de l'argument passé.
+    function display() {
+
+    // Même si display() est exécuter plus tard elle gardera un lien
+    // à la variable b jusqu'à son utilisation
+    divs[b].style.display = 'block'
+  }
+  // On retourne la fonction qui est dans la closure
+  return display
+}
+
+for(var i = 0 ; i < divsLen ; i++) {
+    // On récupère la closure en lui passant un paramètre
+    var closure = maker(i);
+    // On passe la closure en callback
+    setTimeout(closure, i*500) 
+}
+
 
 On peut utiliser dans la closure une variable nommée i. Cela est bien plus pratique à gérer et prête moins à confusion pour peu que l'on ait compris que dans la closure nous utilisons une variable i différente de celle située en-dehors de la closure.
 
