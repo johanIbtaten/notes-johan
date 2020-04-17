@@ -1,6 +1,6 @@
     Statement et expressions définition
     Opérateurs
-    Opérateur typeOf
+    Opérateur typeof
     Variables
     Le hoisting ou remontée des variables
     Évaluation de variables
@@ -157,13 +157,15 @@ These operators are used to express compound conditionals,
 like if either a or b is true.
 
 
-Opérateur typeOf
+Opérateur typeof
 -------------------------------
 - L'opérateur typeof renvoie une chaîne qui indique le type de son opérande.
 
 typeof operande
 
 - operande est une expression qui représente la valeur dont on souhaite obtenir le type.
+
+- Si l'instruction typeof vous renvoie undefined, c'est soit que votre variable est inexistante, soit qu'elle est déclarée mais ne contient rien.
 
 - Résultats possibles de l'opérateur typeof
 Undefined                                               "undefined"
@@ -1389,6 +1391,12 @@ Conditions if elseif else, switch et ternaire
 
 Boucles while() do..while() et for()
 -------------------------------
+JavaScript ne crée pas d'espace fonctionnel spécifique pour une boucle. Toute variable déclarée au sein d'une boucle est déclarée dans l'espace fonctionnel parent à la boucle.
+
+Cependant, il est possible de contourner cette réécriture.
+
+Actuellement, notre variable currentI est déclarée dans l'espace global de notre code.
+
 1. Boucle while()
 La condition est testé avant la première itération.
 
@@ -6931,6 +6939,243 @@ C'est une manière de concevoir la programmtion et de résoudre les différents 
 Les closures
 -------------------------------
 Voir https://openclassrooms.com/fr/courses/1916641-dynamisez-vos-sites-web-avec-javascript/2633501-les-closures
+
+Qu'est-ce qu'une closure ? 
+En JavaScript, il s'agit d'une fonction ayant pour but de capter des données susceptibles de changer au cours du temps, de les enregistrer dans son espace fonctionnel et de les fournir en cas de besoin.
+
+Une variable peut posséder plusieurs références. Elle ne sera jamais supprimée tant qu'elle possèdera encore une référence active.
+Les closures ont été inventées dans le but de répondre à plusieurs problématiques concernant la gestion de données.
+Une closure peut être écrite de plusieurs manières différentes, à vous de choisir celle qui convient le mieux à votre code.
+
+1. Soit le code :
+
+function area() {
+    var myVar = 1;
+}
+area(); // On exécute la fonction, ce qui crée la variable « myVar »
+alert(myVar);
+
+Nous allons obtenir : une erreur. Ceci est normal, car myVar est déclarée dans une fonction 
+tandis que nous essayons d'y accéder depuis l'espace global.
+La seule fonction capable d'accéder à myVar est area(), car c'est elle qui l'a créée. Seulement, une fois l'exécution de la fonction terminée, la variable est supprimée de l'espace
+mémoire et devient donc inaccessible.
+
+----
+
+2. Soit le code : 
+
+function area() {
+    var myVar = 1;
+    function show() {
+        alert(myVar);
+    }
+}
+area();
+alert(myVar);
+
+Le résultat est toujours le même, il est nul. Cependant, en plus de la fonction area(), la fonction show() est maintenant capable, elle aussi, d'accéder à myVar car elle a été créée dans le même espace que celui de myVar. Mais show() n'est pas executé, il faudrait l'exécuter.
+
+----
+
+3. Soit le code :
+
+function area() {
+    var myVar = 1;
+    function show() {
+        alert(myVar);
+    }
+    setTimeout(show, 1000);
+}
+area();
+
+Plutôt que de l'exécuter immédiatement, nous allons l'exécuter une seconde après l'exécution de notre fonction area(), ce qui devrait normalement retourner une erreur puisque myVar est censée être détruite une fois qu'area() a terminé son exécution.
+Et, pourtant, cela fonctionne !
+Dans notre fonction area(), nous avons une première référence vers notre variable, car elle y est déclarée sous le nom myVar. Dans la fonction show(), nous avons une deuxième référence du même nom, myVar.
+Quand une fonction termine son exécution, la référence vers la variable est détruite, rendant son accès impossible. C’est ce qui se produit avec notre fonction area(). La variable dans l'espace mémoire en elle-même continue à exister tant qu'il reste encore une référence qui est susceptible d'être utilisée dans le bloc de la fonction. C'est aussi ce qui se produit avec la fonction show(). Puisque celle-ci possède une référence vers notre variable, cette dernière n'est donc pas détruite.
+Ainsi, une variable peut très bien perdre dix de ses références, elle ne sera pas supprimée tant qu'il lui en restera au moins une. C'est ce qui explique que nous puissions accéder à la variable myVar dans la fonction show() malgré la fin de l'exécution de area().
+
+----
+
+4. Les closures avec setTimeout
+
+Soit le code :
+
+var number = 1;
+setTimeout(function() {
+    alert(number);
+}, 100);
+number++;
+
+La fonction alert() ne nous affiche pas la valeur 1 comme nous pourrions le penser, mais la valeur 2.
+Cela vient du fait que ce n'est que la fonction setTimeout() qui a été exécutée avant le changement de valeur. La fonction anonyme, elle, n'est exécutée que 100 millisecondes après l'exécution de setTimeout(), ce qui a largement laissé le temps à la valeur de number de changer.
+On pourrait penser que, lorsque nous déclarons notre fonction anonyme, celle-ci va directement récupérer les valeurs des variables utilisées. Que nenni ! Lorsque vous déclarez votre fonction en écrivant le nom d'une variable, vous passez une référence vers cette variable à votre fonction. Cette référence sera ensuite utilisée pour connaître la valeur de la variable, mais seulement une fois la fonction exécutée !
+
+----
+
+5. Les closures cas concret
+
+Soit le code :
+
+var divs = document.getElementsByTagName('div'),
+    divsLen = divs.length;
+for (var i = 0; i < divsLen; i++) {
+    setTimeout(function() {
+        divs[i].style.display = 'block';
+    }, 200 * i); // Le temps augmentera de 200 ms à chaque élément
+}
+
+Admettons que vous souhaitiez faire apparaître une dizaine de balises <div> de manière progressive, les unes à la suite des autres. Voici le code que vous tenteriez probablement de faire.
+À la console d'erreurs, vous constaterez qu'elle vous signale que la variable divs[i] est indéfinie, et ce dix fois de suite, ce qui correspond à nos dix itérations de boucle. Si nous regardons d'un peu plus près le problème, nous constatons alors que la variable i vaut toujours 10 à chaque fois qu'elle est utilisée dans les fonctions anonymes, ce qui correspond à sa valeur finale une fois que la boucle a terminé son exécution.
+Ceci nous ramène au même problème : notre fonction anonyme ne prend en compte que la valeur finale de notre variable qui vaut 10 à la fin de la boucle et div[10] n'existe pas car il y a que 10 div et que le plus grand index de notre tableau est 9.
+
+
+Soit le code :
+
+var divs = document.getElementsByTagName('div'),
+    divsLen = divs.length;
+for (var i = 0; i < divsLen; i++) {
+    var currentI = i; // Déclarer une variable DANS une boucle n'est pas conseillé, ici c'est juste pour l'exemple
+    setTimeout(function() {
+        divs[currentI].style.display = 'block';
+    }, 200 * i);
+}
+
+Cela ne fonctionne pas, car nous en revenons toujours au même : la variable currentI est réécrite à chaque tour de boucle, car le JavaScript ne crée pas d'espace fonctionnel spécifique pour une boucle. Toute variable déclarée au sein d'une boucle est déclarée dans l'espace fonctionnel parent à la boucle. Cela nous empêche donc de converser avec la valeur écrite dans notre variable, car la variable est réécrite à chaque itération de la boucle.
+Actuellement, notre variable currentI est déclarée dans l'espace global de notre code.
+
+
+Soit le code :
+
+var divs = document.getElementsByTagName('div'),
+    divsLen = divs.length;
+for (var i = 0; i < divsLen; i++) {
+    (function() {
+        var currentI = i;
+        setTimeout(function() {
+            divs[currentI].style.display = 'block';
+        }, 200 * i);
+    })();
+}
+
+À chaque tour de boucle, une IIFE est créée. À l'intérieur de cette dernière, une variable currentI est déclarée, puis nous lançons l'exécution différée d'une fonction anonyme faisant appel à cette même variable. Cette dernière fonction va utiliser la première (et la seule) variable currentI qu'elle connaît, celle déclarée dans notre IIFE, car elle n'a pas accès aux autres variables currentI déclarées dans d'autres IIFE.
+currentI est déclarée dans une IIFE, sa référence est donc détruite à la fin de l'exécution de l'IIFE. Cependant, nous y avons toujours accès dans notre fonction anonyme exécutée en différé, car nous possédons une référence vers cette variable, ce qui évite sa suppression.
+
+
+Soit le code :
+
+var divs = document.getElementsByTagName('div'),
+    divsLen = divs.length;
+for (var i = 0; i < divsLen; i++) {
+    (function(currentI) {
+        setTimeout(function() {
+            divs[currentI].style.display = 'block';
+        }, 200 * i);
+    })(i);
+}
+
+On peut tomber assez fréquemment sur des closures plutôt écrites de cette manière.
+Nous avons tout simplement créé un argument currentI pour notre IIFE et nous lui passons en paramètre la valeur de i. Cette modification fait gagner un peu d'espace et permet de mieux organiser le code, on distingue plus facilement ce qui constitue la closure ou non.
+
+
+Soit le code :
+
+var divs = document.getElementsByTagName('div'),
+    divsLen = divs.length;
+for (var i = 0; i < divsLen; i++) {
+    (function(i) {
+        setTimeout(function() {
+            divs[i].style.display = 'block';
+        }, 200 * i);
+    })(i);
+}
+
+On peut utiliser dans la closure une variable nommée i. Cela est bien plus pratique à gérer et prête moins à confusion pour peu que l'on ait compris que dans la closure nous utilisons une variable i différente de celle située en-dehors de la closure.
+
+
+5. Les closures et variables statiques
+
+Il n'y a pas de système natif de variables statiques en JavaScript.
+Ces variables particulières sont déclarées à la première exécution de la fonction, mais ne sont pas supprimées à la fin des exécutions. Elles sont conservées pour les prochaines utilisations de la fonction.
+En gros, c'est comme si vous déclariez une variable globale en JavaScript et que vous l'utilisiez dans votre fonction : la variable et sa valeur ne seront jamais détruites. En revanche, la variable globale est accessible par toutes les fonctions, tandis qu'une variable statique n'est accessible que pour la fonction qui a fait sa déclaration.
+
+
+Soit le code :
+
+var myVar = 0;
+function display(value) {
+    if (typeof value != 'undefined') {
+        myVar = value;
+    }
+    alert(myVar);
+}
+display(); // Affiche : 0
+display(42); // Affiche : 42
+display(); // Affiche : 42
+
+Nous voudrions arriver à ceci afin d'éviter l'accès à myVar par une fonction autre que display()
+
+
+Soit le code :
+
+(function() {
+    var myVar = 0;
+    function() {
+        // Du code…
+    }
+})();
+
+La solution se trouve donc avec les closures. En respectant le schéma classique d'une closure, une IIFE avec une fonction anonyme à l'intérieur, nous pouvons déclarer une variable dans l'IIFE et ainsi elle ne sera utilisable que par la fonction anonyme et ne sera jamais supprimée.
+Cependant, comment accéder à notre fonction anonyme ?
+
+
+Soit le code :
+
+var myFunction = (function() {
+    var myVar = 0;
+    return function() {
+        // Du code…
+    };
+})();
+
+La solution est simple : en la retournant avec le mot-clé return et en passant sa référence à une variable.
+
+
+Soit le code :
+
+var display = (function() {
+    var myVar = 0; // Déclaration de la variable pseudo-statique
+    return function(value) {
+        if (typeof value != 'undefined') {
+            myVar = value;
+        }
+        alert(myVar);
+    };
+})();
+
+display(); // Affiche : 0
+display(42); // Affiche : 42
+display(); // Affiche : 42
+
+Et voilà une fonction avec une variable statique nommée myVar ! Cela pourra vous être utile par moments (bien que cela soit assez rare).
+
+
+6. Exemples de closures
+
+    ///////////////////////////////// EX:
+    let f = () => {
+        let i = 1
+      let j = 2
+      return () => {
+        console.log(i)
+        console.log(j)
+      }
+    }
+    console.dir(f()) 
+    // console.dir() permet d'avoir des informations sur la fonction anonyme et de voir les variables qui sont dans la closure de la fonction.
+    [[Scopes]]: Scopes[3]
+    0: Closure (f) {i: 1, j: 2}
+    1: Script {f: ƒ}
+    2: Global {parent: global, opener: null, top: global, length: 0, frames: Window, …}
 
 
 
