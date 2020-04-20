@@ -7018,6 +7018,54 @@ Une variable peut posséder plusieurs références. Elle ne sera jamais supprim�
 Les closures ont été inventées dans le but de répondre à plusieurs problématiques concernant la gestion de données.
 Une closure peut être écrite de plusieurs manières différentes, à vous de choisir celle qui convient le mieux à votre code.
 
+Pour faire une comparaison dans une closure la fonction externe pourrait faire office de classe et 
+la closure qui est la fonction interne retournée pourrait faire office de méthode et la variable utilisée par la closure pourrait faire office d'attribut de la classe :
+
+// Closure
+
+function maker(count) {  
+    return function(){
+        return count++
+    }
+}
+let closurePlusUn = maker(0)
+let closurePlusUnBis = maker(10);
+
+console.log(closurePlusUn())
+console.log(closurePlusUn())
+console.log(closurePlusUn())
+console.log(closurePlusUn())
+
+console.log(closurePlusUnBis())
+console.log(closurePlusUnBis())
+console.log(closurePlusUnBis())
+console.log(closurePlusUnBis())
+
+// Comparaison classe
+
+class Maker {
+    constructor(count) {
+        this.count = count
+    }
+
+    closure() {
+        return this.count++
+    }
+}
+
+const closurePlusUn = new Maker(0)
+const closurePlusUnBis = new Maker(10);
+
+console.log(closurePlusUn.closure())
+console.log(closurePlusUn.closure())
+console.log(closurePlusUn.closure())
+console.log(closurePlusUn.closure())
+
+console.log(closurePlusUnBis.closure())
+console.log(closurePlusUnBis.closure())
+console.log(closurePlusUnBis.closure())
+console.log(closurePlusUnBis.closure())
+
 
 1. Soit le code :
 
