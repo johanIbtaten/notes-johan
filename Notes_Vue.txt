@@ -3,10 +3,10 @@ Vue CLI
 v-model modificateurs
 Getters, accès par propriété et accès par méthode
 Form validation, client-side and server-side
+v-if v-else et v-show particularités
+Gestion des évènements, modificateurs, codes des touches
 -------------------------------
-Voir https://vueschool.io/lessons/vuejs-form-validation-diy?friend=vuejs
-Voir https://vuejs.org/v2/cookbook/form-validation.html#Another-Example-of-Custom-Validation
-
+Voir https://fr.vuejs.org/v2/guide/events.html
 
 
 Limitations Vue.js
@@ -132,3 +132,15 @@ Nous pouvons maintenant utiliser ce getter dans un composant :
 
 Notez que les accesseur accédés par méthodes vont être exécuté chaque fois qu'il seront appelés. 
 Le résultat ne sera donc pas mis en cache.
+
+
+Form validation, client-side and server-side
+-------------------------------
+Voir https://vueschool.io/lessons/vuejs-form-validation-diy?friend=vuejs
+Voir https://vuejs.org/v2/cookbook/form-validation.html#Another-Example-of-Custom-Validation
+
+
+v-if v-else et v-show particularités
+-------------------------------
+1. v-if v-else rend le composant, c'est à dire qu'il est ajouté au DOM au moment où la condition est vrai, avant il n'est pas dans le DOM 
+2. v-show cache le composant, il est dans le DOM mais est en display none jusqu'à que le condition soit vrai alors il n'est plus en display none.

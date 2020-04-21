@@ -50,6 +50,7 @@
         FILTER()
         INCLUDES()
         FIND()
+        SPLICE()
     Méthodes sur les objets
         KEYS()
         ASSIGN()
@@ -99,6 +100,7 @@
     Debounce et Trottle
     Primitive vs Reference
     Prompt
+    Recursivité
     
 
 
@@ -3166,6 +3168,83 @@ Elle n'est pas appelée pour les index supprimés ou pour ceux qui n'ont pas de 
 
 	console.log( [4, 6, 8, 12].find(estPremier) ); // undefined, rien trouvé
 	console.log( [4, 5, 8, 12].find(estPremier) ); // 5
+
+
+SPLICE()
+// var tabElementsSupprimes = array.splice(début, nbASupprimer[, élem1[, élem2[, ...]]])
+1.La méthode splice() modifie le contenu d'un tableau en retirant des 
+éléments et/ou en ajoutant de nouveaux éléments à même le tableau. 
+On peut ainsi vider ou remplacer une partie d'un tableau.
+Si vous spécifiez un nombre différent d'éléments à insérer et d'éléments 
+à supprimer, le tableau aura une longueur différente après l'appel de la méthode.
+
+    [début] 
+        L'indice à partir duquel commencer à changer le tableau (l'indice du premier élement étant 0).
+        Si sa valeur est supérieure à la longueur du tableau array.length, début est ramené à la longueur du tableau array.length.
+        S'il est négatif, le changement commencera d'autant d'éléments à partir de la fin du tableau, c'est à dire à partir de l'index array.length + début. Si array.length + début est inférieur à 0, le changement commencera à l'index 0.
+
+    [nbASupprimer]
+        Un entier indiquant le nombre d'anciens éléments à remplacer.
+        Si ce paramètre est absent ou si sa valeur est supérieure ou égale à array.length - début, alors les éléments entre début et la fin du tableau seront supprimés.
+        Si nbASupprimer vaut 0, aucun élément ne sera supprimé. Dans ce cas, il est nécessaire de spécifier au moins un nouvel élément.
+
+    [élemN] (Facultatif)
+        Les éléments à ajouter au tableau à partir de début. Si vous ne spécifiez pas de nouvel élément, les anciens éléments seront simplement supprimés du tableau.
+
+    Valeur de retour :
+        Un tableau contenant les éléments supprimés. Si un seul élément est supprimé, un tableau contenant un unique élément est retourné.
+
+    ///////////////////////////////////////// EX:
+    const months = ['Jan', 'March', 'April', 'June'];
+    months.splice(1, 0, 'Feb');
+    // inserts at index 1
+    console.log(months);
+    // expected output: Array ["Jan", "Feb", "March", "April", "June"]
+
+    months.splice(4, 1, 'May');
+    // replaces 1 element at index 4
+    console.log(months);
+    // expected output: Array ["Jan", "Feb", "March", "April", "May"]
+
+    ///////////////////////////////////////// EX:
+    var mesPoissons  = ["scalaire", "clown", "mandarin", "chirurgien"];
+
+    // supprime 0 élément à partir de l'index 2, et insère "tambour"
+    var enleves = mesPoissons.splice(2, 0, "tambour");
+    // mesPoissons est ["scalaire", "clown", "tambour", "mandarin", "chirurgien"]
+    // enleves est [], aucun élément supprimé
+
+    // supprime 1 élément à partir de l'index 3
+    enleves = mesPoissons.splice(3, 1);
+    // mesPoissons est ["scalaire", "clown", "tambour", "chirurgien"]
+    // enleves est ["mandarin"]
+
+    // supprime 1 élément à partir de l'index 2, et insère "trompette"
+    enleves = mesPoissons.splice(2, 1, "trompette");
+    // mesPoissons est ["scalaire", "clown", "trompette", "chirurgien"]
+    // enleves est ["tambour"]
+
+    // supprime 2 éléments à partir de l'index 0, et insère "perroquet", "anémone" et"bleu"
+    enleves = mesPoissons.splice(0, 2, "perroquet", "anémone", "bleu");
+    // mesPoissons est ["perroquet", "anémone", "bleu", "mandarin", "chirurgien"]
+    // enleves est ["scalaire", "clown"]
+
+    // supprime 2 éléments à partir de l'indice 2
+    enleves = mesPoissons.splice(mesPoissons.length - 3, 2);
+    // mesPoissons est ["perroquet", "anémone", "chirurgien"]
+    // enleves est ["bleu", "trompette"]
+
+    var mesPoissons = ["perroquet", "anémone", "bleu", "trompette", "chirurgien"];
+    // on retire trois éléments à partir de l'indice 2
+    enleves = mesPoissons.splice(2);
+    // mesPoissons vaut ["perroquet", "anémone"]
+    // enleves vaut ["bleu", "trompette", "chirurgien"]
+
+    var mesAnimaux = ["cheval", "chien", "chat", "dauphin"];
+    enleves = mesAnimaux.splice(-2, 1);
+
+    // mesAnimaux vaut ["cheval", "chien", "dauphin"]
+    // enleves vaut ["chat"]
 
 
 Méthodes sur les objets
@@ -7797,10 +7876,106 @@ Convertir un Objet en Map et inversement et sérialiser
     même tableau en mémoire.
 
 
-
 Prompt
 -------------------------------
 1. Ouvre une fenêtre avec un champ qui permet d'entrer une valeur
     ////////////////////////////////////// EX:
     let age = prompt( "Please tell me your age:" );
     console.log(age);
+
+
+Recursivité
+-------------------------------
+Voir https://onechapteraday.fr/javascript-recursive-functions/
+voir https://www.youtube.com/watch?v=LteNqj4DFD8
+
+1. Afin que la récursivité soit effective, deux fonctionnalités clés doivent nécessairement être implémentées. Il s'agit du cas de base et du cas de propagation, aussi parfois appelé simplement le cas récursif.
+
+Le cas de base. 
+Représente l'ensemble des lignes de code qui permet l'arrêt de la récursion. Habituellement, cet ensemble débute avec une clause conditionnelle comme if. Si cette notion n'est pas mise en place, la fonction sera répétée de manière infinie et le programme plantera. Le cas de base est donc la condition de fin de la fonction récursive.
+
+Le cas de propagation
+Représente l'ensemble des lignes de code où aura lieu la récursivité. Il s'agit, en clair, du bloc de code où la fonction fera à nouveau appel à elle-même.
+
+Soit le code :
+
+function factorial(x) {
+  // This is the base case.
+  if (x === 1) return 1;
+  // This is the recursive one.
+  else return x * factorial(x - 1);
+}
+factorial(5); // output : 120
+
+Notre cas de base déclare que si x est égal à 1, nous retournons la valeur 1. Cette fonction factorial va donc s'arrêter au moment où x atteindra la valeur 1. Pour toute autre valeur positive de x, nous retournons, le produit de x et de factorielle x.
+
+Décomposons factorial(5) pas à pas, pour bien comprendre le mécanisme de la récursivité.
+
+factorial(5) = 5 * factorial(4);
+factorial(4) = 4 * factorial(3);
+factorial(3) = 3 * factorial(2);
+factorial(2) = 2 * factorial(1);
+factorial(1) = 1
+
+Équivaut à 
+
+factorial(5) {
+    return 5 * factorial(4) {
+        return 4 * factorial(3) {
+            return 3 * factorial(2) {
+                return 2 * factorial(1) {
+                    return 1    
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+Une fois que la valeur retourné ne fait plus appel à une fonction
+ici la valeur 1 (valeur retournée par notre cas de base) on remonte
+l'imbrication des fonctions les remplaçant par leur valeur calculée
+
+factorial(5)
+    5 * factorial(4)
+        4 * factorial(3)
+            3 * factorial(2)
+                2 * factorial(1)
+                    1
+
+factorial(5)
+    5 * factorial(4)
+        4 * factorial(3)
+            3 * factorial(2)
+                2 * 1
+
+factorial(5)
+    5 * factorial(4)
+        4 * factorial(3)
+            3 * factorial(2)
+                2
+
+factorial(5)
+    5 * factorial(4)
+        4 * factorial(3)
+            3 * 2
+....
+....
+
+factorial(5)
+    120
+
+120
+
+
+Soit 
+
+120
+    5 * 24
+        4 * 6
+            3 * 2
+                2 * 1
+                    1
+
+
