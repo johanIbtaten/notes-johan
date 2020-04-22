@@ -5,7 +5,7 @@ Trouvez le plus grand ou plus petit nombre dans un tableau
 Trouvez l'index de la plus grande ou plus petite valeur dans un tableau
 Comparer deux dates sans prendre en compte le temps
 Insérer une chaîne dans une chaîne
-
+Nombre de jours entre deux dates
 
 Créer une méthode truncate sur une String
 printReverse
@@ -60,6 +60,37 @@ let indexStr = str.indexOf("petit");
 let strModified = str.substring(0, indexStr) + " arrière " + str.substring(indexStr); 
 console.log(strModified);
 // Output : Salut c'est ton arrière petit-fils
+
+
+Nombre de jours entre deux dates
+-------------------------------
+<!-- HTML -->
+<input type="date" id="start">
+<input type="date" id="end">
+
+<button onclick="compute()">Calcul</button>
+
+// JS
+function compute(){
+
+  const MS_PER_DAY = 1000 * 60 * 60 * 24;
+  
+  let days = 5;
+  
+  const startElement = document.getElementById('start')
+  const endElement = document.getElementById('end')
+  
+  const startDate = new Date(startElement.value)
+  const endDate = new Date(endElement.value)
+  
+  console.log(startDate)
+  console.log(endDate)
+  
+  const timeDifference = endDate.getTime() - startDate.getTime()
+  days = Math.round(timeDifference / MS_PER_DAY)  
+  
+  alert('nombre de jours '+days)
+}
 
 
 
