@@ -555,3 +555,11 @@ Voir https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/change_event
 Éviter la fermeture d'une modal sur le mouseup
 -------------------------------
 1. Il faut remplacer onclick="closeModal()" par onmousedown="closeModal()"
+
+
+Prompt
+-------------------------------
+1. Ouvre une fenêtre avec un champ qui permet d'entrer une valeur
+    ////////////////////////////////////// EX:
+    let age = prompt( "Please tell me your age:" );
+    console.log(age);

@@ -100,7 +100,6 @@
     Module pattern
     Debounce et Trottle
     Primitive vs Reference
-    Prompt
     Recursivité
     
 
@@ -7878,14 +7877,6 @@ Convertir un Objet en Map et inversement et sérialiser
     comme lorsque l'on copie un tableau dans une autre variable, les
     deux variables contiennent la même réference et pointent vers le 
     même tableau en mémoire.
-
-
-Prompt
--------------------------------
-1. Ouvre une fenêtre avec un champ qui permet d'entrer une valeur
-    ////////////////////////////////////// EX:
-    let age = prompt( "Please tell me your age:" );
-    console.log(age);
 
 
 Recursivité
