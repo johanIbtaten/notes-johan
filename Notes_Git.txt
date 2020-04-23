@@ -432,6 +432,13 @@ Git
 	// Le SHA-1 du commit est modifié.
 	Utiliser cette commande avant de pousser le commit sinon ne pas l'utiliser
 
+	git commit --amend
+	// Le SHA-1 du commit est modifié.
+	Ouvre un éditeur de code
+
+	git push origin master -f
+	Permet de pousser la modification sur le repo distant
+
 - Modifier le message d'un ancien commit
 	Voir https://linuxize.com/post/change-git-commit-message/
 

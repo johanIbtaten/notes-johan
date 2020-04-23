@@ -5,14 +5,8 @@ Getters, accès par propriété et accès par méthode
 Form validation, client-side and server-side
 v-if v-else et v-show particularités
 Gestion des évènements, modificateurs, codes des touches
--------------------------------
-Voir https://fr.vuejs.org/v2/guide/events.html
+$ devant un nom de variable
 
-
-Limitations Vue.js
--------------------------------
-1. On ne peux pas rajouter de propriétés à l'objet data de l'objet Vue à la volée
-2. On ne peut pas accéder à un élément de tableau qui se trouve dans une propriété de data directement par son index
 
 
 Vue CLI
@@ -144,3 +138,14 @@ v-if v-else et v-show particularités
 -------------------------------
 1. v-if v-else rend le composant, c'est à dire qu'il est ajouté au DOM au moment où la condition est vrai, avant il n'est pas dans le DOM 
 2. v-show cache le composant, il est dans le DOM mais est en display none jusqu'à que le condition soit vrai alors il n'est plus en display none.
+
+
+Gestion des évènements, modificateurs, codes des touches
+-------------------------------
+Voir https://fr.vuejs.org/v2/guide/events.html
+
+
+$ devant un nom de variable
+-------------------------------
+$ est simplement une convention que Vue utilise pour les propriétés qui sont accessibles dans toutes les instances. 
+Cela évite les conflits avec toutes les autres données définies, propriétés calculées ou méthodes.

@@ -11,6 +11,7 @@ La propagation des évènements (Capture et Bubbling)
 window.setInterval Fonction
 Les événements
 Les types d'événement
+Éviter la fermeture d'une modal sur le mouseup
 
 
 
@@ -543,10 +544,14 @@ Les évènements sont toujours remontés dans ce cas, on ne peut choisir le mode
 
 Les types d'événement
 -------------------------------
--------------------------------
 Voir https://developer.mozilla.org/fr/docs/Web/Events
 Voir https://www.w3schools.com/jsref/dom_obj_event.asp
 
 - change
 Voir https://javascript.info/events-change-inpu
 Voir https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/change_event
+
+
+Éviter la fermeture d'une modal sur le mouseup
+-------------------------------
+1. Il faut remplacer onclick="closeModal()" par onmousedown="closeModal()"
