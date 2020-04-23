@@ -10,6 +10,8 @@ Passer une référence à un gestionnaire d'évènement
 La propagation des évènements (Capture et Bubbling)
 window.setInterval Fonction
 Les événements
+Les types d'événement
+
 
 
 Le DOM
@@ -537,3 +539,14 @@ Les évènements sont toujours remontés dans ce cas, on ne peut choisir le mode
   element.addEventListener('click', function() {
       alert("Vous m'avez cliqué !");
   });
+
+
+Les types d'événement
+-------------------------------
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/Events
+Voir https://www.w3schools.com/jsref/dom_obj_event.asp
+
+- change
+Voir https://javascript.info/events-change-inpu
+Voir https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/change_event

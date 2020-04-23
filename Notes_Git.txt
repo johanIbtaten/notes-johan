@@ -501,6 +501,9 @@ Git
 	git push origin sometag
 	// Push un tag spécifique vers origin
 
+	git tag Lesson2-complete && git push --tags origin
+	// Ajoute un tag sur le dernier commit et le push sur origin
+
 - Annuler un commit, c'est-à-dire créer un nouveau commit qui fait l'inverse du précédent
 	git revert SHADuCommit
 

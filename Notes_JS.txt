@@ -66,6 +66,7 @@
         TOFIXED()
     Méthodes sur JSON
         PARSE()
+        STRINGIFY()
     Rest parameters
     Spread operator (opérateur de décomposition)
     Le protocole « itérable » (Objets itérables)
@@ -2599,6 +2600,8 @@ les propriétés arrCustom et objCustom. Pour décrire plus précisément ce com
 
 Fonctions sur les tableaux
 -------------------------------
+Voir https://www.w3schools.com/jsref/jsref_obj_array.asp
+
 FOREACH()
 // arr.forEach(callback);
 // arr.forEach(callback, thisArg);
@@ -3172,7 +3175,8 @@ Elle n'est pas appelée pour les index supprimés ou pour ceux qui n'ont pas de 
 
 SPLICE()
 // var tabElementsSupprimes = array.splice(début, nbASupprimer[, élem1[, élem2[, ...]]])
-1.La méthode splice() modifie le contenu d'un tableau en retirant des 
+1. The splice() method adds/removes items to/from an array, and returns the removed item(s).
+2.La méthode splice() modifie le contenu d'un tableau en retirant des 
 éléments et/ou en ajoutant de nouveaux éléments à même le tableau. 
 On peut ainsi vider ou remplacer une partie d'un tableau.
 Si vous spécifiez un nombre différent d'éléments à insérer et d'éléments 
