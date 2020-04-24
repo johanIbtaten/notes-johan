@@ -6,6 +6,8 @@ Form validation, client-side and server-side
 v-if v-else et v-show particularités
 Gestion des évènements, modificateurs, codes des touches
 $ devant un nom de variable
+$listeners
+v-model
 
 
 
@@ -149,3 +151,42 @@ $ devant un nom de variable
 -------------------------------
 $ est simplement une convention que Vue utilise pour les propriétés qui sont accessibles dans toutes les instances. 
 Cela évite les conflits avec toutes les autres données définies, propriétés calculées ou méthodes.
+
+
+$listeners
+-------------------------------
+Vue fournit une propriété $listeners contenant un objet avec les écouteurs utilisés sur votre composant. Par exemple :
+
+{
+  focus: function (event) { /* ... */ }
+  input: function (value) { /* ... */ },
+}
+
+En utilisant la propriété $listeners, vous pouvez renvoyer tous les écouteurs d’événements sur 
+le composant vers un élément enfant spécifique avec v-on="$listeners". 
+
+	///////////////////////////////// EX:
+	// EventCreate.vue
+	<BaseButton @click="handleClick" buttonClass="-fill-gradient">Submit</BaseButton>
+
+
+	// BaseButton.vue
+	<template>
+	  <div>
+	    <button v-on="$listeners" v-bind="$attrs">
+	      <slot/>
+	    </button>
+	  </div>
+	</template>
+
+
+v-model
+-------------------------------
+- Dans un input v-model est un sucre syntaxique pour :
+:value="event.title" @input="(value) => { event.title = value }"
+
+<input v-model="event.title">
+
+// Équivaut à
+
+<input :value="event.title" @input="(value) => { event.title = value }">
