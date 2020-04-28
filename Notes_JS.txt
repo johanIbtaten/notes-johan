@@ -101,7 +101,15 @@
     Debounce et Trottle
     Primitive vs Reference
     Recursivité
-    
+    Simuler un appel API avec json-server
+    -------------------------------
+    1.Lancer le server API
+        json-server --watch db.json
+
+    2. Mettre du délai pour la réponse
+        json-server -d 1500 db.json
+
+
 
 
 Statement et expressions définition

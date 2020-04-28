@@ -6,6 +6,9 @@ Trouvez l'index de la plus grande ou plus petite valeur dans un tableau
 Comparer deux dates sans prendre en compte le temps
 Insérer une chaîne dans une chaîne
 Nombre de jours entre deux dates
+Retourner l'index d'un array au hasard
+
+
 
 Créer une méthode truncate sur une String
 printReverse
@@ -91,6 +94,23 @@ function compute(){
   
   alert('nombre de jours '+days)
 }
+
+
+Retourner l'index d'un array au hasard
+-------------------------------
+let items: [1,2,3,4,5,6,7,8,9],
+
+let randomIndex = () => Math.floor(Math.random() * items.length)
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -249,3 +269,6 @@ function randomize (arr) {
 	return arr
 }
 console.log(randomize([1,2,3,4,5]))
+
+
+

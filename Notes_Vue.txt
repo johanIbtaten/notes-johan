@@ -7,7 +7,9 @@ v-if v-else et v-show particularités
 Gestion des évènements, modificateurs, codes des touches
 $ devant un nom de variable
 $listeners
-v-model
+v-model sucre syntaxique
+Transitions entre v-if et v-else
+
 
 
 
@@ -180,7 +182,7 @@ le composant vers un élément enfant spécifique avec v-on="$listeners".
 	</template>
 
 
-v-model
+v-model sucre syntaxique
 -------------------------------
 - Dans un input v-model est un sucre syntaxique pour :
 :value="event.title" @input="(value) => { event.title = value }"
@@ -190,3 +192,70 @@ v-model
 // Équivaut à
 
 <input :value="event.title" @input="(value) => { event.title = value }">
+
+
+Transitions entre v-if et v-else
+-------------------------------
+Voir https://fr.vuejs.org/v2/guide/transitions.html#Transition-entre-elements
+
+- Lors de la permutation entre des éléments qui ont le même nom de balise, vous devez indiquer à Vue 
+qu’ils sont des éléments distincts en lui donnant des attributs key uniques. Sinon, le compilateur 
+de Vue ne remplacera que le contenu de l’élément dans le but d’être efficace. Cependant, même 
+si c’est techniquement inutile, c’est considéré comme une bonne pratique de toujours avoir une 
+clé pour chaque élément dans un composant <transition>
+
+	///////////////////////////////// EX:
+	<transition>
+	  <button v-if="isEditing" key="save">
+	    Sauver
+	  </button>
+	  <button v-else key="edit">
+	    Modifier
+	  </button>
+	</transition>
+
+	Dans ces cas, vous pouvez aussi utiliser l’attribut key pour effectuer une transition entre différents états du même élément. 
+	Au lieu d’utiliser v-if et v-else, l’exemple ci-dessus pourrait être réécrit ainsi :
+
+	<transition>
+	  <button :key="isEditing">
+	    {{ isEditing ? 'Sauver' : 'Modifier' }}
+	  </button>
+	</transition>
+
+
+- Il est effectivement possible de faire une transition entre un nombre indéfini d’éléments, 
+soit en utilisant plusieurs v-if ou soit en liant un élément unique à une propriété dynamique.
+
+	///////////////////////////////// EX:
+	<transition>
+	  <button v-if="docState === 'saved'" key="saved">
+	    Modifier
+	  </button>
+	  <button v-if="docState === 'edited'" key="edited">
+	    Sauver
+	  </button>
+	  <button v-if="docState === 'editing'" key="editing">
+	    Annuler
+	  </button>
+	</transition>
+
+	Qui pourrait aussi s’écrire ainsi :
+
+	<transition>
+	  <button :key="docState">
+	    {{ buttonMessage }}
+	  </button>
+	</transition>
+
+	// ...
+	computed: {
+	  buttonMessage: function () {
+	    switch (this.docState) {
+	      case 'saved': return 'Modifier'
+	      case 'edited': return 'Sauver'
+	      case 'editing': return 'Annuler'
+	    }
+	  }
+	}
+
