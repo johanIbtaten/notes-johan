@@ -13,6 +13,7 @@
 - Caractères spéciaux
 - Html entities
 - Chercher et accéder rapidement à un fichier
+- Ajouter un repère vertical
 
 - Activer ou désactiver ESLint
 
@@ -24,7 +25,7 @@ Ctrl + Shift + L
 - Annule la sélection précédente (quand on fait avec ctrl+D)
 Ctrl + U
 
-- Formater le code
+- Formater le code (avec Prettier ou un autre)
 Shift + Alt + F
 
 - Multiple curseurs en colonne
@@ -109,3 +110,15 @@ Ctrl + P
 Activer ou désactiver ESLint
 -------------------------------
 Voir https://stackoverflow.com/questions/35939042/disable-eslint-parser-error-messages-vscode
+
+
+Ajouter un repère vertical
+-------------------------------
+Dans les settings.json ajouter :
+"editor.rulers": [80]
+"editor.rulers": [80,120]
+
+Pour changer la couleur du repère
+"workbench.colorCustomizations": {
+    "editorRuler.foreground": "#ff4081"
+}

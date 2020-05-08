@@ -13,6 +13,7 @@
     Auto-Boxing
     Les opérateurs d'égalité
     Les opérateurs relationnels (< > <= >=)
+    Les opérateurs unaires (Unary Operators)
     Différence entre undefined et null
     valueOf()
     Double ou simple quotes ou accent grave (backquote ou backtick en anglais)
@@ -51,6 +52,7 @@
         INCLUDES()
         FIND()
         SPLICE()
+        SORT()
     Méthodes sur les objets
         KEYS()
         ASSIGN()
@@ -62,6 +64,7 @@
         INCLUDES()
         STARTSWITH()
         SPLIT()
+        LOCALCOMPARE()
     Méthodes sur les nombres
         TOFIXED()
     Méthodes sur JSON
@@ -83,7 +86,7 @@
     Les modules JavaScript import / export
     Memoization
     Les valeurs évaluées à false
-    Hashtable / Hashmap  vs Array (Data Normalization)
+    Hashtable / Hashmap vs Array (Data Normalization)
     Pattern Observable / Observer
     .json()
     Regression d'une application
@@ -101,14 +104,6 @@
     Debounce et Trottle
     Primitive vs Reference
     Recursivité
-    Simuler un appel API avec json-server
-    -------------------------------
-    1.Lancer le server API
-        json-server --watch db.json
-
-    2. Mettre du délai pour la réponse
-        json-server -d 1500 db.json
-
 
 
 
@@ -1080,6 +1075,59 @@ puis en valeurs du même type, enfin la comparaison est effectuée.
     // and > comparisons, and the specification says that NaN is neither
     // greater than nor less than any other value.
 
+
+Les opérateurs unaires (Unary Operators)
+-------------------------------
+Voir https://scotch.io/tutorials/javascript-unary-operators-simple-and-useful
+Voir https://medium.com/@nikjohn/cast-to-number-in-javascript-using-the-unary-operator-f4ca67c792ce
+
+- Opérateur unaire +
+The Unary plus is the fastest and preferred way of converting something into a number, 
+because it does not perform any other operations on the number.
+The unary + operator converts its operand to Number type.
+That’s right. So you don’t need to parseInt or parseFloat everything.
+ And you sure don’t need to use Number()!
+
++false  // 0
++‘123’  // 123
++0xBABE // 47806 (Hexadecimal)
++null   // 0
++function(val) {return val } // NaN
+
+However, bear in mind that the Unary (+) does not perform well in certain cases. 
+For example, it doesn’t work as expected on empty strings, alphanumeric strings, empty objects etc.
+
++''     // NaN
++'123a' // NaN
++{}     // NaN
+
+There are of course other ways to cast to Number in Javascript, including but not limited to:
+Number()
+parseInt()
+parseFloat()
+~~
+>>>0
+
+- Opérateur unaire -
+It also precedes the operand and converts non-numbers data types to numbers 
+like unary plus, however, it performs an additional operation, negation.
+
+-3                               // returns -3
+-'-3'                            // returns 3
+-'3.14'                          // returns -3.14
+-'3'                             // returns -3
+-'0xFF'                          // returns -255
+-true                            // returns -1
+-'123e-5'                        // returns -0.00123
+-false                           // returns -0
+-null                            // returns -0
+-'Infinity'                      // returns -Infinity
+-'infinity'                      // returns NaN
+-function(val){  return val }    // returns NaN
+-{valueOf: function() {
+      return '0xFF'
+    }
+ }                                //returns -255
 
 Différence entre undefined et null
 -------------------------------
@@ -3258,6 +3306,55 @@ Si vous spécifiez un nombre différent d'éléments à insérer et d'éléments
     // enleves vaut ["chat"]
 
 
+SORT()
+Voir https://delicious-insights.com/fr/articles/le-piege-de-array-sort/
+Voir https://www.zendevs.xyz/comment-trier-un-tableau-en-javascript-avec-la-methode-sort/
+
+// arr.sort()
+// arr.sort(fonctionComparaison)
+
+- Faire attention sans fonction de comparaison.
+En effet sans fonction de comparaison le tableau est trié selon la valeur de point de code Unicode de chaque caractère, 
+d'après la conversion en chaine de caractères de chaque élément. 1 est plus petit que 9 en point unicode.
+
+    ///////////////////////////////////////// EX:
+    var ages = [18, 21, 9, 41, 35, 24]
+    ages.sort()
+    // => [18, 21, 24, 35, 41, 9]
+
+    const array1 = [1, 30, 4, 21, 100000];
+    array1.sort();
+    console.log(array1);
+    // expected output: Array [1, 100000, 21, 30, 4]
+
+- Avec fonction de comparaison
+Si vous voulez que le a soit ordonné en premier dans le tableau, la fonction de comparaison doit retourner un entier négatif ; pour b, un entier positif. 
+Si vous voulez que les deux maintiennent leur ordre actuel, retournez un 0.
+
+Du négatif signifie que a apparaît avant b
+Du neutre (0) signifie qu'ils sont équivalents
+Du positif signifie que a apparaît après b
+
+Pour comparer des nombres:
+
+///////////////////////////////////////// EX:
+var ages = [18, 21, 9, 41, 35, 24]
+ages.sort(function(a, b) {
+  return a - b
+})
+// => [9, 18, 21, 24, 35, 41]
+
+Pour comparer des chaînes de caractères, il faut utiliser localeCompare() :
+
+///////////////////////////////////////// EX:
+var names = ['alice', 'Bob', 'Claire', 'David', 'Élodie', 'Stuart', 'Stéphane']
+names.sort(function(a, b) {
+  return a.localeCompare(b)
+})
+// => ["alice", "Bob", "Claire", "David", "Élodie", "Stéphane", "Stuart"]
+
+
+
 Méthodes sur les objets
 -------------------------------
 KEYS()
@@ -3934,6 +4031,76 @@ un tableau vide sera renvoyé.
     var strReverse = str.split('').reverse().join(''); // 'lkjhgfdsa'
     // split renvoie un tableau sur lequel on peut appliquer reverse
     // enfin on utilise join pour assembler le tout.
+
+
+LOCALCOMPARE()
+Voir https://www.techonthenet.com/js/string_localecompare.php
+Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/String/localeCompare
+
+// str.localeCompare(chaineÀComparer [, locales [, options]])
+
+- The localeCompare() method compares two strings in the current locale.
+
+The locale is based on the language settings of the browser.
+
+The localeCompare() method returns a number indicating whether the string comes before, after or is equal as the compareString in sort order.
+
+Cette méthode renvoie un nombre entier qui indique si la chaîne de caractères courante se situe avant ou après la chaîne passée en argument 
+selon l'ordre lexicographique tenant compte de la locale. Cette méthode renvoie
+
+un nombre négatif si la chaîne de caractères courant se situe avant la chaîne chaineÀComparer
+un nombre positif si elle se situe après
+0 si les deux chaînes se situent au même niveau
+
+Attention à ne pas tester que les valeurs -1 et 1. Les valeurs entières utilisées peuvent varier en fonction des navigateurs et de leurs versions. En effet, la spécification indique uniquement le signe de la valeur à fournir. Par exemple, certains navigateurs pourront renvoyer -2 ou 2 (voire d'autres valeurs).
+
+    /////////////////////////// EX:
+    console.log('a'.localeCompare('c')); // -2, ou -1, ou toute autre valeur négative
+    console.log('c'.localeCompare('a')); // 2, ou 1, ou toute autre valeur positive
+    console.log('a'.localeCompare('a')); // 0
+
+    /////////////////////////// EX:
+    // localeCompare() permet de trier un tableau sans tenir compte de la casse
+    var items = ['réservé', 'Premier', 'Cliché', 'communiqué', 'café', 'Adieu'];
+    items.sort((a, b) => a.localeCompare(b, 'fr', {sensitivity: 'base'}));
+    // ['Adieu', 'café', 'Cliché', 'communiqué', 'Premier', 'réservé']
+
+
+- The options to apply to the sort order. It can be one or more of the following:
+-- caseFirst   
+Determines how "case" will be handled when sorting. It can be one of the following values:
+    upper - uppercase will be sorted first
+    lower - lowercase will be sorted first
+    false - use the locale's default sorting (default)
+
+-- ignorePunctuation   
+Determines whether punctuation will be ignored. It can be one of the following values:
+    true - punctuation will be ignored when sorting
+    false - punctuation will not be ignored when sorting (default)
+
+-- localeMatcher   
+Determines the locale matching algorithm to use. It can be one of the following values:
+    lookup
+    best fit (default)
+
+-- numeric 
+Determines whether numeric collation will be used. It can be one of the following values:
+    true - numeric collation will be used when sorting
+    false - numeric collation will not be used when sorting (default)
+
+-- sensitivity 
+Determines whether numeric collation will be used. It can be one of the following values:
+    base - strings that do not have the same base letters are considered unequal
+    accent - strings that do not have the same base letters or accents are considered unequal
+    case - strings that do not have the same base letters or case are considered unequal
+    variant - strings that do not have the same base letters, accents or case are considered unequal (default)
+-- usage   
+Determines whether the method will perform sorting or searching for matching string. It can be one of the following values:
+    sort - method will perform sorting (default)
+    search - method will search for matching strings
+
+- Pour comparer un grand nombre de chaînes de caractères, par exemple pour trier de grands tableaux, 
+il est préférable de créer un objet Intl.Collator et utiliser la fonction fournie par la propriété compare.
 
 
 Méthodes sur les nombres
@@ -6196,6 +6363,7 @@ Les modules JavaScript import / export
 -------------------------------
 Voir https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Modules
 Voir https://medium.com/@etherealm/named-export-vs-default-export-in-es6-affb483a0910
+https://www.sitepoint.com/understanding-es6-modules/
 
 
 Memoization
@@ -6269,7 +6437,7 @@ Applying a second ! operator (!!undefined) yields false, so in effect !!undefine
      'hello'   | false  | true
 
 
-Hashtable / Hashmap  vs Array (Data Normalization)
+Hashtable / Hashmap vs Array (Data Normalization)
 -------------------------------
 1. La table de hachage (HashMap) est une structure indispensable de données classiques dans la programmation d'applications.
 (voir https://fr.wikipedia.org/wiki/Table_de_hachage)
@@ -6391,7 +6559,7 @@ alors que les observables peuvent le gérer.
 
 3. Un Observable est un objet implémentant une méthode .subscribe qui prend comme paramètre un Observer. Ce dernier a cette forme :
     const observer = {
-      next: val => console.log(val), // une fonction à exécuter à chaque nouvel évenement
+      next: val => console.log(val), // une fonction à exécuter à chaque nouvel évènement
       error: err => console.error(err), // une fonction à exécuter en cas d'erreur
       complete: () => console.info("Complete!") // une fonction à exécuter lorsque l'observable a fini
     };
@@ -7111,6 +7279,8 @@ Une closure peut être écrite de plusieurs manières différentes, à vous de c
 Pour faire une comparaison dans une closure la fonction externe pourrait faire office de classe et 
 la closure qui est la fonction interne retournée pourrait faire office de méthode et la variable utilisée par la closure pourrait faire office d'attribut de la classe :
 
+Une closure est la capacité d’une fonction de retrouver et accéder à son scope, même si elle s’exécute en dehors de ce scope.
+
 // Closure
 
 function maker(count) {  
@@ -7458,6 +7628,8 @@ Block scoping and closure working hand-in-hand.
 
 Module pattern
 -------------------------------
+Voir https://amethyste16.wordpress.com/2016/03/01/le-pattern-module-en-javascript/
+
 There are two requirements for the module
 pattern to be exercised:
 

@@ -7,6 +7,10 @@ Comparer deux dates sans prendre en compte le temps
 Insérer une chaîne dans une chaîne
 Nombre de jours entre deux dates
 Retourner l'index d'un array au hasard
+sort an array of objects by a property value in JavaScript
+Simuler un appel API avec json-server
+Trier un array d'objets par rapport à une propriété de l'objet
+
 
 
 
@@ -269,6 +273,42 @@ function randomize (arr) {
 	return arr
 }
 console.log(randomize([1,2,3,4,5]))
+
+
+Simuler un appel API avec json-server
+-------------------------------
+1.Lancer le server API
+    json-server --watch db.json
+
+2. Mettre du délai pour la réponse
+    json-server -d 1500 db.json
+
+
+Trier un array d'objets par rapport à une propriété de l'objet
+-------------------------------
+- Trier par rapport à des chaînes de caractères (ordre croissant)
+  ///////////////////////////////////// EX:
+  const list = [
+    { color: 'white', size: 'XXL', price: 35 },
+    { color: 'red', size: 'XL', price: 72 },
+    { color: 'black', size: 'M', price: 24 }
+  ]
+
+  list.sort((a, b) => a.color.localeCompare(b.color))
+  // autre méthode moins conseillée  
+  list.sort((a, b) => (a.color > b.color) ? 1 : -1)
+
+  The callback function could calculate other properties too, 
+  to handle the case where the color is the same, and order by a secondary property as well :
+
+  list.sort((a, b) => (a.color > b.color) ? 1 : (a.color === b.color) ? ((a.size > b.size) ? 1 : -1) : -1 )
+
+- Trier par rapport à des chaînes des nombres (ordre croissant)
+  ///////////////////////////////////// EX:
+  list.sort((a, b) => a.price - b.price)
+  list.sort((a, b) => (a.price - b.price) ? -1 : (a.price === b.price) ? ((a.size > b.size) ? 1 : -1) : 1 )
+
+- On peut aussi utiliser lodash pour ce genre de tris
 
 
 
