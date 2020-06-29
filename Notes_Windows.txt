@@ -1,5 +1,6 @@
 - Copier la liste des noms de fichier contenus dans un dossier
 - Désactiver le regroupement par dates dans l'explorateur
+- Copier des dossiers en excluant node_modules
 
 Copier la liste des noms de fichier contenus dans un dossier
 -------------------------------
@@ -12,3 +13,29 @@ dir > dirlist.txt (dans la console)
 Désactiver le regroupement par dates dans l'explorateur
 -------------------------------
 Right Click dans le dossier, Regrouper par > aucun
+
+
+Copier des dossiers en excluant node_modules
+-------------------------------
+Voir https://www.ubackup.com/backup-restore/xcopy-command-to-copy-folders-and-subfolders-6688.html
+
+// Se placer dans un dossier où le fichier except.txt se trouve 
+// autre que source et destination.
+// Écrire node_modules dans le fichier except.txt
+Xcopy C:\source D:\destination /E /H /exclude:except.txt
+
+/E – Copy subdirectories, including any empty ones.
+
+/H - Copy files with hidden and system file attributes
+
+/C - Continue copying even if an error occurs.
+
+/I - If in doubt, always assume the destination is a folder. e.g. when the destination does not exist.
+
+/T - Copy the subdirectory structure, but not the files.
+
+/K - Copy attributes. Typically, Xcopy resets read-only attributes.
+
+/O - Copy file ownership and ACL information.
+
+/X - Copy file audit settings (implies /O).
