@@ -13,9 +13,10 @@
 - Caractères spéciaux
 - Html entities
 - Chercher et accéder rapidement à un fichier
-- Ajouter un repère vertical
-
 - Activer ou désactiver ESLint
+- Ajouter un repère vertical
+- Créer un workspace
+
 
 Racourcis clavier
 -------------------------------
@@ -122,3 +123,8 @@ Pour changer la couleur du repère
 "workbench.colorCustomizations": {
     "editorRuler.foreground": "#ff4081"
 }
+
+
+Créer un workspace
+-------------------------------
+Voir https://www.youtube.com/watch?v=W4xLtxLSm-o
