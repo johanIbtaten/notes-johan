@@ -97,6 +97,9 @@ Alt + 210
 Û
 Alt + 234
 
+Ç
+Alt + 128
+
 - Html entities
 Espace insécable
 &nbsp;

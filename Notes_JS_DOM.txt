@@ -12,7 +12,7 @@ window.setInterval Fonction
 Les événements
 Les types d'événement
 Éviter la fermeture d'une modal sur le mouseup
-
+Récupérer l'ancêtre le plus proche de l'élément courant qui correspond aux sélecteurs passés comme paramètres.
 
 
 Le DOM
@@ -570,3 +570,39 @@ Prompt
     ////////////////////////////////////// EX:
     let age = prompt( "Please tell me your age:" );
     console.log(age);
+
+
+Récupérer l'ancêtre le plus proche de l'élément courant qui correspond aux sélecteurs passés comme paramètres.
+-------------------------------
+Voir https://developer.mozilla.org/fr/docs/Web/API/Element/closest
+
+- La méthode Element.closest() renvoie l'ancêtre le plus proche de 
+l'élément courant (ou l'élément courant) qui correspond 
+aux sélecteurs passés comme paramètres. S'il n'existe pas de tel ancêtre, la méthode renvoie null.
+    //////////////////////////////////// EX:
+    <article>
+      <div id="div-01">Here is div-01
+        <div id="div-02">Here is div-02
+          <div id="div-03">Here is div-03</div>
+        </div>
+      </div>
+    </article>
+
+
+    var el = document.getElementById('div-03');
+
+    var r1 = el.closest("#div-02");  
+    // Renvoie l'élément avec l'identifiant id=div-02
+
+    var r2 = el.closest("div div");  
+    // Renvoie le plus proche ancêtre qui est un div 
+    // dans un div. Ici, c'est div-03 lui-même.
+
+    var r3 = el.closest("article > div");  
+    // Renvoie le plus proche ancêtre qui est un div
+    // et dont l'élément parent est article. Ici c'est 
+    // div-01.
+
+    var r4 = el.closest(":not(div)");
+    // Renvoie le plus proche ancêtre qui n'est pas un
+    // div. Dans ce cas, c'est l'élément article.

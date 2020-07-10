@@ -1,6 +1,7 @@
 - Copier la liste des noms de fichier contenus dans un dossier
 - Désactiver le regroupement par dates dans l'explorateur
 - Copier des dossiers en excluant node_modules
+- Désactiver emplacements récents
 
 Copier la liste des noms de fichier contenus dans un dossier
 -------------------------------
@@ -39,3 +40,8 @@ Xcopy C:\source D:\destination /E /H /exclude:except.txt
 /O - Copy file ownership and ACL information.
 
 /X - Copy file audit settings (implies /O).
+
+
+Désactiver emplacements récents
+-------------------------------
+Voir https://www.howtogeek.com/236711/how-to-turn-off-recent-items-and-frequent-places-in-windows-10/#:~:text=The%20easiest%20way%20to%20turn,on%20Start%20or%20the%20taskbar%E2%80%9D.
