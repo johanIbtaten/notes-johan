@@ -3353,6 +3353,27 @@ names.sort(function(a, b) {
 })
 // => ["alice", "Bob", "Claire", "David", "Élodie", "Stéphane", "Stuart"]
 
+- Alors que la plupart des méthodes de tableau ES5 telles que .filter, .map et .reduce retournent un nouveau tableau et laissent l’original intact, .sort triera le tableau en place. Si cela n’est pas désiré, une technique ES6 pour l’éviter consiste à utiliser l’opérateur ... pour créer un nouveau tableau manuellement.
+
+    ///////////////////////////////////////// EX:
+    const foo = ['c','b','a'];
+    const bar = ['x','z','y'];
+    const fooSorted = foo.sort();
+    const barSorted = [...bar].sort();
+
+    console.log({foo, fooSorted, bar, barSorted});
+
+    /*
+    {
+      "foo":       [ "a", "b", "c" ],
+      "fooSorted": [ "a", "b", "c" ],
+      "bar":       [ "x", "z", "y" ],
+      "barSorted": [ "x", "y", "z" ]
+    }
+
+    // foo et fooSorted font tous deux référence au même tableau, mais bar et barSorted sont maintenant des tableaux individuels.
+    */
+
 
 
 Méthodes sur les objets
