@@ -58,6 +58,9 @@ Built le projet
 	# OR
 	yarn build
 
+Lancer Vue UI
+	vue ui
+
 
 v-model modificateurs
 -------------------------------

@@ -81,6 +81,7 @@ hint: its remote counterpart."
 - Commiter seulement certaines modifications d'un même fichier
 - Lister les fichiers modifiés
 - Combiner des commits brouillons d'une branche de dev en un seul commit avant de le merger sur la branche master
+- Changer origin du git repository
 
 =================================
 Terminal Windows
@@ -805,6 +806,12 @@ hint: its remote counterpart."
 	// Merger la branche mergedev sur master
 	git checkout master
 	git merge mergedev 
+
+- Changer origin du git repository
+	git remote rm origin
+	git remote add origin git@github.com:aplikacjainfo/proj1.git
+	git config master.remote origin
+	git config master.merge refs/heads/master
 
 
  
