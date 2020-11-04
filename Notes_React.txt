@@ -31,6 +31,7 @@ cloneElement() Méthode
 Différence entre un state et une variable de classe
 Affichage conditionnel
 Parent, Child and props
+Différence champ contrôlé vs champ champ non-contrôlé
 
 
 
@@ -2140,5 +2141,12 @@ Parent, Child and props
 -------------------------------
 1. Children do not rerender if the props of the parent change, but if its STATE changes.
 2. Le parent ne peut pas changer le state de l'enfant une fois qu'il a été initialisé.
+
+
+Différence champ contrôlé vs champ champ non-contrôlé
+-------------------------------
+Un champ contrôlé est doté d’une prop  value= . De plus, il est généralement doté d’une prop  onChange=  qui amène vers un gestionnaire assurant le contrôle et le formatage de la saisie, puis son stockage dans l’état local. Sans ce gestionnaire, le champ serait, de facto, en lecture seule pour l'utilisateur.
+
+Pour les cases à cocher et boutons radio, le fait de définir  checked=  place également le champ en mode contrôlé, même en l’absence de  value=  .
 
 

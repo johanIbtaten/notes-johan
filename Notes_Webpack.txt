@@ -1,3 +1,5 @@
+Voir https://www.youtube.com/watch?v=3On5Z0gjf4U&ab_channel=ColtSteele
+
 Afficher le dossier dist dans le dossier du projet
 ESLint Command Line Interface
 require et require.context

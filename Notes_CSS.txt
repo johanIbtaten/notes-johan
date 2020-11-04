@@ -474,6 +474,7 @@ mais la zone d'affichage pour la disposition reste inchangée.
 Les tailles relatives vw, vh, vmin, vmax
 -------------------------------
 Voir https://www.youtube.com/watch?v=TbXAaXMqoIQ
+Voir https://www.youtube.com/watch?v=fi81bovqxXI&ab_channel=ColtSteele
 
 vh = taille relative à la hauteur du viewport
 1vh = 1% de la hauteur du viewport
